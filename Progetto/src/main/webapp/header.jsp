@@ -4,6 +4,8 @@
     Author     : pomo
     Generic responsive header
 --%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%-- Per aggiungere item al menù è sufficiente aggiungere un <li> --%>
 <header>
 <nav class="navbar navbar-default" role="navigation">
     <div class="navbar-header">
