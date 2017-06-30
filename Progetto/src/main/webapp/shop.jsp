@@ -57,7 +57,24 @@
             <!-- Contenuto pagina -->
             <div class="row">
                 <div class="col-md-8">
+                    <center>
                     <h1><%= name %></h1>
+                    <img src="img/big.jpg" class="img-responsive" alt="Responsive image">
+                    </center>
+                    <br/>
+                    <div id="info">
+                        <p>Website: <a href="www.google.com">sito</a></p>
+                    </div>
+                    <div id="map">
+                        <center>
+                            <h3>Dove trovarci</h3>
+                            <div class="embed-responsive embed-responsive-16by9">
+                              <iframe class="embed-responsive-item" src="//www.google.com/maps/embed/v1/place?q=Piazza+Venezia+38122+Trento&key=AIzaSyAOzJPvYZ2Mq5oCbxK5v1R1HBRy5KyfRUM"></iframe>
+                            </div>
+                        </center>
+                    </div>
+                    <br/>
+                    <br/>
                 </div>
                 <div class="col-md-4" id="comments">
                     <h5>Valutazione media degli utenti: 3.0/5</h5>
@@ -87,6 +104,12 @@
                 </div>
             </div>
             <!--Fine contenuto-->
+            <!--Footer-->
+            <footer class="footer">
+                <center>
+                  <p class="text-muted">Footer content</p>
+                </center>
+            </footer>
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
