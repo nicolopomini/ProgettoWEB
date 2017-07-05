@@ -32,6 +32,7 @@
         <title>Registration Page</title>
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
+        <link href="css/LoginTheme.css" type="text/css" rel="stylesheet">
     </head>
     <body>
         <div class="container">
@@ -65,14 +66,50 @@
                   </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
             </nav>
-                    
-            <div class="form-group row">
-                <label for="example-text-input" class="col-2 col-form-label">Text</label>
-                <div class="col-10">
-                    <input class="form-control" type="text" value="Artisanal kale" id="example-text-input">
-                </div>
+            <div class="row">
+                <form class="form-horizontal">
+                    <div class="col-xs-12 marginBottomFix">
+                        <label class="col-xs-12">Fill the form and press "Register" to create a new user</label>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4">
+                        <div class="form-group col-xs-12">
+                            <label for="Email" class="col-xs-12">Email</label>
+                            <div class="col-xs-12">
+                                <input class="form-control" type="email" id="Email">
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12">
+                            <label for="Username" class="col-xs-12">Username</label>
+                            <div class="col-xs-12">
+                                <input class="form-control" type="text" id="Username">
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12">
+                            <label for="Password" class="col-xs-12">Password</label>
+                            <div class="col-xs-12">
+                                <input class="form-control" type="password" id="Password">
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12">
+                            <label for="example-text-input" class="col-xs-12">Name</label>
+                            <div class="col-xs-12">
+                                <input class="form-control" type="text" id="Name">
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12">
+                            <label for="example-text-input" class="col-xs-12">Surname</label>
+                            <div class="col-xs-12">
+                                <input class="form-control" type="text" id="Surname">
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12"> 
+                            <div class="col-xs-2">
+                                <button type="submit" class="btn btn-default">Register</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-                    
             <footer class="footer">
                 <center>
                     <p class="text-muted">Footer content</p>
