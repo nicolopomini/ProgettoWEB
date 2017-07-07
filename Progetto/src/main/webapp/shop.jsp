@@ -97,7 +97,7 @@
                         </ul>
                     </div>
                     <% if(cancomment) { %>
-                    <form class="form-inline" method="POST" action="">
+                    <form class="form-inline" method="POST" action="ShopComment">
                         <div class="form-group">
                           <input type="text" class="form-control" id="exampleInputName2" placeholder="Inserisci un commento" name="newcomment">
                         </div>
