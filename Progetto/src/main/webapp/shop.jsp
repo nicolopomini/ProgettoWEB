@@ -6,7 +6,9 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%!
-    boolean venditore = false, logged = false, cancomment = true;
+    boolean venditore = true, logged = false, cancomment = true;
+    //venditore: gestore di questo negozio
+    //cancomment: ha comprato da questo negozio
     String name = "Prova";
 %>
 <!DOCTYPE html>
@@ -38,10 +40,11 @@
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                  <% if(venditore) { %>
-                  <li><a href="#">Modifica negozio</a></li>
-                  <% } %>
+                    <% if(venditore) { %>
+                    <li><a role="button" data-toggle="modal" data-target=".bs-example-modal-lg">Modifica il tuo negozio</a></li>
+                    <% } %>
                   <% if(logged) { %>
+                  <li><a href="#">Nome e Cognome</a></li>
                   <li><a href="#">Esci</a></li>
                   <% }else {%>
                   <li><a href="#">Login</a></li>
@@ -100,10 +103,50 @@
                         </div>
                         <button type="submit" class="btn btn-default">Invia</button>
                       </form>
+                    <% } else { %>
+                    <p>Per lasciare un commento devi aver aquistato in questo negozio.</p>
                     <% } %>
                 </div>
             </div>
             <!--Fine contenuto-->
+            <!--Modal modifica shop-->
+            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Modifica il tuo negozio</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="ModifyShop" method="POST">
+                            <div class="form-group">
+                                <label for="newname">Nome del negozio</label>
+                                <input type="text" class="form-control" name="newname" id="newname" placeholder="Prova">
+                            </div>
+                            <div class="form-group">
+                                <label for="website">Website</label>
+                                <input type="text" class="form-control" name="website" id="website" placeholder="www.google.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Indirizzo</label>
+                                <input type="text" class="form-control" name="address" id="address" placeholder="Piazza Venezia, Trento">
+                            </div>
+                            <div class="form-group">
+                                <label for="orari">Orari</label>
+                                <input type="text" class="form-control" name="orari" id="orari" placeholder="Prova">
+                            </div>
+                            <div class="form-group">
+                                <label for="image">Immagine negozio</label>
+                                <input type="file" id="image" name="image">
+                                <p class="help-block">Messaggio per l'immagine</p>
+                            </div>
+                            <button type="submit" class="btn btn-default">Modifica</button>
+                        </form>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <!--End modal-->
             <!--Footer-->
             <footer class="footer">
                 <center>
