@@ -66,7 +66,7 @@
                     </center>
                     <br/>
                     <div id="info">
-                        <p>Website: <a href="www.google.com">sito</a></p>
+                        <p>Website: <a href="www.google.com" target="_blank">sito</a></p>
                     </div>
                     <div id="map">
                         <center>

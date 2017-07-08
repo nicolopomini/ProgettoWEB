@@ -1,4 +1,4 @@
-/*insert into User (name, surname, email, password, address, verificationCode, type) values
+insert into User (name, surname, email, password, address, verificationCode, type) values
 	("Luca","Patron","lucapatron@email.com","qwerty","via del pigneto 11, Roma","","registered"),
 	("Massimo","Casale","massimocasale@email.com","qwerty","via pompei 2, Roma","","seller"),
 	("Andrea","Vesco","andreavesco@email.com","qwerty","via luni 15, Roma","","seller"),
@@ -104,7 +104,7 @@
 	("Gabriele","Maurina","gabrielemaurina95@gmail.com","qwerty"," ","","admin"),
 	("Michele","Armellini","michelearmellini@gmail.com","qwerty"," ","","admin"),
 	("Marco","Merlin","marcomerlin@gmail.com","qwerty"," ","","admin");
-*/
+
 	insert into Shop (name,website,address,lat,lon,openingHours,userId,pathImage) values
 		("Le Group","legroupefashion.com","via del corso, 282, 00187 Roma",41.8972018,12.4820151,"Lun-Dom: 10 - 20",2,"img/1.JPG"),
 		("Le Group","legroupefashion.com","via nazionale, 195, 00184 Roma",41.8996288,12.4912549,"Lun-Dom: 10 - 20",2,"img/1.JPG"),
