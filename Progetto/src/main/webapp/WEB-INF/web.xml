@@ -4,8 +4,40 @@
         <servlet-name>DebugServlet</servlet-name>
         <servlet-class>Selvelts.DebugServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddToCart</servlet-name>
+        <servlet-class>Selvelts.AddToCart</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ItemComment</servlet-name>
+        <servlet-class>Selvelts.ItemComment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ModifyShop</servlet-name>
+        <servlet-class>Selvelts.ModifyShop</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShopComment</servlet-name>
+        <servlet-class>Selvelts.ShopComment</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DebugServlet</servlet-name>
         <url-pattern>/DebugServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddToCart</servlet-name>
+        <url-pattern>/AddToCart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ItemComment</servlet-name>
+        <url-pattern>/ItemComment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ModifyShop</servlet-name>
+        <url-pattern>/ModifyShop</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShopComment</servlet-name>
+        <url-pattern>/ShopComment</url-pattern>
     </servlet-mapping>
 </web-app>

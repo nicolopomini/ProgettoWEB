@@ -8,7 +8,7 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%! 
 String itemname = "Item", shopname= "Shop";
-int shop = 1;
+int shop = 1, itemid = 1;
 double price = 2.34, lat = 41.8849605, lng = 12.5107732;
 String[] negozi = {"via del corso, 282, 00187 Roma","via nazionale, 195, 00184 Roma"};
 double[] nearby = {41.8972018,12.4820151,41.8996288,12.4912549};
@@ -24,7 +24,7 @@ boolean logged = true, cancomment = true;
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
     </head>
-    <body onload="initMap()">
+    <body>
         <div class="container">
             <!-- Menu -->
             <nav class="navbar navbar-default">
@@ -61,8 +61,11 @@ boolean logged = true, cancomment = true;
                         <h1><%= itemname %></h1>
                     </center>
                     <p>Prezzo: <fmt:formatNumber value="<%= price %>" type="currency"/></p>
-                    <h4>Aggiungi al carrello</h4>
-                    <p>Venduto da <a href="shop.jsp?shopid=<%= shop %>" target="_blank"><%= shopname %></a></p>
+                    <form action="AddToCart" method="POST" class="form-inline">
+                        <input type="hidden" name="itemid" value="<%=itemid%>">
+                        <input class="btn btn-default" type="submit" value="Aggiungi al carrello">
+                    </form>
+                    <p>Venduto da <a href="shop.jsp?shopid=<%= shop %>" target="_blank"><%= shopname %></a>: <a href="#map">Indirizzo</a></p>
                     <center>
                         <div id="itemimages" >
                         <img src="img/big.jpg" class="img-responsive" alt="Responsive image">
@@ -71,9 +74,10 @@ boolean logged = true, cancomment = true;
                         </div>
                         <br/>
                         <div>
-                            <h4>Dove puoi trovare il prodotto</h4>
-                            <div><select id="locationSelect" style="width: 10%; visibility: hidden"></select></div>
-                            <div id="map" class="embed-responsive embed-responsive-16by9" style="width: 100%; height: 90%"></div>
+                            <h3>Dove puoi trovare il prodotto</h3>
+                            <div><select class="form-control" id="locationSelect" visibility: hidden"></select></div>
+                            <div id="map" class="embed-responsive embed-responsive-16by9"></div>
+                            <div id="venditori"></div>
                         </div>
                     </center>
                 </div>
@@ -121,45 +125,39 @@ boolean logged = true, cancomment = true;
             var locationSelect;
 
               function initMap() {
-                var center = {lat: <%= lat %>, lng: <%= lng %>};
                 map = new google.maps.Map(document.getElementById('map'), {
-                  center: center,
+                  center: new google.maps.LatLng(<%= lat %>,<%= lng %>),
                   zoom: 15,
                   mapTypeId: 'roadmap',
                   mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
                 });
                 infoWindow = new google.maps.InfoWindow();
-                
                 locationSelect = document.getElementById("locationSelect");
+                //da riempire
+                var locations = [
+                    ["Negozio0","Questo negozio",41.8849605,12.5107732],
+                    ["Negozio1","via del corso, 282, 00187 Roma",41.8972018,12.4820151],
+                    ["Negozio2","via nazionale, 195, 00184 Roma",41.8996288,12.4912549]
+                ];
+                var bounds = new google.maps.LatLngBounds();
+                for(var i = 0; i < locations.length; i++) {
+                    var name = locations[i][0];
+                    var address = locations[i][1];
+                    var latlng = new google.maps.LatLng(
+                        parseFloat(locations[i][2]),
+                        parseFloat(locations[i][3]));
+                    createOption(name,i);
+                    createMarker(latlng, name, address);
+                    bounds.extend(latlng);
+                } 
+                map.fitBounds(bounds);
+                locationSelect.style.visibility = "visible";
                 locationSelect.onchange = function() {
-                  var markerNum = locationSelect.options[locationSelect.selectedIndex].value;
-                  if (markerNum != "none"){
-                    google.maps.event.trigger(markers[markerNum], 'click');
-                  }
-                };
-                searchLocationsNear();
-              }
-
-             function searchLocationsNear() {
-
-                 var bounds = new google.maps.LatLngBounds();
-                   var name = "Negozio";
-                   var address = "via del corso, 282, 00187 Roma";
-                   var latlng = new google.maps.LatLng(
-                        parseFloat(41.8972018),
-                        parseFloat(12.4820151));
-
-                   createOption(name,0);
-                   createMarker(latlng, name, address);
-                   bounds.extend(latlng);
-                   
-                 map.fitBounds(bounds);
-                 locationSelect.style.visibility = "visible";
-                 locationSelect.onchange = function() {
                    var markerNum = locationSelect.options[locationSelect.selectedIndex].value;
                    google.maps.event.trigger(markers[markerNum], 'click');
-                 };
-               };
+                };
+                google.maps.event.trigger(markers[0], 'click');
+              }
 
              function createMarker(latlng, name, address) {
                 var html = "<b>" + name + "</b> <br/>" + address;
