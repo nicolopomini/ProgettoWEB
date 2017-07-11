@@ -118,7 +118,7 @@
                         <h4 class="modal-title">Modifica il tuo negozio</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="ModifyShop" method="POST">
+                        <form action="Prova" method="POST" >
                             <div class="form-group">
                                 <label for="newname">Nome del negozio</label>
                                 <input type="text" class="form-control" name="newname" id="newname" placeholder="Prova">
