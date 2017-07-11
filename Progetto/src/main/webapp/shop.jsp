@@ -43,6 +43,7 @@
                     <% if(venditore) { %>
                     <li><a role="button" data-toggle="modal" data-target=".bs-example-modal-lg">Modifica il tuo negozio</a></li>
                     <% } %>
+                  <li><a href="cart.jsp">Carrello</a></li>
                   <% if(logged) { %>
                   <li><a href="#">Nome e Cognome</a></li>
                   <li><a href="#">Esci</a></li>

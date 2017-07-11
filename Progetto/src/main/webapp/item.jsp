@@ -6,13 +6,14 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
-<%! 
+<%
 String itemname = "Item", shopname= "Shop";
 int shop = 1, itemid = 1;
 double price = 2.34, lat = 41.8849605, lng = 12.5107732;
 String[] negozi = {"via del corso, 282, 00187 Roma","via nazionale, 195, 00184 Roma"};
 double[] nearby = {41.8972018,12.4820151,41.8996288,12.4912549};
 boolean logged = true, cancomment = true;
+String message = request.getParameter("message");
 %>
 <!DOCTYPE html>
 <html>
@@ -43,6 +44,7 @@ boolean logged = true, cancomment = true;
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                  <li><a href="cart.jsp">Carrello</a></li>
                   <% if(logged) { %>
                   <li><a href="#">Nome e Cognome</a></li>
                   <li><a href="#">Esci</a></li>
@@ -55,6 +57,14 @@ boolean logged = true, cancomment = true;
             </div><!-- /.container-fluid -->
           </nav>
             <!-- Fine menu -->
+            <% if(message != null && message.equals("ok")) { %>
+            <div class="alert alert-info alert-dismissable fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                    <span aria-hidden="true">x</span>
+                </button>
+                <%=itemname%> aggiunto al carrello
+            </div>
+            <% } %>
             <div class="row">
                 <div class="col-md-8">
                     <center>

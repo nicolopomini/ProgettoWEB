@@ -6,9 +6,7 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -51,14 +49,22 @@ public class AddToCart extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int itemid = Integer.parseInt(request.getParameter("itemid"));
-        ArrayList<Integer> cart;
+        HashMap<Integer,Integer> cart;
         HttpSession session = request.getSession();
-        cart = (ArrayList<Integer>) session.getAttribute("cart");
-        if(cart == null)
-            session.setAttribute("cart", cart);
-        cart.add(itemid);
+        cart = (HashMap<Integer,Integer>) session.getAttribute("cart");
+        if(cart == null) 
+            cart = new HashMap<>();
+        Integer obj = cart.get(itemid);
+        if(obj == null)
+            cart.put(itemid, 1);
+        else
+            cart.replace(itemid, obj + 1);
+        session.setAttribute("cart", cart);
         String contextPath = getServletContext().getContextPath();
-        System.out.println(contextPath);
+        if(!contextPath.endsWith("/"))
+            contextPath += "/";
+        contextPath += "item.jsp?itemid=" + itemid + "&message=ok";
+        response.sendRedirect(response.encodeRedirectURL(contextPath));
     }
 
     /**
