@@ -7,11 +7,14 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -20,12 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "AddToCart", urlPatterns = {"/AddToCart"})
 public class AddToCart extends HttpServlet {
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        System.out.println("Selvelts.AddToCart.init()");
-    }
-    
 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -40,7 +37,6 @@ public class AddToCart extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.getWriter().println("get");
     }
 
     /**
@@ -54,8 +50,15 @@ public class AddToCart extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.getWriter().println("post");
-        
+        int itemid = Integer.parseInt(request.getParameter("itemid"));
+        ArrayList<Integer> cart;
+        HttpSession session = request.getSession();
+        cart = (ArrayList<Integer>) session.getAttribute("cart");
+        if(cart == null)
+            session.setAttribute("cart", cart);
+        cart.add(itemid);
+        String contextPath = getServletContext().getContextPath();
+        System.out.println(contextPath);
     }
 
     /**
