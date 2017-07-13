@@ -20,6 +20,10 @@
         <servlet-name>ShopComment</servlet-name>
         <servlet-class>servlets.ShopComment</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>InsertItem</servlet-name>
+        <servlet-class>servlets.InsertItem</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DebugServlet</servlet-name>
         <url-pattern>/DebugServlet</url-pattern>
@@ -39,5 +43,9 @@
     <servlet-mapping>
         <servlet-name>ShopComment</servlet-name>
         <url-pattern>/ShopComment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InsertItem</servlet-name>
+        <url-pattern>/InsertItem</url-pattern>
     </servlet-mapping>
 </web-app>

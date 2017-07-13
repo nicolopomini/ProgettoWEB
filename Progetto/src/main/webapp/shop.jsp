@@ -41,7 +41,8 @@
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <% if(venditore) { %>
-                    <li><a role="button" data-toggle="modal" data-target=".bs-example-modal-lg">Modifica il tuo negozio</a></li>
+                    <li><a role="button" data-toggle="modal" data-target="#inserisciitem">Aggiungi un item</a></li>
+                    <li><a role="button" data-toggle="modal" data-target="#modificanegozio">Modifica il tuo negozio</a></li>
                     <% } %>
                   <li><a href="cart.jsp">Carrello</a></li>
                   <% if(logged) { %>
@@ -110,8 +111,9 @@
                 </div>
             </div>
             <!--Fine contenuto-->
+            <% if(venditore) { %>
             <!--Modal modifica shop-->
-            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="modificanegozio">
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -119,7 +121,7 @@
                         <h4 class="modal-title">Modifica il tuo negozio</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="Prova" method="POST" >
+                        <form action="ModifyShop" method="POST" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="newname">Nome del negozio</label>
                                 <input type="text" class="form-control" name="newname" id="newname" placeholder="Prova">
@@ -139,7 +141,7 @@
                             <div class="form-group">
                                 <label for="image">Immagine negozio</label>
                                 <input type="file" id="image" name="image">
-                                <p class="help-block">Messaggio per l'immagine</p>
+                                <p class="help-block">Inserisci un immagine che rappresenti il tuo negozio</p>
                             </div>
                             <button type="submit" class="btn btn-default">Modifica</button>
                         </form>
@@ -148,6 +150,52 @@
               </div>
             </div>
             <!--End modal-->
+            <!--Inserisci nuovo item-->
+            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="inserisciitem">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Inserisci nuovo item</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="InsertItem" method="POST" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="name">Nome dell'item</label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Nome item" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="descrizione">Descrizione</label>
+                                <textarea class="form-control" rows="3" name="descrizione" id="descrizione" placeholder="Descrizione" maxlength="500" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="prezzo">Prezzo</label>
+                                <input type="number" step="0.01" class="form-control" name="prezzo" id="prezzo" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="categoria">Categoria</label>
+                                <select class="form-control" id='categoria'>
+                                    <option>1</option>
+                                    <option>2</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="image">Inserisci immagini</label>
+                                <div id='immaginiitem'>
+                                <input type="file" id="image" name="image1">
+                                </div>
+                                <p class="help-block">Inserisci delle immagini per l'oggetto. <a onclick="addPhoto()" href='#'>Aggiungi un'altra foto</a></p>
+                            </div>
+                            <button type="submit" class="btn btn-default">Aggiungi</button>
+                            <button type='reset' class="btn btn-default">Reset</button>
+                        </form>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <!--End modal-->
+            <!--Fine nuovo item-->
+            <% } %>
             <!--Footer-->
             <footer class="footer">
                 <center>
@@ -157,5 +205,14 @@
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            var count = 1;
+            function addPhoto() {
+                var content = document.getElementById("immaginiitem").innerHTML;
+                count++;
+                content+='<input type="file" id="image" name="image' + count + '">';
+                document.getElementById("immaginiitem").innerHTML = content;
+            }
+        </script>
     </body>
 </html>
