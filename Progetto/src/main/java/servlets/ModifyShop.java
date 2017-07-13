@@ -5,13 +5,16 @@
  */
 package servlets;
 
+import Utility.MultipartHandler;
+import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Collection;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 /**
  *
@@ -32,7 +35,7 @@ public class ModifyShop extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.getWriter().println("200 OK get");
+        
     }
 
     /**
@@ -54,10 +57,30 @@ public class ModifyShop extends HttpServlet {
         orari
         image
         */
-        PrintWriter out = response.getWriter();
-        out.println("200 OK post");
-        String site = request.getParameter("website");
-        out.println(site);
+        String encoding = request.getCharacterEncoding();
+        if(encoding == null)
+            encoding = "UTF-8";
+        String name = null, website = null, address = null, orari = null, image = null;
+        Collection<Part> requestObjects = request.getParts();
+        for(Part p : requestObjects) {
+            if(p.getName().equals("image")) //file
+                image = MultipartHandler.processImage(p);
+            else {  //testo
+                if(p.getName().equals("newname"))
+                    name = MultipartHandler.getStringValue(p, encoding);
+                else if(p.getName().equals("website"))
+                    website = MultipartHandler.getStringValue(p, encoding);
+                else if(p.getName().equals("address"))
+                    address = MultipartHandler.getStringValue(p, encoding);
+                else if(p.getName().equals("orari"))
+                    orari = MultipartHandler.getStringValue(p, encoding);
+            }
+        }
+        System.out.println(name);
+        System.out.println(website);
+        System.out.println(address);
+        System.out.println(orari);
+        System.out.println(image);
     }
 
     /**
