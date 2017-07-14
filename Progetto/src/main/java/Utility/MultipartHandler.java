@@ -6,7 +6,6 @@
 package Utility;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +30,7 @@ public class MultipartHandler {
         }
         return value.toString();
     }
-    public static String processImage(Part part) throws IOException {
+    public static String processImage(Part part, String context) throws IOException {
         String upname = getFilename(part);
         String ext = "";
         int i = upname.length() -1;
@@ -39,26 +38,27 @@ public class MultipartHandler {
             ext = upname.charAt(i) + ext;
             i--;
         }
-        String filename = "img/";
-        filename += UUID.randomUUID().toString();
-        filename += "." + ext;
+        if(!context.endsWith("/"))
+            context += "/";
+        String path = "img/";
+        path += UUID.randomUUID().toString();
+        path += "." + ext;
+        String filename = context + path;
         File file = new File(filename);
         file.getParentFile().mkdirs();
         file.createNewFile();
-        System.out.println(file.getAbsolutePath());
         InputStream input = null;
         OutputStream out = null;
         input = part.getInputStream();
         out = new FileOutputStream(file);
         int read = 0;
-        System.out.println("Image size: " + part.getSize());
         byte[] bytes = new byte[DEFAULT_BUFFER_SIZE];
 
         while ((read = input.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
         }
         part.delete();
-        return filename;
+        return path;
     }
     private static String getFilename(Part part) {
         for (String cd : part.getHeader("content-disposition").split(";")) {

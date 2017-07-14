@@ -5,7 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%!
+<%
+    //aggiungere shopid
     boolean venditore = true, logged = false, cancomment = true;
     //venditore: gestore di questo negozio
     //cancomment: ha comprato da questo negozio
@@ -174,7 +175,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="categoria">Categoria</label>
-                                <select class="form-control" id='categoria'>
+                                <select class="form-control" id='categoria' name="categoria">
                                     <option>1</option>
                                     <option>2</option>
                                 </select>

@@ -5,13 +5,20 @@
  */
 package servlets;
 
+import Utility.MultipartHandler;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Properties;
 import javax.servlet.ServletException;
+import static javax.servlet.SessionTrackingMode.URL;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 /**
  *
@@ -19,32 +26,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "InsertItem", urlPatterns = {"/InsertItem"})
 public class InsertItem extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet InsertItem</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet InsertItem at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -58,7 +39,6 @@ public class InsertItem extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
     }
 
     /**
@@ -72,7 +52,32 @@ public class InsertItem extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String name = "", descrizione = "", categoria = "";
+        double prezzo = -1.0;
+        ArrayList<String> images = new ArrayList<>();
+        String encoding = request.getCharacterEncoding();
+        if(encoding == null)
+            encoding = "UTF-8";
+        Collection<Part> requestObjects = request.getParts();
+        for(Part p : requestObjects) {
+            if(p.getSize() > 0) {
+                if(p.getName().startsWith("image"))
+                    images.add(MultipartHandler.processImage(p,getServletContext().getRealPath("/")));
+                else if(p.getName().equals("name"))
+                    name = MultipartHandler.getStringValue(p, encoding);
+                else if(p.getName().equals("descrizione"))
+                    descrizione = MultipartHandler.getStringValue(p, encoding);
+                else if(p.getName().equals("prezzo"))
+                    prezzo = Double.parseDouble(MultipartHandler.getStringValue(p, encoding));
+                else if(p.getName().equals("categoria"))
+                    categoria = MultipartHandler.getStringValue(p, encoding);
+            }
+        }
+        System.out.println(name);
+        System.out.println(descrizione);
+        System.out.println(prezzo);
+        System.out.println(categoria);
+        System.out.println(images);
     }
 
     /**
