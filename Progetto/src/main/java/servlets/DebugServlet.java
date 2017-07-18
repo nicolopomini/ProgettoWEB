@@ -5,12 +5,18 @@
  */
 package servlets;
 
+import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import persistence.utils.dao.exceptions.DAOException;
+import persistence.utils.dao.exceptions.DAOFactoryException;
+import persistence.utils.dao.factories.DAOFactory;
 
 /**
  *
@@ -27,6 +33,21 @@ public class DebugServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
+    private UserDAO userDao;
+
+    @Override
+    public void init() throws ServletException {
+        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+        if (daoFactory == null) {
+            throw new ServletException("Impossible to get dao factory for storage system");
+        }
+        try {
+            userDao = daoFactory.getDAO(UserDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for user storage system", ex);
+        }
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -43,6 +64,11 @@ public class DebugServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             out.println(getServletContext().getContextPath());
+            try {
+                out.println("tot = " + userDao.getCount());
+            } catch (DAOException ex) {
+                Logger.getLogger(DebugServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
