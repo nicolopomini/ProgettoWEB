@@ -55,4 +55,9 @@
         <servlet-name>InsertItem</servlet-name>
         <url-pattern>/InsertItem</url-pattern>
     </servlet-mapping>
+    
+    <listener>
+        <description>ServletContextListener</description>
+        <listener-class>listeners.WebAppContextListener</listener-class>
+    </listener>
 </web-app>
