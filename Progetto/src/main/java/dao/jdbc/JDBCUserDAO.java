@@ -27,7 +27,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
     
     @Override
     public Long getCount() throws DAOException {
-        try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Users");) {
+        try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM User");) {
             ResultSet counter = stmt.executeQuery();
             if (counter.next()) {
                 return counter.getLong(1);

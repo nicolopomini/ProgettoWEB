@@ -34,15 +34,17 @@ public class JDBCDAOFactory implements DAOFactory {
     /**
      * Call this method before use the instance of this class.
      * @param dbUrl the url to access to the database.
+     * @param user the username to access the database.
+     * @param password the password to access the database.
      * @throws DAOFactoryException if an error occurred during dao factory
      * configuration.
      * 
      * @author Stefano Chirico
      * @since 1.0.170417
      */
-    public static void configure(String dbUrl) throws DAOFactoryException {
+    public static void configure(String dbUrl, String user, String password) throws DAOFactoryException {
         if (instance == null) {
-            instance = new JDBCDAOFactory(dbUrl);
+            instance = new JDBCDAOFactory(dbUrl, user, password);
         } else {
             throw new DAOFactoryException("DAOFactory already configured. You can call configure only one time");
         }
@@ -74,7 +76,7 @@ public class JDBCDAOFactory implements DAOFactory {
      * @author Stefano Chirico
      * @since 1.0.170417
      */
-    private JDBCDAOFactory(String dbUrl) throws DAOFactoryException {
+    private JDBCDAOFactory(String dbUrl, String user, String password) throws DAOFactoryException {
         super();
 
         try {
@@ -84,7 +86,8 @@ public class JDBCDAOFactory implements DAOFactory {
         }
 
         try {
-            CON = DriverManager.getConnection(dbUrl);
+            System.out.println(dbUrl + "   " + user + "   " + password);
+            CON = DriverManager.getConnection(dbUrl, user, password);
         } catch (SQLException sqle) {
             throw new DAOFactoryException("Cannot create connection", sqle);
         }
