@@ -1,3 +1,9 @@
+DROP DATABASE WebProject;
+
+CREATE DATABASE WebProject;
+
+USE WebProject;
+
 DROP TABLE IF EXISTS User;
 CREATE TABLE User
 (
