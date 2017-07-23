@@ -30,10 +30,10 @@ public class JBDCComplaintDAO extends JDBCDAO<Complaint, Integer> implements Com
     
     @Override
     public Long getCount() throws DAOException {
-        try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Complaint");) {
-            ResultSet counter = stmt.executeQuery();
-            if (counter.next()) {
-                return counter.getLong(1);
+        try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Complaint");) {
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getLong(1);
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count complaints", ex);

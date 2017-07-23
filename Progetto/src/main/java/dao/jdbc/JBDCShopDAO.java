@@ -30,10 +30,10 @@ public class JBDCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO{
 
     @Override
     public Long getCount() throws DAOException {
-        try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Shop");) {
-            ResultSet counter = stmt.executeQuery();
-            if (counter.next()) {
-                return counter.getLong(1);
+        try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Shop");) {
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getLong(1);
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count shops", ex);
@@ -153,5 +153,26 @@ public class JBDCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO{
         } catch (SQLException ex) {
             throw new DAOException("Impossible to remove the shop", ex);
         }
+    }
+
+    @Override
+    public boolean canComment(Integer shopId, Integer userId) throws DAOException {
+        if (shopId == null) {
+            throw new DAOException("shopId is null");
+        }
+        if (userId == null) {
+            throw new DAOException("userId is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Shop, Item, Purchase WHERE Shop.shopId = Item.shopId AND Item.itemId = Purchase.itemId AND Shop.shopId = ? AND Purchase.userId = ?;");) {
+            stm.setInt(1, shopId);
+            stm.setInt(2, userId);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getLong(1) > 0;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to count purchases", ex);
+        }
+        return false;
     }
 }

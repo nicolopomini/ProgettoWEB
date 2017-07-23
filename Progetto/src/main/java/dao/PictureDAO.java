@@ -8,6 +8,7 @@ package dao;
 import dao.entities.Picture;
 import java.util.ArrayList;
 import persistence.utils.dao.DAO;
+import persistence.utils.dao.exceptions.DAOException;
 
 /**
  *
@@ -19,6 +20,7 @@ public interface PictureDAO extends DAO<Picture, Integer>{
      * Get all the paths of all the pictures related to an item
      * @param itemId the related item
      * @return a list with all the server-side paths
+     * @throws persistence.utils.dao.exceptions.DAOException
      */
-    //public ArrayList<String> getPictures(int itemId);
+    public ArrayList<Picture> getByItemId(Integer itemId) throws DAOException;
 }

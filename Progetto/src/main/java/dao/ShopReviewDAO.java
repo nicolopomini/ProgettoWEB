@@ -6,7 +6,9 @@
 package dao;
 
 import dao.entities.ShopReview;
+import java.util.ArrayList;
 import persistence.utils.dao.DAO;
+import persistence.utils.dao.exceptions.DAOException;
 
 /**
  *
@@ -18,6 +20,7 @@ public interface ShopReviewDAO extends DAO<ShopReview, Integer>{
      * Get all the review related to a shop
      * @param shopId the shop required
      * @return a list with all comments
+     * @throws persistence.utils.dao.exceptions.DAOException
      */
-    //public ArrayList<ShopReview> getReviews(int shopId);
+    public ArrayList<ShopReview> getByShopId(Integer shopId) throws DAOException;
 }

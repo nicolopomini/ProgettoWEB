@@ -9,6 +9,7 @@ import dao.entities.Item;
 import dao.entities.Shop;
 import java.util.ArrayList;
 import persistence.utils.dao.DAO;
+import persistence.utils.dao.exceptions.DAOException;
 
 /**
  *
@@ -18,15 +19,17 @@ import persistence.utils.dao.DAO;
 public interface ItemDAO extends DAO<Item, Integer>{
     /**
      * return a list of shops that sell the same item in a range of 5km. Two items are the same if they have the same name and the same category
-     * @param itemId the original item
+     * @param item the original item
      * @return a list of shops that sell the same item
+     * @throws persistence.utils.dao.exceptions.DAOException
      */
-    //public ArrayList<Shop> getItemNearby(int itemId);
+    public ArrayList<Shop> getItemNearby(Item item) throws DAOException;
     /**
      * An user can comment an item only if it has bought that item
      * @param itemId the related item
      * @param userId the related user
      * @return true if given user can leave a comment to the given item, false otherwise
+     * @throws persistence.utils.dao.exceptions.DAOException
      */
-    //public boolean canComment(int itemId, int userId);
+    public boolean canComment(Integer itemId, Integer userId) throws DAOException;
 }

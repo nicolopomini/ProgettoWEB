@@ -8,6 +8,7 @@ package dao;
 import dao.entities.ItemReview;
 import java.util.ArrayList;
 import persistence.utils.dao.DAO;
+import persistence.utils.dao.exceptions.DAOException;
 
 /**
  *
@@ -18,8 +19,7 @@ public interface ItemReviewDAO extends DAO<ItemReview, Integer>{
      * Get all the review related to an item
      * @param itemId the item required
      * @return a list with all comments
+     * @throws persistence.utils.dao.exceptions.DAOException
      */
-    //public ArrayList<ItemReview> getReviews(int itemId);
-    //public boolean insertReview(int itemId, int userId, String text);
-
+    public ArrayList<ItemReview> getByItem(Integer itemId) throws DAOException;
 }

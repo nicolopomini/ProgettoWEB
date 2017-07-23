@@ -30,10 +30,10 @@ public class JBDCItemReview extends JDBCDAO<ItemReview, Integer> implements Item
 
     @Override
     public Long getCount() throws DAOException {
-        try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM ItemReview");) {
-            ResultSet counter = stmt.executeQuery();
-            if (counter.next()) {
-                return counter.getLong(1);
+        try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM ItemReview");) {
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getLong(1);
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count itemReviews", ex);
@@ -138,6 +138,33 @@ public class JBDCItemReview extends JDBCDAO<ItemReview, Integer> implements Item
             stm.executeUpdate();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to remove the itemReview", ex);
+        }
+    }
+
+    @Override
+    public ArrayList<ItemReview> getByItem(Integer itemId) throws DAOException {
+        if (itemId == null) {
+            throw new DAOException("itemId is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ItemReview WHERE itemId = ?")) {
+            stm.setInt(1, itemId);
+            try (ResultSet rs = stm.executeQuery()) {
+                ArrayList<ItemReview> itemReviews = new ArrayList<>();
+                while(rs.next())
+                {
+                    ItemReview itemReview = new ItemReview();
+                    itemReview.setItemReviewId(rs.getInt("itemReviewId"));
+                    itemReview.setReviewText(rs.getString("reviewText"));
+                    itemReview.setReply(rs.getString("reply"));
+                    itemReview.setUserId(rs.getInt("userId"));
+                    itemReview.setItemId(rs.getInt("itemId"));
+                    itemReview.setReviewTime(rs.getString("reviewTime"));
+                    itemReviews.add(itemReview);
+                }
+                return itemReviews;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get itemReviews for the passed itemId", ex);
         }
     }
 }

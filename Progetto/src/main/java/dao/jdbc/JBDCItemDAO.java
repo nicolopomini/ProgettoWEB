@@ -7,6 +7,7 @@ package dao.jdbc;
 
 import dao.ItemDAO;
 import dao.entities.Item;
+import dao.entities.Shop;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,16 +25,19 @@ import persistence.utils.dao.jdbc.JDBCDAO;
 
 public class JBDCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
 
+    private static final double COOR_TO_KM = 0.009;
+    private static final double MAX_DISTANCE = 5;
+    
     public JBDCItemDAO(Connection con) {
         super(con);
     }
 
     @Override
     public Long getCount() throws DAOException {
-        try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Item");) {
-            ResultSet counter = stmt.executeQuery();
-            if (counter.next()) {
-                return counter.getLong(1);
+        try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Item");) {
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getLong(1);
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count items", ex);
@@ -138,6 +142,77 @@ public class JBDCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
             stm.executeUpdate();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to remove the item", ex);
+        }
+    }
+
+    @Override
+    public boolean canComment(Integer itemId, Integer userId) throws DAOException {
+        if (itemId == null) {
+            throw new DAOException("itemId is null");
+        }
+        if (userId == null) {
+            throw new DAOException("userId is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Item, Purchase WHERE Item.itemId = Purchase.itemId AND Item.itemId = ? AND Purchase.userId = ?;");) {
+            stm.setInt(1, itemId);
+            stm.setInt(2, userId);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getLong(1) > 0;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to count purchases", ex);
+        }
+        return false;
+    }
+
+    @Override
+    public ArrayList<Shop> getItemNearby(Item item) throws DAOException {
+        if (item == null) {
+            throw new DAOException("item is null");
+        }
+        
+        String query = "SELECT DISTINCT "
+                + "NearbyShop.shopId AS shopId, NearbyShop.userId AS userId, "
+                + "NearbyShop.name AS name, NearbyShop.website AS website, "
+                + "NearbyShop.address AS address, NearbyShop.lat AS lat, "
+                + "NearbyShop.lon AS lon, NearbyShop.openingHours AS openingHours, "
+                + "NearbyShop.imagePath AS imagePath "
+                + "FROM Item, Shop AS NearbyShop, Shop AS OriginalShop "
+                + "WHERE Item.shopId = NearbyShop.shopId AND Item.itemId != ? "
+                + "AND Item.name LIKE ? AND Item.category = ? AND OriginalShop.shopId = ? "
+                + "AND ABS(NearbyShop.lat - OriginalShop.lat) < ? "
+                + "AND ABS(NearbyShop.lon - OriginalShop.lon) < ?;";
+                
+        try (PreparedStatement stm = CON.prepareStatement(query)) {
+            stm.setInt(1, item.getItemId());
+            stm.setString(2, item.getName());
+            stm.setString(3, item.getCategory());
+            stm.setInt(4, item.getShopId());
+            stm.setDouble(5, COOR_TO_KM * MAX_DISTANCE);
+            stm.setDouble(6, COOR_TO_KM * MAX_DISTANCE);
+            
+            try (ResultSet rs = stm.executeQuery()) {
+                ArrayList<Shop> shops = new ArrayList<>();
+                while(rs.next())
+                {
+                    Shop shop = new Shop();
+                    shop.setShopId(rs.getInt("shopId"));
+                    shop.setUserId(rs.getInt("userId"));
+                    shop.setName(rs.getString("name"));
+                    shop.setWebsite(rs.getString("website"));
+                    shop.setAddress(rs.getString("address"));
+                    shop.setLat(rs.getDouble("lat"));
+                    shop.setLon(rs.getDouble("lon"));
+                    shop.setOpeningHours(rs.getString("openingHours"));
+                    shop.setImagePath(rs.getString("imagePath"));
+                    
+                    shops.add(shop);
+                }
+                return shops;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get shops", ex);
         }
     }
 }

@@ -30,10 +30,10 @@ public class JBDCPictureDAO extends JDBCDAO<Picture, Integer> implements Picture
 
     @Override
     public Long getCount() throws DAOException {
-        try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Picture");) {
-            ResultSet counter = stmt.executeQuery();
-            if (counter.next()) {
-                return counter.getLong(1);
+        try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Picture");) {
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getLong(1);
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count pictures", ex);
@@ -128,6 +128,31 @@ public class JBDCPictureDAO extends JDBCDAO<Picture, Integer> implements Picture
             stm.executeUpdate();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to remove the picture", ex);
+        }
+    }
+
+    @Override
+    public ArrayList<Picture> getByItemId(Integer itemId) throws DAOException {
+        if (itemId == null) {
+            throw new DAOException("itemId is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Picture WHERE itemId = ?")) {
+            stm.setInt(1, itemId);
+            try (ResultSet rs = stm.executeQuery()) {
+                ArrayList<Picture> pictures = new ArrayList<>();
+                while(rs.next())
+                {
+                    Picture picture = new Picture();
+                    picture.setPictureId(rs.getInt("pictureId"));
+                    picture.setPath(rs.getString("path"));
+                    picture.setItemId(rs.getInt("itemId"));
+                    
+                    pictures.add(picture);
+                }
+                return pictures;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get pictures for the passed itemId", ex);
         }
     }
 }

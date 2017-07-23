@@ -6,7 +6,6 @@
 package dao.jdbc;
 
 import dao.ShopReviewDAO;
-import dao.entities.ItemReview;
 import dao.entities.ShopReview;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,10 +30,10 @@ public class JBDCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements S
 
     @Override
     public Long getCount() throws DAOException {
-        try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM ShopReview");) {
-            ResultSet counter = stmt.executeQuery();
-            if (counter.next()) {
-                return counter.getLong(1);
+        try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM ShopReview");) {
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getLong(1);
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count shopReviews", ex);
@@ -138,6 +137,32 @@ public class JBDCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements S
             stm.executeUpdate();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to remove the shopReview", ex);
+        }
+    }
+
+    @Override
+    public ArrayList<ShopReview> getByShopId(Integer shopId) throws DAOException {
+        if (shopId == null) {
+            throw new DAOException("shopId is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ShopReview WHERE shopId = ?")) {
+            stm.setInt(1, shopId);
+            try (ResultSet rs = stm.executeQuery()) {
+                ArrayList<ShopReview> shopReviews = new ArrayList<>();
+                while(rs.next())
+                {
+                    ShopReview shopReview = new ShopReview();
+                    shopReview.setShopReviewId(rs.getInt("shopReviewId"));
+                    shopReview.setReviewText(rs.getString("reviewText"));
+                    shopReview.setReply(rs.getString("reply"));
+                    shopReview.setUserId(rs.getInt("userId"));
+                    shopReview.setShopId(rs.getInt("shopId"));
+                    shopReview.setReviewTime(rs.getString("reviewTime"));
+                }
+                return shopReviews;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get shopReviews for the passed shopId", ex);
         }
     }
 }
