@@ -5,7 +5,7 @@
  */
 package servlets;
 
-import utility.MultipartHandler;
+import Utility.MultipartHandler;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
