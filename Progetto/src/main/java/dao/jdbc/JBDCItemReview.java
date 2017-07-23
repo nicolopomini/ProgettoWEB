@@ -42,4 +42,14 @@ public class JBDCItemReview extends JDBCDAO<ItemReview, Integer> implements Item
     public ItemReview update(ItemReview entity) throws DAOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void add(ItemReview entity) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void removeByPrimaryKey(Integer primaryKey) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

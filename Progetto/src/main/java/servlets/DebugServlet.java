@@ -6,6 +6,7 @@
 package servlets;
 
 import dao.UserDAO;
+import dao.entities.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -65,7 +66,18 @@ public class DebugServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             out.println(getServletContext().getContextPath());
             try {
-                out.println("tot = " + userDao.getCount());
+                User u = userDao.getByPrimaryKey(1);
+                u.setEmail("qwer123@gmail.com");
+                userDao.add(u);
+                
+                u.setEmail("qwer1233@gmail.com");
+                u.setName("qwerqadfasdfaqe");
+                userDao.update(u);
+                
+                for(User user : userDao.getAll())
+                {
+                    out.println(user);
+                }
             } catch (DAOException ex) {
                 Logger.getLogger(DebugServlet.class.getName()).log(Level.SEVERE, null, ex);
             }

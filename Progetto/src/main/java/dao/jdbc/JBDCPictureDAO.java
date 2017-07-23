@@ -42,4 +42,14 @@ public class JBDCPictureDAO extends JDBCDAO<Picture, Integer> implements Picture
     public Picture update(Picture entity) throws DAOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void add(Picture entity) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void removeByPrimaryKey(Integer primaryKey) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -86,7 +86,6 @@ public class JDBCDAOFactory implements DAOFactory {
         }
 
         try {
-            System.out.println(dbUrl + "   " + user + "   " + password);
             CON = DriverManager.getConnection(dbUrl, user, password);
         } catch (SQLException sqle) {
             throw new DAOFactoryException("Cannot create connection", sqle);

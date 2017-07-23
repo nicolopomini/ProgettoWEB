@@ -42,4 +42,14 @@ public class JBDCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements S
     public ShopReview update(ShopReview entity) throws DAOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void add(ShopReview entity) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void removeByPrimaryKey(Integer primaryKey) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

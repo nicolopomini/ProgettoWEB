@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
@@ -41,17 +43,107 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
 
     @Override
     public User getByPrimaryKey(Integer primaryKey) throws DAOException {
-        return null;
+        if (primaryKey == null) {
+            throw new DAOException("primaryKey is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User WHERE userId = ?")) {
+            stm.setInt(1, primaryKey);
+            try (ResultSet rs = stm.executeQuery()) {
+
+                rs.next();
+                User user = new User();
+                user.setUserId(rs.getInt("userId"));
+                user.setName(rs.getString("name"));
+                user.setSurname(rs.getString("surname"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setAddress(rs.getString("address"));
+                user.setType(rs.getString("type"));
+                user.setVerificationCode(rs.getString("verificationCode"));
+
+                return user;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the user for the passed primary key", ex);
+        }
     }
 
     @Override
     public List<User> getAll() throws DAOException {
-        return null;
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User")) {
+            try (ResultSet rs = stm.executeQuery()) {
+                ArrayList<User> users = new ArrayList<>();
+                while(rs.next())
+                {
+                    User user = new User();
+                    user.setUserId(rs.getInt("userId"));
+                    user.setName(rs.getString("name"));
+                    user.setSurname(rs.getString("surname"));
+                    user.setEmail(rs.getString("email"));
+                    user.setPassword(rs.getString("password"));
+                    user.setAddress(rs.getString("address"));
+                    user.setType(rs.getString("type"));
+                    user.setVerificationCode(rs.getString("verificationCode"));
+                    users.add(user);
+                }
+                return users;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get users", ex);
+        }
     }
 
     @Override
-    public User update(User entity) throws DAOException {
-        return null;
+    public User update(User user) throws DAOException {
+        try (PreparedStatement stm = CON.prepareStatement("UPDATE User SET name = ?, surname = ?, email = ?, password = ?, address = ?, type = ?, verificationCode = ? WHERE userId = ?;")) {
+            stm.setString(1, user.getName());
+            stm.setString(2, user.getSurname());
+            stm.setString(3, user.getEmail());
+            stm.setString(4, user.getPassword());
+            stm.setString(5, user.getAddress());
+            stm.setString(6, user.getType());
+            stm.setString(7, user.getVerificationCode());
+            stm.setInt(8, user.getUserId());
+            stm.executeUpdate();
+            return user;
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to update the user", ex);
+        }
     }
-    
+
+    @Override
+    public void add(User user) throws DAOException {
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO User (name, surname, email, password, address, type, verificationCode) VALUES (?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS)) {
+            stm.setString(1, user.getName());
+            stm.setString(2, user.getSurname());
+            stm.setString(3, user.getEmail());
+            stm.setString(4, user.getPassword());
+            stm.setString(5, user.getAddress());
+            stm.setString(6, user.getType());
+            stm.setString(7, user.getVerificationCode());
+            stm.executeUpdate();
+            
+            ResultSet rs = stm.getGeneratedKeys();
+            if(rs.next())
+            {
+                int userId = rs.getInt(1);
+                user.setUserId(userId);
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to add the user", ex);
+        }
+    }
+
+    @Override
+    public void removeByPrimaryKey(Integer primaryKey) throws DAOException {
+        if (primaryKey == null) {
+            throw new DAOException("primaryKey is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("DELETE FROM User WHERE userId = ?")) {
+            stm.setInt(1, primaryKey);
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to remove the user", ex);
+        }
+    }
 }

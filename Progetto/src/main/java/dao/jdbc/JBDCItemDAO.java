@@ -42,4 +42,14 @@ public class JBDCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
     public Item update(Item entity) throws DAOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void add(Item entity) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void removeByPrimaryKey(Integer primaryKey) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

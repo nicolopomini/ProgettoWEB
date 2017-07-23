@@ -21,6 +21,9 @@ import persistence.utils.dao.exceptions.DAOFactoryException;
  */
 public interface DAO<ENTITY_CLASS, PRIMARY_KEY> {
 
+    public void add(ENTITY_CLASS entity) throws DAOException;
+    public void removeByPrimaryKey(PRIMARY_KEY primaryKey) throws DAOException;
+    
     /**
      * Returns the number of records of {@code ENTITY_CLASS} stored on the
      * persistence system of the application.
