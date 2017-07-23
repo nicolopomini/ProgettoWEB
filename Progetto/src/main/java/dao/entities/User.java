@@ -82,4 +82,9 @@ public class User {
     public void setVerificationCode(String verificationCode) {
         this.verificationCode = verificationCode;
     }
+
+    @Override
+    public String toString() {
+        return "User{" + "userId=" + userId + ", name=" + name + ", surname=" + surname + ", email=" + email + ", password=" + password + ", address=" + address + ", type=" + type + ", verificationCode=" + verificationCode + '}';
+    }
 }

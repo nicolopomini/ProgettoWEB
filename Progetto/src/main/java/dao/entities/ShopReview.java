@@ -64,4 +64,9 @@ public class ShopReview {
     public void setReviewTime(String reviewTime) {
         this.reviewTime = reviewTime;
     }
+
+    @Override
+    public String toString() {
+        return "ShopReview{" + "shopReviewId=" + shopReviewId + ", reviewText=" + reviewText + ", reply=" + reply + ", userId=" + userId + ", shopId=" + shopId + ", reviewTime=" + reviewTime + '}';
+    }
 }

@@ -37,4 +37,9 @@ public class Picture {
     public void setItemId(Integer itemId) {
         this.itemId = itemId;
     }
+
+    @Override
+    public String toString() {
+        return "Picture{" + "pictureId=" + pictureId + ", path=" + path + ", itemId=" + itemId + '}';
+    }
 }

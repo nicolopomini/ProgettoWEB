@@ -64,4 +64,9 @@ public class Complaint {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "Complaint{" + "complaintId=" + complaintId + ", purchaseId=" + purchaseId + ", complaintTime=" + complaintTime + ", complaintText=" + complaintText + ", reply=" + reply + ", status=" + status + '}';
+    }
 }

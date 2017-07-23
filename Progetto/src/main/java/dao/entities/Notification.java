@@ -46,4 +46,9 @@ public class Notification {
     public void setSeen(Boolean seen) {
         this.seen = seen;
     }
+
+    @Override
+    public String toString() {
+        return "Notification{" + "notificationId=" + notificationId + ", userId=" + userId + ", notificationText=" + notificationText + ", seen=" + seen + '}';
+    }
 }

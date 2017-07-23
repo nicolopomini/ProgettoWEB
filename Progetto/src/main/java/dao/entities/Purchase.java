@@ -55,4 +55,9 @@ public class Purchase {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+    @Override
+    public String toString() {
+        return "Purchase{" + "purchaseId=" + purchaseId + ", purchaseTime=" + purchaseTime + ", userId=" + userId + ", itemId=" + itemId + ", quantity=" + quantity + '}';
+    }
 }

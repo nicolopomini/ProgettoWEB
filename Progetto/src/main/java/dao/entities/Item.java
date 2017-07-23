@@ -64,4 +64,9 @@ public class Item {
     public void setShopId(Integer shopId) {
         this.shopId = shopId;
     }
+
+    @Override
+    public String toString() {
+        return "Item{" + "itemId=" + itemId + ", name=" + name + ", description=" + description + ", category=" + category + ", price=" + price + ", shopId=" + shopId + '}';
+    }
 }

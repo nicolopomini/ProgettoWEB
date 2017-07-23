@@ -91,4 +91,9 @@ public class Shop {
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
+
+    @Override
+    public String toString() {
+        return "Shop{" + "shopId=" + shopId + ", userId=" + userId + ", name=" + name + ", website=" + website + ", address=" + address + ", lat=" + lat + ", lon=" + lon + ", openingHours=" + openingHours + ", imagePath=" + imagePath + '}';
+    }
 }
