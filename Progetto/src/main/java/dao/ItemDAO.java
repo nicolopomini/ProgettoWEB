@@ -17,12 +17,6 @@ import persistence.utils.dao.DAO;
 
 public interface ItemDAO extends DAO<Item, Integer>{
     /**
-     * Get a specific item
-     * @param itemId the id of the required item
-     * @return the required item
-     */
-    //public Item getItem(int itemId);
-    /**
      * return a list of shops that sell the same item in a range of 5km. Two items are the same if they have the same name and the same category
      * @param itemId the original item
      * @return a list of shops that sell the same item

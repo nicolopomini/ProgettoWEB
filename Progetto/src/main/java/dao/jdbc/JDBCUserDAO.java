@@ -105,6 +105,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
             stm.setString(7, user.getVerificationCode());
             stm.setInt(8, user.getUserId());
             stm.executeUpdate();
+            
             return user;
         } catch (SQLException ex) {
             throw new DAOException("Impossible to update the user", ex);
@@ -112,7 +113,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
     }
 
     @Override
-    public void add(User user) throws DAOException {
+    public User add(User user) throws DAOException {
         try (PreparedStatement stm = CON.prepareStatement("INSERT INTO User (name, surname, email, password, address, type, verificationCode) VALUES (?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS)) {
             stm.setString(1, user.getName());
             stm.setString(2, user.getSurname());
@@ -129,6 +130,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
                 int userId = rs.getInt(1);
                 user.setUserId(userId);
             }
+            return user;
         } catch (SQLException ex) {
             throw new DAOException("Impossible to add the user", ex);
         }

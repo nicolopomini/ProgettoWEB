@@ -14,13 +14,7 @@ import persistence.utils.dao.DAO;
  * @author Gabriele
  */
 public interface PictureDAO extends DAO<Picture, Integer>{
-    /**
-     * Insert a picture related to an item
-     * @param itemId the related item
-     * @param path the server-side path of the picture
-     * @return true if the operation is finished successfully, false otherwise
-     */
-    //public boolean insertPicture(int itemId, String path);
+
     /**
      * Get all the paths of all the pictures related to an item
      * @param itemId the related item

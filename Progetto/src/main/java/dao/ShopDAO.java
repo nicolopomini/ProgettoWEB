@@ -14,12 +14,7 @@ import persistence.utils.dao.DAO;
  */
 
 public interface ShopDAO extends DAO<Shop, Integer>{
-    /**
-     * return the required shop
-     * @param shopId id of the shop
-     * @return the shop with given shopID
-     */
-    //public Shop getShop(int shopId);
+
     /**
      * An user can leave a comment to a shop only if it has buoght an item into that shop
      * @param shopId id of the shop

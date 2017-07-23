@@ -8,6 +8,11 @@ package dao.jdbc;
 import dao.ShopDAO;
 import dao.entities.Shop;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
@@ -25,31 +30,128 @@ public class JBDCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO{
 
     @Override
     public Long getCount() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Shop");) {
+            ResultSet counter = stmt.executeQuery();
+            if (counter.next()) {
+                return counter.getLong(1);
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to count shops", ex);
+        }
+
+        return 0L;
     }
 
     @Override
     public Shop getByPrimaryKey(Integer primaryKey) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (primaryKey == null) {
+            throw new DAOException("primaryKey is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Shop WHERE shopId = ?")) {
+            stm.setInt(1, primaryKey);
+            try (ResultSet rs = stm.executeQuery()) {
+
+                rs.next();
+                Shop shop = new Shop();
+                shop.setShopId(rs.getInt("shopId"));
+                shop.setUserId(rs.getInt("userId"));
+                shop.setName(rs.getString("name"));
+                shop.setWebsite(rs.getString("website"));
+                shop.setAddress(rs.getString("address"));
+                shop.setLat(rs.getDouble("lat"));
+                shop.setLon(rs.getDouble("lon"));
+                shop.setOpeningHours(rs.getString("openingHours"));
+                shop.setImagePath(rs.getString("imagePath"));
+
+                return shop;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the shop for the passed primary key", ex);
+        }
     }
 
     @Override
     public List<Shop> getAll() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Shop")) {
+            try (ResultSet rs = stm.executeQuery()) {
+                ArrayList<Shop> shops = new ArrayList<>();
+                while(rs.next())
+                {
+                    Shop shop = new Shop();
+                    shop.setShopId(rs.getInt("shopId"));
+                    shop.setUserId(rs.getInt("userId"));
+                    shop.setName(rs.getString("name"));
+                    shop.setWebsite(rs.getString("website"));
+                    shop.setAddress(rs.getString("address"));
+                    shop.setLat(rs.getDouble("lat"));
+                    shop.setLon(rs.getDouble("lon"));
+                    shop.setOpeningHours(rs.getString("openingHours"));
+                    shop.setImagePath(rs.getString("imagePath"));
+                    
+                    shops.add(shop);
+                }
+                return shops;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get shops", ex);
+        }
     }
 
     @Override
-    public Shop update(Shop entity) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Shop update(Shop shop) throws DAOException {
+        try (PreparedStatement stm = CON.prepareStatement("UPDATE Shop SET userId = ?, name = ?, website = ?, address = ?, lat = ?, lon = ?, openingHours = ?, imagePath = ? WHERE shopId = ?;")) {
+            stm.setInt(1, shop.getUserId());
+            stm.setString(2, shop.getName());
+            stm.setString(3, shop.getWebsite());
+            stm.setString(4, shop.getAddress());
+            stm.setDouble(5, shop.getLat());
+            stm.setDouble(6, shop.getLon());
+            stm.setString(7, shop.getOpeningHours());
+            stm.setString(8, shop.getImagePath());
+            stm.setInt(9, shop.getShopId());
+            stm.executeUpdate();
+            
+            return shop;
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to update the shop", ex);
+        }
     }
 
     @Override
-    public void add(Shop entity) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Shop add(Shop shop) throws DAOException {
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Shop (userId, name, website, address, lat, lon, openingHours, imagePath) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS)) {
+            stm.setInt(1, shop.getUserId());
+            stm.setString(2, shop.getName());
+            stm.setString(3, shop.getWebsite());
+            stm.setString(4, shop.getAddress());
+            stm.setDouble(5, shop.getLat());
+            stm.setDouble(6, shop.getLon());
+            stm.setString(7, shop.getOpeningHours());
+            stm.setString(8, shop.getImagePath());
+            stm.executeUpdate();
+            
+            ResultSet rs = stm.getGeneratedKeys();
+            if(rs.next())
+            {
+                int shopId = rs.getInt(1);
+                shop.setShopId(shopId);
+            }
+            return shop;
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to add the shop", ex);
+        }
     }
 
     @Override
     public void removeByPrimaryKey(Integer primaryKey) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (primaryKey == null) {
+            throw new DAOException("primaryKey is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("DELETE FROM Shop WHERE shopId = ?")) {
+            stm.setInt(1, primaryKey);
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to remove the shop", ex);
+        }
     }
 }

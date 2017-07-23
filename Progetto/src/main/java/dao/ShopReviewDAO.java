@@ -6,7 +6,6 @@
 package dao;
 
 import dao.entities.ShopReview;
-import java.util.ArrayList;
 import persistence.utils.dao.DAO;
 
 /**
@@ -21,19 +20,4 @@ public interface ShopReviewDAO extends DAO<ShopReview, Integer>{
      * @return a list with all comments
      */
     //public ArrayList<ShopReview> getReviews(int shopId);
-    /**
-     * Method to insert a new review to a shop
-     * @param shopId related shop
-     * @param userId author of the review
-     * @param text content of the review
-     * @return true if the operation is finished successfully, false otherwise
-     */
-    //public boolean insertReview(int shopId, int userId, String text);
-    /**
-     * Method for sellers to reply a review
-     * @param reviewId the id of the review to reply
-     * @param reply reply content
-     * @return true if the operation is finished successfully, false otherwise
-     */
-    //public boolean replyReview(int reviewId, String reply);
 }

@@ -21,7 +21,7 @@ import persistence.utils.dao.exceptions.DAOFactoryException;
  */
 public interface DAO<ENTITY_CLASS, PRIMARY_KEY> {
 
-    public void add(ENTITY_CLASS entity) throws DAOException;
+    public ENTITY_CLASS add(ENTITY_CLASS entity) throws DAOException;
     public void removeByPrimaryKey(PRIMARY_KEY primaryKey) throws DAOException;
     
     /**
