@@ -5,6 +5,14 @@
  */
 package servlets;
 
+import dao.ComplaintDAO;
+import dao.ItemDAO;
+import dao.ItemReviewDAO;
+import dao.NotificationDAO;
+import dao.PictureDAO;
+import dao.PurchaseDAO;
+import dao.ShopDAO;
+import dao.ShopReviewDAO;
 import dao.UserDAO;
 import dao.entities.User;
 import java.io.IOException;
@@ -35,7 +43,15 @@ public class DebugServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     
-    private UserDAO userDao;
+    private ComplaintDAO complaintDAO;
+    private ItemDAO itemDAO;
+    private ItemReviewDAO itemReviewDAO;
+    private NotificationDAO notificationDAO;
+    private PictureDAO pictureDAO;
+    private PurchaseDAO purchaseDAO;
+    private ShopDAO shopDAO;
+    private ShopReviewDAO shopReviewDAO;
+    private UserDAO userDAO;
 
     @Override
     public void init() throws ServletException {
@@ -44,7 +60,55 @@ public class DebugServlet extends HttpServlet {
             throw new ServletException("Impossible to get dao factory for storage system");
         }
         try {
-            userDao = daoFactory.getDAO(UserDAO.class);
+            complaintDAO = daoFactory.getDAO(ComplaintDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for camplaint storage system", ex);
+        }
+        
+        try {
+            itemDAO = daoFactory.getDAO(ItemDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for item storage system", ex);
+        }
+        
+        try {
+            itemReviewDAO = daoFactory.getDAO(ItemReviewDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for itemReview storage system", ex);
+        }
+        
+        try {
+            notificationDAO = daoFactory.getDAO(NotificationDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for notification storage system", ex);
+        }
+        
+        try {
+            pictureDAO = daoFactory.getDAO(PictureDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for picture storage system", ex);
+        }
+        
+        try {
+            purchaseDAO = daoFactory.getDAO(PurchaseDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for purchase storage system", ex);
+        }
+        
+        try {
+            shopDAO = daoFactory.getDAO(ShopDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+        
+        try {
+            shopReviewDAO = daoFactory.getDAO(ShopReviewDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shopReview storage system", ex);
+        }
+        
+        try {
+            userDAO = daoFactory.getDAO(UserDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for user storage system", ex);
         }
@@ -65,15 +129,15 @@ public class DebugServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             out.println(getServletContext().getContextPath());
             try {
-                User u = userDao.getByPrimaryKey(1);
+                User u = userDAO.getByPrimaryKey(1);
                 u.setEmail("qwer123@gmail.com");
-                userDao.add(u);
+                userDAO.add(u);
                 
                 u.setEmail("qwer1233@gmail.com");
                 u.setName("qwerqadfasdfaqe");
-                userDao.update(u);
+                userDAO.update(u);
                 
-                for(User user : userDao.getAll())
+                for(User user : userDAO.getAll())
                 {
                     out.println(user);
                 }

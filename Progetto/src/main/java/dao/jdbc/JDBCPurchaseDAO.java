@@ -22,9 +22,9 @@ import persistence.utils.dao.jdbc.JDBCDAO;
  * @author Gabriele
  */
 
-public class JBDCPurchaseDAO extends JDBCDAO<Purchase, Integer> implements PurchaseDAO{
+public class JDBCPurchaseDAO extends JDBCDAO<Purchase, Integer> implements PurchaseDAO{
 
-    public JBDCPurchaseDAO(Connection con) {
+    public JDBCPurchaseDAO(Connection con) {
         super(con);
     }
 

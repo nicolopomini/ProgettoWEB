@@ -22,9 +22,9 @@ import persistence.utils.dao.jdbc.JDBCDAO;
  * @author Gabriele
  */
 
-public class JBDCPictureDAO extends JDBCDAO<Picture, Integer> implements PictureDAO{
+public class JDBCPictureDAO extends JDBCDAO<Picture, Integer> implements PictureDAO{
 
-    public JBDCPictureDAO(Connection con) {
+    public JDBCPictureDAO(Connection con) {
         super(con);
     }
 

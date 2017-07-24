@@ -22,9 +22,9 @@ import persistence.utils.dao.jdbc.JDBCDAO;
  * @author Gabriele
  */
 
-public class JBDCComplaintDAO extends JDBCDAO<Complaint, Integer> implements ComplaintDAO{
+public class JDBCComplaintDAO extends JDBCDAO<Complaint, Integer> implements ComplaintDAO{
 
-    public JBDCComplaintDAO(Connection con) {
+    public JDBCComplaintDAO(Connection con) {
         super(con);
     }
     

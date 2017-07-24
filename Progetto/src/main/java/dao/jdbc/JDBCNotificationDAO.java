@@ -22,9 +22,9 @@ import persistence.utils.dao.jdbc.JDBCDAO;
  * @author Gabriele
  */
 
-public class JBDCNotificationDOA extends JDBCDAO<Notification, Integer> implements NotificationDAO{
+public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implements NotificationDAO{
 
-    public JBDCNotificationDOA(Connection con) {
+    public JDBCNotificationDAO(Connection con) {
         super(con);
     } 
 

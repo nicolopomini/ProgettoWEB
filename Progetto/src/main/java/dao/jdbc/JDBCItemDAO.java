@@ -23,12 +23,12 @@ import persistence.utils.dao.jdbc.JDBCDAO;
  * @author Gabriele
  */
 
-public class JBDCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
+public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
 
     private static final double COOR_TO_KM = 0.009;
     private static final double MAX_DISTANCE = 5;
     
-    public JBDCItemDAO(Connection con) {
+    public JDBCItemDAO(Connection con) {
         super(con);
     }
 

@@ -22,9 +22,9 @@ import persistence.utils.dao.jdbc.JDBCDAO;
  * @author Gabriele
  */
 
-public class JBDCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements ShopReviewDAO{
+public class JDBCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements ShopReviewDAO{
 
-    public JBDCShopReviewDAO(Connection con) {
+    public JDBCShopReviewDAO(Connection con) {
         super(con);
     }
 
