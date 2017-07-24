@@ -33,17 +33,17 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
     }
 
     @Override
-    public Long getCount() throws DAOException {
+    public Integer getCount() throws DAOException {
         try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Item");) {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                return rs.getLong(1);
+                return rs.getInt(1);
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count items", ex);
         }
 
-        return 0L;
+        return 0;
     }
 
     @Override
@@ -137,7 +137,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
         if (primaryKey == null) {
             throw new DAOException("primaryKey is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("DELETE FROM Item WHERE userId = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("DELETE FROM Item WHERE itemId = ?")) {
             stm.setInt(1, primaryKey);
             stm.executeUpdate();
         } catch (SQLException ex) {

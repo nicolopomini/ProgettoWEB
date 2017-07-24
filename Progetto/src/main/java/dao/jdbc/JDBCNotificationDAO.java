@@ -29,17 +29,17 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
     } 
 
     @Override
-    public Long getCount() throws DAOException {
+    public Integer getCount() throws DAOException {
         try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Notification");) {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                return rs.getLong(1);
+                return rs.getInt(1);
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count notifications", ex);
         }
 
-        return 0L;
+        return 0;
     }
 
     @Override
@@ -113,7 +113,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
             if(rs.next())
             {
                 int notificationId = rs.getInt(1);
-                notification.setUserId(notificationId);
+                notification.setNotificationId(notificationId);
             }
             return notification;
         } catch (SQLException ex) {

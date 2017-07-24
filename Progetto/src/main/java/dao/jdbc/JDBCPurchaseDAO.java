@@ -29,17 +29,17 @@ public class JDBCPurchaseDAO extends JDBCDAO<Purchase, Integer> implements Purch
     }
 
     @Override
-    public Long getCount() throws DAOException {
+    public Integer getCount() throws DAOException {
         try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Purchase");) {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                return rs.getLong(1);
+                return rs.getInt(1);
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count purchases", ex);
         }
 
-        return 0L;
+        return 0;
     }
 
     @Override
@@ -119,7 +119,7 @@ public class JDBCPurchaseDAO extends JDBCDAO<Purchase, Integer> implements Purch
             if(rs.next())
             {
                 int purchaseId = rs.getInt(1);
-                purchase.setUserId(purchaseId);
+                purchase.setPurchaseId(purchaseId);
             }
             return purchase;
         } catch (SQLException ex) {

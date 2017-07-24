@@ -29,17 +29,17 @@ public class JDBCPictureDAO extends JDBCDAO<Picture, Integer> implements Picture
     }
 
     @Override
-    public Long getCount() throws DAOException {
+    public Integer getCount() throws DAOException {
         try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Picture");) {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                return rs.getLong(1);
+                return rs.getInt(1);
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count pictures", ex);
         }
 
-        return 0L;
+        return 0;
     }
 
     @Override

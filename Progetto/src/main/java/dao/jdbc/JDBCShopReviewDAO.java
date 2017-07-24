@@ -29,17 +29,17 @@ public class JDBCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements S
     }
 
     @Override
-    public Long getCount() throws DAOException {
+    public Integer getCount() throws DAOException {
         try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM ShopReview");) {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                return rs.getLong(1);
+                return rs.getInt(1);
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count shopReviews", ex);
         }
 
-        return 0L;
+        return 0;
     }
 
     @Override
@@ -81,6 +81,8 @@ public class JDBCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements S
                     shopReview.setUserId(rs.getInt("userId"));
                     shopReview.setShopId(rs.getInt("shopId"));
                     shopReview.setReviewTime(rs.getString("reviewTime"));
+                    
+                    shopReviews.add(shopReview);
                 }
                 return shopReviews;
             }

@@ -14,9 +14,18 @@ import dao.PurchaseDAO;
 import dao.ShopDAO;
 import dao.ShopReviewDAO;
 import dao.UserDAO;
+import dao.entities.Complaint;
+import dao.entities.Item;
+import dao.entities.ItemReview;
+import dao.entities.Notification;
+import dao.entities.Picture;
+import dao.entities.Purchase;
+import dao.entities.Shop;
+import dao.entities.ShopReview;
 import dao.entities.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -127,22 +136,20 @@ public class DebugServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            out.println(getServletContext().getContextPath());
+            out.print("Test:<br><br>");
             try {
-                User u = userDAO.getByPrimaryKey(1);
-                u.setEmail("qwer123@gmail.com");
-                userDAO.add(u);
-                
-                u.setEmail("qwer1233@gmail.com");
-                u.setName("qwerqadfasdfaqe");
-                userDAO.update(u);
-                
-                for(User user : userDAO.getAll())
-                {
-                    out.println(user);
-                }
+                testUser(out);
+                testShop(out);
+                testItem(out);
+                testPicture(out);
+                testNotification(out);
+                testPurchase(out);
+                testComplaint(out);
+                testItemReview(out);
+                testShopReview(out);
             } catch (DAOException ex) {
                 Logger.getLogger(DebugServlet.class.getName()).log(Level.SEVERE, null, ex);
+                out.println("<br>" + ex);
             }
         }
     }
@@ -169,5 +176,273 @@ public class DebugServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
+    
+    private void testUser(PrintWriter out) throws DAOException
+    {
+        User u = new User();
+        
+        u.setName("asdf");
+        u.setAddress("asdf");
+        u.setEmail(UUID.randomUUID().toString());
+        u.setPassword("asdf");
+        u.setSurname("asdf");
+        u.setType("admin");
+        u.setVerificationCode("asdf");
+        
+        userDAO.add(u);
+        
+        u.setEmail(UUID.randomUUID().toString());
+        userDAO.add(u);
+        
+        out.print(userDAO.getByPrimaryKey(1) + "<br>");
+        
+        u.setSurname("asdfasdgasg");
+        userDAO.update(u);
+        
+        for(User user : userDAO.getAll())
+        {
+            out.print(user + "<br>");
+        }
+        
+        userDAO.removeByPrimaryKey(userDAO.getCount());
+        
+        out.print("<br>");
+    }
+    
+    private void testShop(PrintWriter out) throws DAOException
+    {
+        Shop s = new Shop();
+        
+        s.setAddress("asdf");
+        s.setImagePath("asdf");
+        s.setLat(0d);
+        s.setLon(0d);
+        s.setName("asdf");
+        s.setOpeningHours("asdf");
+        s.setUserId(1);
+        s.setWebsite("asdf");
+        
+        shopDAO.add(s);
+        
+        s.setName("qwer");
+        shopDAO.add(s);
+        
+        out.print(shopDAO.getByPrimaryKey(1) + "<br>");
+        
+        s.setOpeningHours("qwer");
+        shopDAO.update(s);
+        
+        for(Shop shop : shopDAO.getAll())
+        {
+            out.print(shop + "<br>");
+        }
+        
+        shopDAO.removeByPrimaryKey(shopDAO.getCount());
+        
+        out.print("<br>");
+    }
+    
+    private void testItem(PrintWriter out) throws DAOException
+    {
+        Item i = new Item();
+        
+        i.setCategory("home");
+        i.setDescription("asdf");
+        i.setName("asdf");
+        i.setPrice(1d);
+        i.setShopId(1);
+        
+        itemDAO.add(i);
+        
+        i.setName("qwer");
+        itemDAO.add(i);
+        
+        out.print(itemDAO.getByPrimaryKey(1) + "<br>");
+        
+        i.setDescription("qwer");
+        itemDAO.update(i);
+        
+        for(Item item : itemDAO.getAll())
+        {
+            out.print(item + "<br>");
+        }
+        
+        itemDAO.removeByPrimaryKey(itemDAO.getCount());
+        
+        out.print("<br>");
+    }
+    
+    private void testPicture(PrintWriter out) throws DAOException
+    {
+        Picture p = new Picture();
+        
+        p.setPath("asdf");
+        p.setItemId(1);
+        
+        pictureDAO.add(p);
+        
+        p.setPath("qwer");
+        pictureDAO.add(p);
+        
+        out.print(pictureDAO.getByPrimaryKey(1) + "<br>");
+        
+        p.setPath("asdfasdgasg");
+        pictureDAO.update(p);
+        
+        for(Picture picture : pictureDAO.getAll())
+        {
+            out.print(picture + "<br>");
+        }
+        
+        pictureDAO.removeByPrimaryKey(pictureDAO.getCount());
+        
+        out.print("<br>");
+    }
+    
+    private void testNotification(PrintWriter out) throws DAOException
+    {
+        Notification n = new Notification();
+        
+        n.setNotificationText("asdf");
+        n.setSeen(false);
+        n.setUserId(1);
+        
+        notificationDAO.add(n);
+        
+        n.setNotificationText("qwer");
+        notificationDAO.add(n);
+        
+        out.print(notificationDAO.getByPrimaryKey(1) + "<br>");
+        
+        n.setNotificationText("asdfasdgasg");
+        notificationDAO.update(n);
+        
+        for(Notification notification : notificationDAO.getAll())
+        {
+            out.print(notification + "<br>");
+        }
+        
+        notificationDAO.removeByPrimaryKey(notificationDAO.getCount());
+        
+        out.print("<br>");
+    }
+    
+    private void testPurchase(PrintWriter out) throws DAOException
+    {
+        Purchase p = new Purchase();
+        
+        p.setItemId(1);
+        p.setPurchaseTime("1975-01-01 00:00:01");
+        p.setQuantity(5);
+        p.setUserId(1);
+        
+        purchaseDAO.add(p);
+        
+        p.setQuantity(2);
+        purchaseDAO.add(p);
+        
+        out.print(purchaseDAO.getByPrimaryKey(1) + "<br>");
+        
+        p.setQuantity(4);
+        purchaseDAO.update(p);
+        
+        for(Purchase purchase : purchaseDAO.getAll())
+        {
+            out.print(purchase + "<br>");
+        }
+        
+        purchaseDAO.removeByPrimaryKey(purchaseDAO.getCount());
+        
+        out.print("<br>");
+    }
+    
+    private void testComplaint(PrintWriter out) throws DAOException
+    {
+        Complaint c = new Complaint();
+        
+        c.setComplaintText("asdf");
+        c.setComplaintTime("1975-01-01 00:00:01");
+        c.setPurchaseId(1);
+        c.setReply("qwer");
+        c.setStatus("new");
+        
+        complaintDAO.add(c);
+        
+        c.setComplaintText("qwer");
+        complaintDAO.add(c);
+        
+        out.print(complaintDAO.getByPrimaryKey(1) + "<br>");
+        
+        c.setComplaintText("qwer");
+        complaintDAO.update(c);
+        
+        for(Complaint complaint : complaintDAO.getAll())
+        {
+            out.print(complaint + "<br>");
+        }
+        
+        complaintDAO.removeByPrimaryKey(complaintDAO.getCount());
+        
+        out.print("<br>");
+    }
+    
+    private void testItemReview(PrintWriter out) throws DAOException
+    {
+        ItemReview ir = new ItemReview();
+        
+        ir.setItemId(1);
+        ir.setReply("asdf");
+        ir.setReviewText("asdf");
+        ir.setReviewTime("1975-01-01 00:00:01");
+        ir.setUserId(1);
+        
+        itemReviewDAO.add(ir);
+        
+        ir.setReviewText("qwer");
+        itemReviewDAO.add(ir);
+        
+        out.print(itemReviewDAO.getByPrimaryKey(1) + "<br>");
+        
+        ir.setReviewText("qwer");
+        itemReviewDAO.update(ir);
+        
+        for(ItemReview itemReview : itemReviewDAO.getAll())
+        {
+            out.print(itemReview + "<br>");
+        }
+        
+        itemReviewDAO.removeByPrimaryKey(itemReviewDAO.getCount());
+        
+        out.print("<br>");
+    }
+    
+    private void testShopReview(PrintWriter out) throws DAOException
+    {
+        ShopReview sr = new ShopReview();
+        
+        sr.setShopId(1);
+        sr.setReply("asdf");
+        sr.setReviewText("asdf");
+        sr.setReviewTime("1975-01-01 00:00:01");
+        sr.setUserId(1);
+        
+        shopReviewDAO.add(sr);
+        
+        sr.setReviewText("qwer");
+        shopReviewDAO.add(sr);
+        
+        out.print(shopReviewDAO.getByPrimaryKey(1) + "<br>");
+        
+        sr.setReviewText("qwer");
+        shopReviewDAO.update(sr);
+        
+        for(ShopReview shopReview : shopReviewDAO.getAll())
+        {
+            out.print(shopReview + "<br>");
+        }
+        
+        shopReviewDAO.removeByPrimaryKey(shopReviewDAO.getCount());
+        
+        out.print("<br>");
+    }
 }

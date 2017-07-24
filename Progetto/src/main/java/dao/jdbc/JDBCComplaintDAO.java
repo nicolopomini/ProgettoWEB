@@ -29,17 +29,17 @@ public class JDBCComplaintDAO extends JDBCDAO<Complaint, Integer> implements Com
     }
     
     @Override
-    public Long getCount() throws DAOException {
+    public Integer getCount() throws DAOException {
         try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Complaint");) {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                return rs.getLong(1);
+                return rs.getInt(1);
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count complaints", ex);
         }
 
-        return 0L;
+        return 0;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class JDBCComplaintDAO extends JDBCDAO<Complaint, Integer> implements Com
         if (primaryKey == null) {
             throw new DAOException("primaryKey is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Complaint WHERE userId = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Complaint WHERE complaintId = ?")) {
             stm.setInt(1, primaryKey);
             try (ResultSet rs = stm.executeQuery()) {
 
@@ -69,7 +69,7 @@ public class JDBCComplaintDAO extends JDBCDAO<Complaint, Integer> implements Com
 
     @Override
     public List<Complaint> getAll() throws DAOException {
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Complaints")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Complaint")) {
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<Complaint> complaints = new ArrayList<>();
                 while(rs.next())

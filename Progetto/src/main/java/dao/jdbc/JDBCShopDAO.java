@@ -29,17 +29,17 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO{
     }
 
     @Override
-    public Long getCount() throws DAOException {
+    public Integer getCount() throws DAOException {
         try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Shop");) {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                return rs.getLong(1);
+                return rs.getInt(1);
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count shops", ex);
         }
 
-        return 0L;
+        return 0;
     }
 
     @Override
