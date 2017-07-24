@@ -105,7 +105,7 @@ insert into User (name, surname, email, password, address, verificationCode, typ
 	("Michele","Armellini","michelearmellini@gmail.com","qwerty"," ","","admin"),
 	("Marco","Merlin","marcomerlin@gmail.com","qwerty"," ","","admin");
 
-	insert into Shop (name,website,address,lat,lon,openingHours,userId,pathImage) values
+	insert into Shop (name,website,address,lat,lon,openingHours,userId,imagePath) values
 		("Le Group","legroupefashion.com","via del corso, 282, 00187 Roma",41.8972018,12.4820151,"Lun-Dom: 10 - 20",2,"img/1.JPG"),
 		("Le Group","legroupefashion.com","via nazionale, 195, 00184 Roma",41.8996288,12.4912549,"Lun-Dom: 10 - 20",2,"img/1.JPG"),
 		("Feltrinelli","lafeltrinelli.it","Largo di Torre Argentina, 5/A, 00186 Roma",41.89611,12.47663,"Lun-Dom 9 - 21",3,"img/2.jpeg"),
@@ -117,8 +117,29 @@ insert into User (name, surname, email, password, address, verificationCode, typ
 		("Deatronic Srl","deatronic.com","Via Giulianello, 1, 00178 Roma",41.8669907,12.5389056,"",6,"img/6.jpg"),
 		("G.B. Elettronica","stores.ebay.it","Viale dei Consoli, 7, 00175 Roma",41.8638302802915,12.5571177802915,"Lun-Sab 9-13, 16-20",6,"img/7.jpg");
 
+insert into Item (name, description, category, price, shopId) values
+	("iPhone", "Apple iPhone", "electronics",749.99,10),
+	("iPhone", "Apple iPhone", "electronics",749.99,9),
+	("I Pilastri della Terra", "Libro 'I Pilastri della terra', Ken Follett","books",15.49,3),
+	("I Pilastri della Terra", "Libro 'I Pilastri della terra', Ken Follett","books",19.99,4),
+	("I Pilastri della Terra", "Libro 'I Pilastri della terra', Ken Follett","books",12.34,5);
 
+insert into Picture (path,itemID) values
+	("img/iphone.jpg",1),
+	("img/iphone.jpg",2),
+	("img/iphone7.jpg",1),
+	("img/iphone7.jpg",2),
+	("img/pilastri.jpg",3),
+	("img/pilastri.jpg",4),
+	("img/pilastri.jpg",5);
 
+insert into ShopReview (reviewText, reply, userId, shopId, reviewTime, score) values
+	("Ottimo negozio", null, 22, 4, now(), 5),
+	("Bello", "Grazie", 31, 4, now(), 5),
+	("Cosi cosi", null, 22, 4, now(), 2);
 
+insert into ItemReview (reviewText, reply, userId, itemId, reviewTime, score) values
+	("Bello",null, 11, 3, now(), 4),
+	("Lungo!!","eddai!", 11, 3, now(), 3);
 
 

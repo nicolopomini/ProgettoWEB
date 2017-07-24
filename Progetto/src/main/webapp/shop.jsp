@@ -4,13 +4,66 @@
     Author     : pomo
 --%>
 
+<%@page import="java.util.Locale"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.text.DateFormat"%>
+<%@page import="java.util.Date"%>
+<%@page import="dao.entities.User"%>
+<%@page import="dao.ShopReviewDAO"%>
+<%@page import="dao.entities.ShopReview"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="persistence.utils.dao.exceptions.DAOFactoryException"%>
+<%@page import="dao.ShopDAO"%>
+<%@page import="persistence.utils.dao.factories.DAOFactory"%>
+<%@page import="dao.entities.Shop"%>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     //aggiungere shopid
-    boolean venditore = true, logged = false, cancomment = true;
-    //venditore: gestore di questo negozio
-    //cancomment: ha comprato da questo negozio
-    String name = "Prova";
+    int shopid = Integer.parseInt(request.getParameter("shopid"));
+    boolean venditore, logged, cancomment;
+    Shop shop;
+    User user;
+    double valutation;
+    int progress;
+    ArrayList<ShopReview> reviews;
+    String location;
+    DAOFactory daoFactory;
+    ShopDAO shopDAO;
+    ShopReviewDAO shopReviewDAO;
+    daoFactory = (DAOFactory) application.getAttribute("daoFactory");
+    if (daoFactory == null) {
+        throw new ServletException("Impossible to get dao factory for storage system");
+    }
+    try {
+            shopDAO = daoFactory.getDAO(ShopDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+    try {
+            shopReviewDAO = daoFactory.getDAO(ShopReviewDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+    shop = shopDAO.getByPrimaryKey(shopid);
+    valutation = 3.2; //DA CAMBIARE!
+    progress = (int)(valutation * 10);
+    location = shop.getAddress().replace(' ', '+');
+    reviews = shopReviewDAO.getByShopId(shopid);
+    user = (User)session.getAttribute("user");
+    request.setAttribute("user", user);
+    request.setAttribute("shop", shop);
+    if(user == null) {  //non è loggato
+        logged = false;
+        venditore = false;
+        cancomment = false;
+    }
+    else {
+        logged = true;
+        venditore = user.getUserId() == shop.getUserId();
+        //cancomment = shopDAO.canComment(shop.getShopId(), user.getUserId());
+        cancomment = true;
+    }
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +71,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title><%= name %></title>
+        <title><%= shop.getName() %></title>
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
     </head>
@@ -47,7 +100,7 @@
                     <% } %>
                   <li><a href="cart.jsp">Carrello</a></li>
                   <% if(logged) { %>
-                  <li><a href="#">Nome e Cognome</a></li>
+                  <li><a href="#"><%= user.getName() + " " + user.getSurname() %></a></li>
                   <li><a href="#">Esci</a></li>
                   <% }else {%>
                   <li><a href="#">Login</a></li>
@@ -62,54 +115,84 @@
             
             <!-- Contenuto pagina -->
             <div class="row">
+                <% if(!reviews.isEmpty()) { %>
                 <div class="col-md-8">
+                <% } %>
                     <center>
-                    <h1><%= name %></h1>
-                    <img src="img/big.jpg" class="img-responsive" alt="Responsive image">
+                    <h1><%= shop.getName() %></h1>
+                    <img src="${pageContext.request.contextPath}/<%=shop.getImagePath()%>" class="img-responsive" alt="Responsive image">
                     </center>
                     <br/>
                     <div id="info">
-                        <p>Website: <a href="www.google.com" target="_blank">sito</a></p>
+                        <ul class="list-group">
+                            <li class="list-group-item">Website: <a href="<%= shop.getWebsite() %>" target="_blank"><%= shop.getWebsite() %></a></li>
+                            <li class="list-group-item">Orari del negozio: <%=shop.getOpeningHours()%></li>
+                        </ul>
+                        <br/>
+                        <% if(reviews.isEmpty()) { %>
+                        <h5 style="text-align: center">Nessuna recensione</h5>
+                        <%}%>
                     </div>
                     <div id="map">
                         <center>
                             <h3>Dove trovarci</h3>
                             <div class="embed-responsive embed-responsive-16by9">
-                              <iframe class="embed-responsive-item" src="//www.google.com/maps/embed/v1/place?q=Piazza+Venezia+38122+Trento&key=AIzaSyAOzJPvYZ2Mq5oCbxK5v1R1HBRy5KyfRUM"></iframe>
+                              <iframe class="embed-responsive-item" src="//www.google.com/maps/embed/v1/place?q=<%=location%>&key=AIzaSyAOzJPvYZ2Mq5oCbxK5v1R1HBRy5KyfRUM"></iframe>
                             </div>
                         </center>
                     </div>
                     <br/>
                     <br/>
+                <% if(!reviews.isEmpty()) { %>
                 </div>
                 <div class="col-md-4" id="comments">
-                    <h5>Valutazione media degli utenti: 3.0/5</h5>
+                <% } %>
+                    <% if(!reviews.isEmpty()) { %>
+                    <h5>Valutazione media degli utenti: <%=valutation%>/5</h5>
                     <div class="progress">
                         <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                          <span class="sr-only">60</span>
+                          <span class="sr-only"><%=progress%></span>
                         </div>
                       </div>
                     <div class="commenti">
                         <!--Per ogni commento:-->
+                        <% for(ShopReview s : reviews) { 
+                        SimpleDateFormat dt = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss"); 
+                        Date date = dt.parse(s.getReviewTime()); 
+                        %>
                         <ul class="list-group">
-                            <li class="list-group-item"><b>Nome Utente</b>: commento</li>
-                            <li class="list-group-item"><b>Venditore</b>: risposta commento</li>
+                            <fmt:formatDate value = "<%=date%>" /> : <%for(int i = 0; i < s.getScore(); i++) {%><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <%}%>
+                            <li class="list-group-item"><%=s.getReviewText()%></li>
+                            <% if(s.getReply() != null) { %>
+                            <li class="list-group-item"><%=s.getReply()%></li>
+                            <% } else if(venditore) { %>
+                            <form class="form-inline" method="POST" action="ShopComment">
+                                <input type="hidden" name="reply" value="1">
+                                <input type="hidden" name="reviewid" value="<%=s.getShopReviewId()%>">
+                                <div class="form-group">
+                                  <input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" required>
+                                </div>
+                                <button type="submit" class="btn btn-default">Invia</button>
+                              </form>
+                            <% } %>
                         </ul>
-                        <ul class="list-group">
-                            <li class="list-group-item"><b>Nome Utente</b>: commento 2 senza rispodta feobe vdovmelbprv!</li>
-                        </ul>
+                        <% } %>
                     </div>
                     <% if(cancomment) { %>
                     <form class="form-inline" method="POST" action="ShopComment">
                         <div class="form-group">
-                          <input type="text" class="form-control" id="exampleInputName2" placeholder="Inserisci un commento" name="newcomment">
+                          <input type="text" class="form-control" placeholder="Inserisci un commento" name="newcomment" required>
+                          <input type="number" step="1" min="0" max="5" class="form-control" name="score" placeholder="Voto" required>
                         </div>
                         <button type="submit" class="btn btn-default">Invia</button>
                       </form>
                     <% } else { %>
                     <p>Per lasciare un commento devi aver aquistato in questo negozio.</p>
                     <% } %>
+                    <% } %>
+                <% if(!reviews.isEmpty()) { %>
                 </div>
+                <% } %>
             </div>
             <!--Fine contenuto-->
             <% if(venditore) { %>
