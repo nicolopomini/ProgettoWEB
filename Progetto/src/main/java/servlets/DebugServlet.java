@@ -239,6 +239,8 @@ public class DebugServlet extends HttpServlet {
         
         shopDAO.removeByPrimaryKey(shopDAO.getCount());
         
+        out.print("Can comment " + shopDAO.canComment(1, 1) + "<br>");
+        
         out.print("<br>");
     }
     
@@ -269,6 +271,9 @@ public class DebugServlet extends HttpServlet {
         
         itemDAO.removeByPrimaryKey(itemDAO.getCount());
         
+        out.print("Can comment " + itemDAO.canComment(1, 1) + "<br>");
+        out.print("Nearby " + itemDAO.getItemNearby(i).size() + "<br>");
+        
         out.print("<br>");
     }
     
@@ -295,6 +300,8 @@ public class DebugServlet extends HttpServlet {
         }
         
         pictureDAO.removeByPrimaryKey(pictureDAO.getCount());
+        
+        out.print("By item " + pictureDAO.getByItemId(1) + "<br>");
         
         out.print("<br>");
     }
@@ -395,6 +402,7 @@ public class DebugServlet extends HttpServlet {
         ir.setReviewText("asdf");
         ir.setReviewTime("1975-01-01 00:00:01");
         ir.setUserId(1);
+        ir.setScore(5);
         
         itemReviewDAO.add(ir);
         
@@ -413,6 +421,9 @@ public class DebugServlet extends HttpServlet {
         
         itemReviewDAO.removeByPrimaryKey(itemReviewDAO.getCount());
         
+        out.print("Average " + itemReviewDAO.getAverageScoreByItemId(1) + "<br>");
+        out.print("By item " + itemReviewDAO.getByItemId(1).size() + "<br>");
+        
         out.print("<br>");
     }
     
@@ -425,6 +436,7 @@ public class DebugServlet extends HttpServlet {
         sr.setReviewText("asdf");
         sr.setReviewTime("1975-01-01 00:00:01");
         sr.setUserId(1);
+        sr.setScore(5);
         
         shopReviewDAO.add(sr);
         
@@ -442,6 +454,9 @@ public class DebugServlet extends HttpServlet {
         }
         
         shopReviewDAO.removeByPrimaryKey(shopReviewDAO.getCount());
+        
+        out.print("Average " + shopReviewDAO.getAverageScoreByShopId(1) + "<br>");
+        out.print("By shop " + shopReviewDAO.getByShopId(1).size() + "<br>");
         
         out.print("<br>");
     }

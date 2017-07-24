@@ -16,6 +16,7 @@ public class ItemReview {
     private Integer userId;
     private Integer itemId;
     private String reviewTime;
+    private Integer score;
 
     public Integer getItemReviewId() {
         return itemReviewId;
@@ -39,6 +40,10 @@ public class ItemReview {
 
     public String getReviewTime() {
         return reviewTime;
+    }
+
+    public Integer getScore() {
+        return score;
     }
 
     public void setItemReviewId(Integer itemReviewId) {
@@ -65,8 +70,12 @@ public class ItemReview {
         this.reviewTime = reviewTime;
     }
 
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
     @Override
     public String toString() {
-        return "ItemReview{" + "itemReviewId=" + itemReviewId + ", reviewText=" + reviewText + ", reply=" + reply + ", userId=" + userId + ", itemId=" + itemId + ", reviewTime=" + reviewTime + '}';
+        return "ItemReview{" + "itemReviewId=" + itemReviewId + ", reviewText=" + reviewText + ", reply=" + reply + ", userId=" + userId + ", itemId=" + itemId + ", reviewTime=" + reviewTime + ", score=" + score + '}';
     }
 }

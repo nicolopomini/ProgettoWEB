@@ -21,5 +21,7 @@ public interface ItemReviewDAO extends DAO<ItemReview, Integer>{
      * @return a list with all comments
      * @throws persistence.utils.dao.exceptions.DAOException
      */
-    public ArrayList<ItemReview> getByItem(Integer itemId) throws DAOException;
+    public ArrayList<ItemReview> getByItemId(Integer itemId) throws DAOException;
+    
+    public Double getAverageScoreByItemId(Integer itemId) throws DAOException;
 }

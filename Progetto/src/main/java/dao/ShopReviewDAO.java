@@ -23,4 +23,6 @@ public interface ShopReviewDAO extends DAO<ShopReview, Integer>{
      * @throws persistence.utils.dao.exceptions.DAOException
      */
     public ArrayList<ShopReview> getByShopId(Integer shopId) throws DAOException;
+    
+    public Double getAverageScoreByShopId(Integer shopId) throws DAOException;
 }

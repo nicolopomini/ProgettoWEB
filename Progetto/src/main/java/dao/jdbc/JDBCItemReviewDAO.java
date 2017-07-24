@@ -59,6 +59,7 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
                 itemReview.setUserId(rs.getInt("userId"));
                 itemReview.setItemId(rs.getInt("itemId"));
                 itemReview.setReviewTime(rs.getString("reviewTime"));
+                itemReview.setScore(rs.getInt("score"));
 
                 return itemReview;
             }
@@ -81,6 +82,8 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
                     itemReview.setUserId(rs.getInt("userId"));
                     itemReview.setItemId(rs.getInt("itemId"));
                     itemReview.setReviewTime(rs.getString("reviewTime"));
+                    itemReview.setScore(rs.getInt("score"));
+                    
                     itemReviews.add(itemReview);
                 }
                 return itemReviews;
@@ -92,13 +95,14 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
 
     @Override
     public ItemReview update(ItemReview itemReview) throws DAOException {
-        try (PreparedStatement stm = CON.prepareStatement("UPDATE ItemReview SET reviewText = ?, reply = ?, userId = ?, itemId = ?, reviewTime = ? WHERE itemReviewId = ?;")) {
+        try (PreparedStatement stm = CON.prepareStatement("UPDATE ItemReview SET reviewText = ?, reply = ?, userId = ?, itemId = ?, reviewTime = ?, score = ? WHERE itemReviewId = ?;")) {
             stm.setString(1, itemReview.getReviewText());
             stm.setString(2, itemReview.getReply());
             stm.setInt(3, itemReview.getUserId());
             stm.setInt(4, itemReview.getItemId());
             stm.setString(5, itemReview.getReviewTime());
-            stm.setInt(6, itemReview.getItemReviewId());
+            stm.setInt(6, itemReview.getScore());
+            stm.setInt(7, itemReview.getItemReviewId());
             stm.executeUpdate();
             return itemReview;
         } catch (SQLException ex) {
@@ -108,12 +112,13 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
 
     @Override
     public ItemReview add(ItemReview itemReview) throws DAOException {
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO ItemReview (reviewText, reply, userId, itemId, reviewTime) VALUES (?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO ItemReview (reviewText, reply, userId, itemId, reviewTime, score) VALUES (?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS)) {
             stm.setString(1, itemReview.getReviewText());
             stm.setString(2, itemReview.getReply());
             stm.setInt(3, itemReview.getUserId());
             stm.setInt(4, itemReview.getItemId());
             stm.setString(5, itemReview.getReviewTime());
+            stm.setInt(6, itemReview.getScore());
             stm.executeUpdate();
             
             ResultSet rs = stm.getGeneratedKeys();
@@ -142,7 +147,7 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
     }
 
     @Override
-    public ArrayList<ItemReview> getByItem(Integer itemId) throws DAOException {
+    public ArrayList<ItemReview> getByItemId(Integer itemId) throws DAOException {
         if (itemId == null) {
             throw new DAOException("itemId is null");
         }
@@ -159,6 +164,8 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
                     itemReview.setUserId(rs.getInt("userId"));
                     itemReview.setItemId(rs.getInt("itemId"));
                     itemReview.setReviewTime(rs.getString("reviewTime"));
+                    itemReview.setScore(rs.getInt("score"));
+                    
                     itemReviews.add(itemReview);
                 }
                 return itemReviews;
@@ -166,5 +173,22 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get itemReviews for the passed itemId", ex);
         }
+    }
+
+    @Override
+    public Double getAverageScoreByItemId(Integer itemId) throws DAOException {
+        if (itemId == null) {
+            throw new DAOException("itemId is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT AVG(score) FROM ItemReview WHERE itemId = ?");) {
+            stm.setInt(1, itemId);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get average score", ex);
+        }
+        return 0d;
     }
 }
