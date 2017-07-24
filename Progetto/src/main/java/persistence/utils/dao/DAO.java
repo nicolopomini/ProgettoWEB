@@ -35,7 +35,7 @@ public interface DAO<ENTITY_CLASS, PRIMARY_KEY> {
      * @author Stefano Chirico
      * @since 1.0.170417
      */
-    public Long getCount() throws DAOException;
+    public Integer getCount() throws DAOException;
 
     /**
      * Returns the {@code ENTITY_CLASS} instance of the storage system record
