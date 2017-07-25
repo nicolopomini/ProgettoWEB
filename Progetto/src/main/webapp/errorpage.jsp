@@ -1,6 +1,6 @@
 <%-- 
-    Document   : errordb
-    Created on : Jul 24, 2017, 3:25:32 PM
+    Document   : errorpage
+    Created on : Jul 25, 2017, 1:41:49 PM
     Author     : pomo
 --%>
 
@@ -60,7 +60,7 @@
             <!-- Fine menu -->
             <div class="starter-template">
                 <h1>Errore</h1>
-                <p class="lead">Si è verificato un errore nel collegamento con il database</p>
+                <p class="lead">L'elemento richiesto non esiste o non è disponibile. Assicurati di aver cercato quello che effettivamente desideravi cercare.</p>
               </div>
             <footer class="footer">
                   <p class="text-muted">Footer content</p>

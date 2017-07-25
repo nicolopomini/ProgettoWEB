@@ -4,7 +4,7 @@
     <context-param>
         <description>The url of the JDBC persistence system database position</description>
         <param-name>dburl</param-name>
-        <param-value>jdbc:mysql://127.0.0.1:3306/WebProject</param-value>
+        <param-value>jdbc:mysql://127.0.0.1:3306/webproject</param-value>
     </context-param>
     
     <context-param>
@@ -16,7 +16,7 @@
     <context-param>
         <description>Password for db</description>
         <param-name>dbpassword</param-name>
-        <param-value>root</param-value>
+        <param-value>ciao</param-value>
     </context-param>
     
     <servlet>
@@ -43,6 +43,11 @@
         <servlet-name>InsertItem</servlet-name>
         <servlet-class>servlets.InsertItem</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ShopCommentReply</servlet-name>
+        <servlet-class>servlets.ShopCommentReply</servlet-class>
+    </servlet>
+    
     <servlet-mapping>
         <servlet-name>DebugServlet</servlet-name>
         <url-pattern>/DebugServlet</url-pattern>
@@ -67,9 +72,26 @@
         <servlet-name>InsertItem</servlet-name>
         <url-pattern>/InsertItem</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShopCommentReply</servlet-name>
+        <url-pattern>/ShopCommentReply</url-pattern>
+    </servlet-mapping>
     
     <listener>
         <description>ServletContextListener</description>
         <listener-class>listeners.WebAppContextListener</listener-class>
     </listener>
+    
+    <error-page>
+        <exception-type>java.lang.NullPointerException</exception-type>
+        <location>/errorpage.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>javax.servlet.ServletException</exception-type>
+        <location>/errordb.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>persistence.utils.dao.exceptions.DAOFactoryException</exception-type>
+        <location>/errordb.jsp</location>
+    </error-page>
 </web-app>

@@ -5,6 +5,8 @@
  */
 package servlets;
 
+import dao.ShopDAO;
+import dao.entities.Shop;
 import utils.MultipartHandler;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +20,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import persistence.utils.dao.exceptions.DAOException;
+import persistence.utils.dao.exceptions.DAOFactoryException;
+import persistence.utils.dao.factories.DAOFactory;
+import utils.StringUtils;
 
 /**
  *
@@ -26,6 +33,21 @@ import javax.servlet.http.Part;
  */
 @WebServlet(name = "ModifyShop", urlPatterns = {"/ModifyShop"})
 public class ModifyShop extends HttpServlet {
+    private ShopDAO shopDAO;
+    @Override
+    public void init() throws ServletException {
+        super.init(); 
+        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+        if (daoFactory == null) {
+            throw new ServletException("Impossible to get dao factory for storage system");
+        }
+        try {
+            shopDAO = daoFactory.getDAO(ShopDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+    }
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -52,6 +74,8 @@ public class ModifyShop extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Shop shop = (Shop)session.getAttribute("shop");
         String name = null, website = null, address = null, orari = null, image = null;
         double lat = 0.0, lng = 0.0;
         String encoding = request.getCharacterEncoding();
@@ -64,13 +88,13 @@ public class ModifyShop extends HttpServlet {
                     image = MultipartHandler.processImage(p,getServletContext().getRealPath("/"));
                 else {  //testo
                     if(p.getName().equals("newname"))
-                        name = MultipartHandler.getStringValue(p, encoding);
+                        name = StringUtils.checkInputString(MultipartHandler.getStringValue(p, encoding));
                     else if(p.getName().equals("website"))
-                        website = MultipartHandler.getStringValue(p, encoding);
+                        website = StringUtils.checkInputString(MultipartHandler.getStringValue(p, encoding));
                     else if(p.getName().equals("address"))
                         address = MultipartHandler.getStringValue(p, encoding);
                     else if(p.getName().equals("orari"))
-                        orari = MultipartHandler.getStringValue(p, encoding);
+                        orari = StringUtils.checkInputString(MultipartHandler.getStringValue(p, encoding));
                 }
             }
         }
@@ -88,6 +112,29 @@ public class ModifyShop extends HttpServlet {
             lng = coordinates.getJsonNumber("lng").doubleValue();
         }
         //query di modifica
+        if(name != null)
+            shop.setName(name);
+        if(website != null)
+            shop.setWebsite(website);
+        if(address != null) {
+            shop.setAddress(address);
+            shop.setLat(lat);
+            shop.setLon(lng);
+        }
+        if(orari != null)
+            shop.setOpeningHours(orari);
+        if(image != null)
+            shop.setImagePath(image);
+        try {
+            shopDAO.update(shop);
+        } catch (DAOException ex) {
+            throw new ServletException("Impossible to update the shop", ex);
+        }
+        String contextPath = getServletContext().getContextPath();
+        if(!contextPath.endsWith("/"))
+            contextPath += "/";
+        contextPath += "shop.jsp?shopid=" + shop.getShopId() + "&message=updated";
+        response.sendRedirect(response.encodeRedirectURL(contextPath));
     }
 
     /**

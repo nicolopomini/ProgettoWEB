@@ -19,7 +19,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    //aggiungere shopid
+    if(request.getParameter("shopid") == null)
+        throw new NullPointerException("No shop specified");
     int shopid = Integer.parseInt(request.getParameter("shopid"));
     boolean venditore, logged, cancomment;
     Shop shop;
@@ -46,13 +47,14 @@
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
     shop = shopDAO.getByPrimaryKey(shopid);
-    valutation = 3.2; //DA CAMBIARE!
+    if(shop == null)
+        throw new NullPointerException("Shop doesn't exist");
+    valutation = shopReviewDAO.getAverageScoreByShopId(shopid);
     progress = (int)(valutation * 10);
     location = shop.getAddress().replace(' ', '+');
     reviews = shopReviewDAO.getByShopId(shopid);
     user = (User)session.getAttribute("user");
-    request.setAttribute("user", user);
-    request.setAttribute("shop", shop);
+    session.setAttribute("shop", shop);
     if(user == null) {  //non è loggato
         logged = false;
         venditore = false;
@@ -61,8 +63,7 @@
     else {
         logged = true;
         venditore = user.getUserId() == shop.getUserId();
-        //cancomment = shopDAO.canComment(shop.getShopId(), user.getUserId());
-        cancomment = true;
+        cancomment = shopDAO.canComment(shop.getShopId(), user.getUserId());
     }
 %>
 <!DOCTYPE html>
@@ -111,7 +112,20 @@
             </div><!-- /.container-fluid -->
           </nav>
             <!-- Fine menu -->
-            
+            <% if(message != null) { %>
+            <div class="alert alert-info alert-dismissable fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                    <span aria-hidden="true">x</span>
+                </button>
+                <%if(message.equals("updated")) {%>
+                Negozio aggiornato.
+                <%} else if(message.equals("insered")) {%>
+                Commento inserito.
+                <%} else if(message.equals("replied")) {%>
+                Risposto al commento.
+                <%}%>
+            </div>
+            <% } %>
             
             <!-- Contenuto pagina -->
             <div class="row">
@@ -146,6 +160,20 @@
                 <% if(!reviews.isEmpty()) { %>
                 </div>
                 <div class="col-md-4" id="comments">
+                <% } else if(cancomment) { %>
+                <h4>Inserisci un commento</h4>
+                <form method="POST" action="ShopComment">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Inserisci un commento" name="newcomment" required>
+                          Voto:
+                            <select class="form-control" name="score">
+                              <% for(int i = 1; i <= 5; i++) { %>
+                              <option value="<%=i%>"><%=i%></option>
+                              <%}%>
+                          </select>
+                        </div>
+                        <button type="submit" class="btn btn-default">Invia</button>
+                      </form>
                 <% } %>
                     <% if(!reviews.isEmpty()) { %>
                     <h5>Valutazione media degli utenti: <%=valutation%>/5</h5>
@@ -166,8 +194,7 @@
                             <% if(s.getReply() != null) { %>
                             <li class="list-group-item"><%=s.getReply()%></li>
                             <% } else if(venditore) { %>
-                            <form class="form-inline" method="POST" action="ShopComment">
-                                <input type="hidden" name="reply" value="1">
+                            <form class="form-inline" method="POST" action="ShopCommentReply">
                                 <input type="hidden" name="reviewid" value="<%=s.getShopReviewId()%>">
                                 <div class="form-group">
                                   <input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" required>
@@ -181,8 +208,13 @@
                     <% if(cancomment) { %>
                     <form class="form-inline" method="POST" action="ShopComment">
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="Inserisci un commento" name="newcomment" required>
-                          <input type="number" step="1" min="0" max="5" class="form-control" name="score" placeholder="Voto" required>
+                            <input type="text" class="form-control" placeholder="Inserisci un commento" name="newcomment" required>
+                          Voto:
+                            <select class="form-control" name="score">
+                              <% for(int i = 1; i <= 5; i++) { %>
+                              <option value="<%=i%>"><%=i%></option>
+                              <%}%>
+                          </select>
                         </div>
                         <button type="submit" class="btn btn-default">Invia</button>
                       </form>
@@ -208,19 +240,19 @@
                         <form action="ModifyShop" method="POST" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="newname">Nome del negozio</label>
-                                <input type="text" class="form-control" name="newname" id="newname" placeholder="Prova">
+                                <input type="text" class="form-control" name="newname" id="newname" placeholder="<%=shop.getName()%>">
                             </div>
                             <div class="form-group">
                                 <label for="website">Website</label>
-                                <input type="text" class="form-control" name="website" id="website" placeholder="www.google.com">
+                                <input type="text" class="form-control" name="website" id="website" placeholder="<%=shop.getWebsite()%>">
                             </div>
                             <div class="form-group">
                                 <label for="address">Indirizzo</label>
-                                <input type="text" class="form-control" name="address" id="address" placeholder="Piazza Venezia, Trento">
+                                <input type="text" class="form-control" name="address" id="address" placeholder="<%=shop.getAddress()%>">
                             </div>
                             <div class="form-group">
                                 <label for="orari">Orari</label>
-                                <input type="text" class="form-control" name="orari" id="orari" placeholder="Prova">
+                                <input type="text" class="form-control" name="orari" id="orari" placeholder="<%=shop.getOpeningHours()%>">
                             </div>
                             <div class="form-group">
                                 <label for="image">Immagine negozio</label>
@@ -259,8 +291,8 @@
                             <div class="form-group">
                                 <label for="categoria">Categoria</label>
                                 <select class="form-control" id='categoria' name="categoria">
-                                    <option>1</option>
-                                    <option>2</option>
+                                    <option value='electronics'>Elettronica</option>
+                                    <option value='books'>Libri</option>
                                 </select>
                             </div>
                             <div class="form-group">

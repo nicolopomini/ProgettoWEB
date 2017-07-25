@@ -8,10 +8,8 @@ package servlets;
 import dao.ShopReviewDAO;
 import dao.entities.Shop;
 import dao.entities.ShopReview;
-import dao.entities.User;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.rmi.ServerException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,8 +25,8 @@ import utils.StringUtils;
  *
  * @author pomo
  */
-@WebServlet(name = "ShopComment", urlPatterns = {"/ShopComment"})
-public class ShopComment extends HttpServlet {
+@WebServlet(name = "ShopCommentReply", urlPatterns = {"/ShopCommentReply"})
+public class ShopCommentReply extends HttpServlet {
     private ShopReviewDAO shopReview;
 
     @Override
@@ -44,8 +42,6 @@ public class ShopComment extends HttpServlet {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
     }
-    
-   
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -73,27 +69,20 @@ public class ShopComment extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User user = (User)session.getAttribute("user");
         Shop shop = (Shop)session.getAttribute("shop");
-        String comment = StringUtils.checkInputString(request.getParameter("newcomment"));
-        int score = Integer.parseInt(request.getParameter("score"));
-        ShopReview review = new ShopReview();
-        review.setReply(null);
-        review.setShopReviewId(null);
-        review.setReviewText(comment);
-        review.setScore(score);
-        review.setReviewTime(new Timestamp(new Date().getTime()).toString());
-        review.setShopId(shop.getShopId());
-        review.setUserId(user.getUserId());
+        int reviewid = Integer.parseInt(request.getParameter("reviewid"));
         try {
-            shopReview.add(review);
+            ShopReview review = shopReview.getByPrimaryKey(reviewid);
+            String reply = StringUtils.checkInputString(request.getParameter("replycomment"));
+            review.setReply(reply);
+            shopReview.update(review);
         } catch (DAOException ex) {
-            throw new ServletException("Error during insering the shop review",ex);
+            throw new ServerException("Impossible to reply the review", ex);
         }
         String contextPath = getServletContext().getContextPath();
         if(!contextPath.endsWith("/"))
             contextPath += "/";
-        contextPath += "shop.jsp?shopid=" + shop.getShopId() + "&message=insered";
+        contextPath += "shop.jsp?shopid=" + shop.getShopId() + "&message=replied";
         response.sendRedirect(response.encodeRedirectURL(contextPath));
     }
 
