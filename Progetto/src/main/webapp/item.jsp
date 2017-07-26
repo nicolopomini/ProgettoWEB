@@ -19,6 +19,7 @@
 <%@page import="persistence.utils.dao.factories.DAOFactory"%>
 <%@page import="dao.entities.Shop"%>
 <%@page import="dao.entities.Item"%>
+<%@ page errorPage="/errorpage.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%
