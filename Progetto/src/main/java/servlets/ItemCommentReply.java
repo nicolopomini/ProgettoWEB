@@ -8,10 +8,7 @@ package servlets;
 import dao.ItemReviewDAO;
 import dao.entities.Item;
 import dao.entities.ItemReview;
-import dao.entities.User;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,8 +24,8 @@ import utils.StringUtils;
  *
  * @author pomo
  */
-@WebServlet(name = "ItemComment", urlPatterns = {"/ItemComment"})
-public class ItemComment extends HttpServlet {
+@WebServlet(name = "ItemCommentReply", urlPatterns = {"/ItemCommentReply"})
+public class ItemCommentReply extends HttpServlet {
     private ItemReviewDAO itemReviewDAO;
 
     @Override
@@ -44,7 +41,6 @@ public class ItemComment extends HttpServlet {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
     }
-    
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -72,27 +68,19 @@ public class ItemComment extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User user = (User)session.getAttribute("user");
         Item item = (Item)session.getAttribute("item");
-        String comment = StringUtils.checkInputString(request.getParameter("newcomment"));
-        int score = Integer.parseInt(request.getParameter("score"));
-        ItemReview review = new ItemReview();
-        review.setItemId(item.getItemId());
-        review.setItemReviewId(null);
-        review.setReply(null);
-        review.setReviewText(comment);
-        review.setReviewTime(new Timestamp(new Date().getTime()).toString());
-        review.setScore(score);
-        review.setUserId(user.getUserId());
+        int reviewid = Integer.parseInt(request.getParameter("reviewid"));
         try {
-            itemReviewDAO.add(review);
+            ItemReview review = itemReviewDAO.getByPrimaryKey(reviewid);
+            review.setReply(StringUtils.checkInputString(request.getParameter("replycomment")));
+            itemReviewDAO.update(review);
         } catch (DAOException ex) {
-            throw new ServletException("Impossible to add the item review", ex);
+            throw new ServletException("Impossible to reply the review", ex);
         }
         String contextPath = getServletContext().getContextPath();
         if(!contextPath.endsWith("/"))
             contextPath += "/";
-        contextPath += "item.jsp?itemid=" + item.getItemId() + "&message=insered";
+        contextPath += "item.jsp?itemid=" + item.getItemId() + "&message=replied";
         response.sendRedirect(response.encodeRedirectURL(contextPath));
     }
 

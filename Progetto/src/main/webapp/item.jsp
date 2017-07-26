@@ -4,16 +4,82 @@
     Author     : pomo
 --%>
 
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="dao.entities.User"%>
+<%@page import="dao.entities.ItemReview"%>
+<%@page import="dao.entities.Picture"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="dao.ItemReviewDAO"%>
+<%@page import="dao.PictureDAO"%>
+<%@page import="dao.ShopDAO"%>
+<%@page import="persistence.utils.dao.DAO"%>
+<%@page import="persistence.utils.dao.exceptions.DAOFactoryException"%>
+<%@page import="dao.ItemDAO"%>
+<%@page import="persistence.utils.dao.factories.DAOFactory"%>
+<%@page import="dao.entities.Shop"%>
+<%@page import="dao.entities.Item"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%
-String itemname = "Item", shopname= "Shop";
-int shop = 1, itemid = 1;
-double price = 2.34, lat = 41.8849605, lng = 12.5107732;
-String[] negozi = {"via del corso, 282, 00187 Roma","via nazionale, 195, 00184 Roma"};
-double[] nearby = {41.8972018,12.4820151,41.8996288,12.4912549};
-boolean logged = true, cancomment = true;
-String message = request.getParameter("message");
+    if(request.getParameter("itemid") == null)
+        throw new NullPointerException("No item specified");
+    int itemid = Integer.parseInt(request.getParameter("itemid"));
+    Item item;
+    Shop shop;
+    ArrayList<Picture> immagini;
+    ArrayList<ItemReview> commenti;
+    ArrayList<Shop> nearby;
+    boolean venditore, logged, cancomment;
+    User user;
+    double media;
+    ItemDAO itemDAO;
+    ShopDAO shopDAO;
+    PictureDAO pictureDAO;
+    ItemReviewDAO itemReviewDAO;
+    DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+    if (daoFactory == null) {
+        throw new ServletException("Impossible to get dao factory for storage system");
+    }
+    try {
+        itemDAO = daoFactory.getDAO(ItemDAO.class);
+    } catch (DAOFactoryException ex) {
+        throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+    }
+    try {
+            shopDAO = daoFactory.getDAO(ShopDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+    try {
+            pictureDAO = daoFactory.getDAO(PictureDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+    try {
+            itemReviewDAO = daoFactory.getDAO(ItemReviewDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+    item = itemDAO.getByPrimaryKey(itemid);
+    shop = shopDAO.getByPrimaryKey(item.getShopId());
+    immagini = pictureDAO.getByItemId(itemid);
+    nearby = itemDAO.getItemNearby(item);
+    commenti = itemReviewDAO.getByItemId(itemid);
+    media = itemReviewDAO.getAverageScoreByItemId(itemid);
+    int progress = (int)(media * 10);
+    user = (User)session.getAttribute("user");
+    if(user == null) {
+        logged = false;
+        cancomment = false;
+        venditore = false;
+    } else {
+        logged = true;
+        cancomment = itemDAO.canComment(itemid, user.getUserId());
+        venditore = user.getUserId() == shop.getUserId();
+    }
+    session.setAttribute("item", item);
+    String message = request.getParameter("message");
 %>
 <!DOCTYPE html>
 <html>
@@ -21,7 +87,7 @@ String message = request.getParameter("message");
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title><%= itemname %></title>
+        <title><%= item.getName() %></title>
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
     </head>
@@ -46,7 +112,7 @@ String message = request.getParameter("message");
                 <ul class="nav navbar-nav navbar-right">
                   <li><a href="cart.jsp">Carrello</a></li>
                   <% if(logged) { %>
-                  <li><a href="#">Nome e Cognome</a></li>
+                  <li><a href="#"><%=user.getName() + " " + user.getSurname()%></a></li>
                   <li><a href="#">Esci</a></li>
                   <% }else {%>
                   <li><a href="#">Login</a></li>
@@ -57,31 +123,44 @@ String message = request.getParameter("message");
             </div><!-- /.container-fluid -->
           </nav>
             <!-- Fine menu -->
-            <% if(message != null && message.equals("ok")) { %>
+            <% if(message != null) { %>
             <div class="alert alert-info alert-dismissable fade in" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="close">
                     <span aria-hidden="true">x</span>
                 </button>
-                <%=itemname%> aggiunto al carrello
+                <%if(message.equals("ok")) {%>
+                <%=item.getName()%> aggiunto al carrello
+                <%}else if(message.equals("insered")) {%>
+                Commento inserito.
+                <%} else if(message.equals("replied")) {%>
+                Risposto al commento.
+                <%}%>
             </div>
             <% } %>
             <div class="row">
+                <% if(!commenti.isEmpty()){ %>
                 <div class="col-md-8">
+                <%}%>
                     <center>
-                        <h1><%= itemname %></h1>
+                        <h1><%= item.getName() %></h1>
                     </center>
-                    <p>Prezzo: <fmt:formatNumber value="<%= price %>" type="currency"/></p>
+                    <p>Prezzo: <fmt:formatNumber value="<%= item.getPrice() %>" type="currency"/></p>
                     <form action="AddToCart" method="POST" class="form-inline">
                         <input type="hidden" name="itemid" value="<%=itemid%>">
                         <input class="btn btn-default" type="submit" value="Aggiungi al carrello">
                     </form>
-                    <p>Venduto da <a href="shop.jsp?shopid=<%= shop %>" target="_blank"><%= shopname %></a>: <a href="#map">Indirizzo</a></p>
+                    <p>Venduto da <a href="shop.jsp?shopid=<%= shop.getShopId() %>" target="_blank"><%= shop.getName() %></a>: <a href="#map">Vedi sulla mappa</a></p>
                     <center>
                         <div id="itemimages" >
-                        <img src="img/big.jpg" class="img-responsive" alt="Responsive image">
-                        <img src="img/1.JPG" class="img-responsive" alt="Responsive image">
-                        <img src="img/small.jpg" class="img-responsive" alt="Responsive image">
+                         <% for(Picture p : immagini) {%>
+                        <img src="${pageContext.request.contextPath}/<%=p.getPath()%>" class="img-responsive" alt="Responsive image">
+                        <br/>
+                        <%}%>
                         </div>
+                        <br/>
+                        <% if(commenti.isEmpty()) { %>
+                        <h5 style="text-align: center">Nessuna recensione</h5>
+                        <%}%>
                         <br/>
                         <div>
                             <h3>Dove puoi trovare il prodotto</h3>
@@ -91,35 +170,70 @@ String message = request.getParameter("message");
                         </div>
                     </center>
                 </div>
+                <% if(!commenti.isEmpty()) { %>
                 <div class="col-md-4" id="comments">
-                    <h5>Valutazione media degli utenti: 3.0/5</h5>
+                    <h5>Valutazione media degli utenti: <%=media%>/5</h5>
                     <div class="progress">
-                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                          <span class="sr-only">60</span>
+                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="<%=progress%>" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                          <span class="sr-only"><%=progress%></span>
                         </div>
                       </div>
                     <div class="commenti">
                         <!--Per ogni commento:-->
+                        <% for(ItemReview r : commenti) {
+                            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
+                            Date date = dt.parse(r.getReviewTime());                         
+                        %>
+                        <fmt:formatDate value = "<%=date%>" /> : <%for(int i = 0; i < r.getScore(); i++) {%><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <%}%>
                         <ul class="list-group">
-                            <li class="list-group-item"><b>Nome Utente</b>: commento</li>
-                            <li class="list-group-item"><b>Venditore</b>: risposta commento</li>
+                            <li class="list-group-item"><%=r.getReviewText()%></li>
+                            <%if(r.getReply() != null) {%>
+                            <li class="list-group-item"><%=r.getReply()%></li>
+                            <%} else if(venditore) {%>
+                            <form class="form-inline" method="POST" action="ItemCommentReply">
+                                <input type="hidden" name="reviewid" value="<%=r.getItemReviewId()%>">
+                                <div class="form-group">
+                                  <input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" required>
+                                </div>
+                                <button type="submit" class="btn btn-default">Invia</button>
+                              </form>
+                            <%}%>
                         </ul>
-                        <ul class="list-group">
-                            <li class="list-group-item"><b>Nome Utente</b>: commento 2 senza rispodta feobe vdovmelbprv!</li>
-                        </ul>
+                        <%}%>
                     </div>
                     <% if(cancomment) { %>
                     <form class="form-inline" method="POST" action="ItemComment">
                         <div class="form-group">
-                          <input type="text" class="form-control" id="exampleInputName2" placeholder="Inserisci un commento" name="newcomment">
+                            <input type="text" class="form-control" placeholder="Inserisci un commento" name="newcomment" required>
+                          Voto:
+                            <select class="form-control" name="score">
+                              <% for(int i = 1; i <= 5; i++) { %>
+                              <option value="<%=i%>"><%=i%></option>
+                              <%}%>
+                          </select>
                         </div>
                         <button type="submit" class="btn btn-default">Invia</button>
                       </form>
                     <% } else { %>
-                    <p>Per lasciare un commento devi aver aquistato questo oggetto.</p>
+                    <p>Per lasciare un commento devi aver aquistato in questo negozio.</p>
                     <% } %>
                 </div>
             </div>
+                <%}else if(cancomment) {%>
+                <h4>Inserisci un commento</h4>
+                <form method="POST" action="ItemComment">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Inserisci un commento" name="newcomment" required>
+                          Voto:
+                            <select class="form-control" name="score">
+                              <% for(int i = 1; i <= 5; i++) { %>
+                              <option value="<%=i%>"><%=i%></option>
+                              <%}%>
+                          </select>
+                        </div>
+                        <button type="submit" class="btn btn-default">Invia</button>
+                      </form>
+                <%}%>
             <!--Footer-->
             <footer class="footer">
                 <center>
@@ -136,19 +250,20 @@ String message = request.getParameter("message");
 
               function initMap() {
                 map = new google.maps.Map(document.getElementById('map'), {
-                  center: new google.maps.LatLng(<%= lat %>,<%= lng %>),
+                  center: new google.maps.LatLng(<%= shop.getLat() %>,<%= shop.getLon() %>),
                   zoom: 15,
                   mapTypeId: 'roadmap',
                   mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
                 });
                 infoWindow = new google.maps.InfoWindow();
                 locationSelect = document.getElementById("locationSelect");
-                //da riempire
+
                 var locations = [
-                    ["Negozio0","Questo negozio",41.8849605,12.5107732],
-                    ["Negozio1","via del corso, 282, 00187 Roma",41.8972018,12.4820151],
-                    ["Negozio2","via nazionale, 195, 00184 Roma",41.8996288,12.4912549]
+                    ["<%= shop.getName() %>","<%= shop.getAddress() %>",<%= shop.getLat() %>,<%= shop.getLon() %>]
                 ];
+                <% for(Shop s : nearby) { %>
+                    locations.push(["<%=s.getName()%>","<%= s.getAddress() %>",<%= s.getLat() %>,<%= s.getLon() %>]);
+                <%}%>
                 var bounds = new google.maps.LatLngBounds();
                 for(var i = 0; i < locations.length; i++) {
                     var name = locations[i][0];

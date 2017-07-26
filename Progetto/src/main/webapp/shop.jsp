@@ -65,6 +65,7 @@
         venditore = user.getUserId() == shop.getUserId();
         cancomment = shopDAO.canComment(shop.getShopId(), user.getUserId());
     }
+    String message = request.getParameter("message");
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -185,8 +186,8 @@
                     <div class="commenti">
                         <!--Per ogni commento:-->
                         <% for(ShopReview s : reviews) { 
-                        SimpleDateFormat dt = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss"); 
-                        Date date = dt.parse(s.getReviewTime()); 
+                        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
+                        Date date = dt.parse(s.getReviewTime());
                         %>
                         <ul class="list-group">
                             <fmt:formatDate value = "<%=date%>" /> : <%for(int i = 0; i < s.getScore(); i++) {%><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <%}%>
