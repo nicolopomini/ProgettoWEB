@@ -5,6 +5,10 @@
  */
 package utils;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
 /**
  *
  * @author pomo
@@ -17,5 +21,22 @@ public class StringUtils {
         rtr = rtr.replace("<", "&lt;");
         rtr = rtr.replace(">", "&gt;");
         return rtr;
+    }
+    
+    public static boolean isValidString(String s,String allowedCharacters)
+    {
+        String sanitizedString = s.replaceAll(allowedCharacters, "");
+        return sanitizedString.equals(s);
+    }
+    
+    public static boolean isEmpty(String s)
+    {
+        boolean toRtn = false;
+        String sanitizedString = s.replaceAll(" ", "");
+        if(sanitizedString.equals(""))
+        {
+            toRtn = true;
+        }
+        return toRtn;
     }
 }

@@ -4,23 +4,132 @@
     Author     : Marco
 --%>
 
+
+<%@page import="java.security.SecureRandom"%>
+<%@page import="java.math.BigInteger"%>
+<%@page import="utils.BCrypt"%>
+<%@page import="persistence.utils.dao.exceptions.DAOFactoryException"%>
+<%@page import="dao.UserDAO"%>
+<%@page import="dao.entities.User"%>
+<%@page import="utils.StringUtils"%>
+<%@page import="persistence.utils.dao.factories.DAOFactory"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%!
-    boolean venditore, logged;
-    String name = "Prova";
-%>
 <%
-    if(session.getAttribute("logged") == null)
+    boolean logged, venditore;
+    logged = venditore = false;
+    boolean validData = true;
+    String tmpEmail, tmpPassword, tmpName, tmpSurname, tmpAddress;
+    User toInsert = new User();
+    
+    session.setAttribute("user",null);
+    if(session.getAttribute("user") == null)
     {
-        logged = false;
-        session.setAttribute("logged", logged);
-        venditore = false;
-        session.setAttribute("venditore", venditore);
+        if(request.getMethod().equals("POST"))
+        {
+            if(request.getParameter("Email") != null)
+            {
+                tmpEmail = request.getParameter("Email");
+                String emailRegex = "[^a-zA-Z0-9-_@.]";
+                if(!StringUtils.isValidString(tmpEmail,emailRegex) || StringUtils.isEmpty(tmpEmail))
+                {
+                    validData = false;
+                }
+            }
+            else
+            {
+                throw new NullPointerException("Oops, You got on this page the wrong way");
+            }
+            
+            if(request.getParameter("Password") != null)
+            {
+                tmpPassword = request.getParameter("Password");
+                String passwordRegex = "[^a-zA-Z0-9-_]";
+                if(!StringUtils.isValidString(tmpPassword,passwordRegex) || StringUtils.isEmpty(tmpPassword))
+                {
+                    validData = false;
+                }
+            }
+            else
+            {
+                throw new NullPointerException("Oops, You got on this page the wrong way");
+            }
+            
+            if(request.getParameter("Name") != null)
+            {
+                tmpName = request.getParameter("Name");
+                String nameRegex = "[^a-zA-Z ]";
+                if(!StringUtils.isValidString(tmpName,nameRegex) || StringUtils.isEmpty(tmpName))
+                {
+                    validData = false;
+                }
+            }
+            else
+            {
+                throw new NullPointerException("Oops, You got on this page the wrong way");
+            }
+            
+            if(request.getParameter("Surname") != null)
+            {
+                tmpSurname = request.getParameter("Surname");
+                String surnameRegex = "[^a-zA-Z ]";
+                if(!StringUtils.isValidString(tmpSurname,surnameRegex) || StringUtils.isEmpty(tmpSurname))
+                {
+                    validData = false;
+                }
+            }
+            else
+            {
+                throw new NullPointerException("Oops, You got on this page the wrong way");
+            }
+            
+            if(request.getParameter("Address") != null)
+            {
+                tmpAddress = request.getParameter("Address");
+                String addressRegex = "[^a-zA-Z0-9, ]";
+                if(!StringUtils.isValidString(tmpAddress,addressRegex) || StringUtils.isEmpty(tmpAddress))
+                {
+                    validData = false;
+                }
+            }
+            else
+            {
+                throw new NullPointerException("Oops, You got on this page the wrong way");
+            }
+            
+            if(validData)
+            {
+                toInsert.setUserId(null);
+                toInsert.setEmail(tmpEmail);
+                String hashedPassword = BCrypt.hashpw(tmpPassword, BCrypt.gensalt(12));
+                toInsert.setPassword(hashedPassword);
+                toInsert.setName(tmpName);
+                toInsert.setSurname(tmpSurname);
+                toInsert.setAddress(tmpAddress);
+                toInsert.setType("registered");
+                SecureRandom random = new SecureRandom();
+                String verificationCode = new BigInteger(130, random).toString(32);
+                toInsert.setVerificationCode(verificationCode);
+                UserDAO user;
+                DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+                if (daoFactory == null) 
+                {
+                    throw new ServletException("Impossible to get dao factory for storage system");
+                }
+                try 
+                {
+                    user = daoFactory.getDAO(UserDAO.class);
+                } 
+                catch (DAOFactoryException ex) 
+                {
+                    throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+                }
+                user.add(toInsert);
+            }
+        }
     }
     else
     {
-        logged = (boolean)session.getAttribute("logged");
-        venditore = (boolean)session.getAttribute("venditore");
+        logged = true;
     }
 %>  
 <!DOCTYPE html>
@@ -67,7 +176,33 @@
                 </div><!-- /.container-fluid -->
             </nav>
             <div class="row">
-                <form class="form-horizontal">
+                <% if(!logged) 
+                {
+                    if(request.getMethod().equals("POST"))
+                    {
+                        if(validData)
+                        {
+                %>
+                
+                <div class="col-xs-12">
+                    <label>Registration completed.</label>
+                </div>
+                
+                <%      }
+                        else
+                        {
+                %>
+                
+                <div class="col-xs-12">
+                    <label>Registration failed, please try again.</label>
+                </div>
+                
+                <%      }
+                    }
+                    else
+                    {
+                %>
+                <form method="post" action="<%=request.getRequestURL() %>" class="form-horizontal">
                     <div class="col-xs-12 marginBottomFix">
                         <label class="col-xs-12">Fill the form and press "Register" to create a new user</label>
                     </div>
@@ -75,31 +210,31 @@
                         <div class="form-group col-xs-12">
                             <label for="Email" class="col-xs-12">Email</label>
                             <div class="col-xs-12">
-                                <input class="form-control" type="email" id="Email">
-                            </div>
-                        </div>
-                        <div class="form-group col-xs-12">
-                            <label for="Username" class="col-xs-12">Username</label>
-                            <div class="col-xs-12">
-                                <input class="form-control" type="text" id="Username">
+                                <input class="form-control" type="email" name="Email" id="Email">
                             </div>
                         </div>
                         <div class="form-group col-xs-12">
                             <label for="Password" class="col-xs-12">Password</label>
                             <div class="col-xs-12">
-                                <input class="form-control" type="password" id="Password">
+                                <input class="form-control" type="password" name="Password" id="Password">
                             </div>
                         </div>
                         <div class="form-group col-xs-12">
                             <label for="example-text-input" class="col-xs-12">Name</label>
                             <div class="col-xs-12">
-                                <input class="form-control" type="text" id="Name">
+                                <input class="form-control" type="text" name="Name" id="Name">
                             </div>
                         </div>
                         <div class="form-group col-xs-12">
                             <label for="example-text-input" class="col-xs-12">Surname</label>
                             <div class="col-xs-12">
-                                <input class="form-control" type="text" id="Surname">
+                                <input class="form-control" type="text" name="Surname" id="Surname">
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12">
+                            <label for="example-text-input" class="col-xs-12">Address</label>
+                            <div class="col-xs-12">
+                                <input class="form-control" type="text" name="Address" id="Address">
                             </div>
                         </div>
                         <div class="form-group col-xs-12"> 
@@ -109,6 +244,17 @@
                         </div>
                     </div>
                 </form>
+            <%      }
+                } 
+                else 
+                {
+            %>
+            
+                <div class="col-xs-12">
+                    <label>Effettua il logout per accedere a questa pagina</label>
+                </div>
+            
+            <%  } %>
             </div>
             <footer class="footer">
                 <center>
