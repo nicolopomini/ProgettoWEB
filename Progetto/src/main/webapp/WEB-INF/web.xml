@@ -16,7 +16,7 @@
     <context-param>
         <description>Password for db</description>
         <param-name>dbpassword</param-name>
-        <param-value>ciao</param-value>
+        <param-value>root</param-value>
     </context-param>
     
     <servlet>

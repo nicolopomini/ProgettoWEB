@@ -136,8 +136,9 @@ public class DebugServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            out.print("Test:<br><br>");
             try {
+                out.print("Test:<br><br>");
+                
                 testUser(out);
                 testShop(out);
                 testItem(out);
@@ -147,6 +148,8 @@ public class DebugServlet extends HttpServlet {
                 testComplaint(out);
                 testItemReview(out);
                 testShopReview(out);
+                
+                out.print("Test completed");
             } catch (DAOException ex) {
                 Logger.getLogger(DebugServlet.class.getName()).log(Level.SEVERE, null, ex);
                 out.println("<br>" + ex);
