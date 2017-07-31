@@ -47,7 +47,7 @@ public class JDBCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements S
         if (primaryKey == null) {
             throw new DAOException("primaryKey is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ShopReview WHERE shopReviewId = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ShopReview, User WHERE shopReviewId = ? AND ShopReview.userId = User.userId")) {
             stm.setInt(1, primaryKey);
             try (ResultSet rs = stm.executeQuery()) {
 
@@ -60,6 +60,8 @@ public class JDBCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements S
                 shopReview.setShopId(rs.getInt("shopId"));
                 shopReview.setReviewTime(rs.getString("reviewTime"));
                 shopReview.setScore(rs.getInt("score"));
+                shopReview.setAuthorName(rs.getString("name"));
+                shopReview.setAuthorSurname(rs.getString("surname"));
 
                 return shopReview;
             }
@@ -70,7 +72,7 @@ public class JDBCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements S
 
     @Override
     public List<ShopReview> getAll() throws DAOException {
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ShopReview")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ShopReview, User WHERE ShopReview.userId = User.userId")) {
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<ShopReview> shopReviews = new ArrayList<>();
                 while(rs.next())
@@ -83,6 +85,8 @@ public class JDBCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements S
                     shopReview.setShopId(rs.getInt("shopId"));
                     shopReview.setReviewTime(rs.getString("reviewTime"));
                     shopReview.setScore(rs.getInt("score"));
+                    shopReview.setAuthorName(rs.getString("name"));
+                    shopReview.setAuthorSurname(rs.getString("surname"));
                     
                     shopReviews.add(shopReview);
                 }
@@ -151,7 +155,7 @@ public class JDBCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements S
         if (shopId == null) {
             throw new DAOException("shopId is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ShopReview WHERE shopId = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ShopReview, User WHERE shopId = ? AND ShopReview.userId = User.userId")) {
             stm.setInt(1, shopId);
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<ShopReview> shopReviews = new ArrayList<>();
@@ -165,6 +169,8 @@ public class JDBCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements S
                     shopReview.setShopId(rs.getInt("shopId"));
                     shopReview.setReviewTime(rs.getString("reviewTime"));
                     shopReview.setScore(rs.getInt("score"));
+                    shopReview.setAuthorName(rs.getString("name"));
+                    shopReview.setAuthorSurname(rs.getString("surname"));
                     
                     shopReviews.add(shopReview);
                 }

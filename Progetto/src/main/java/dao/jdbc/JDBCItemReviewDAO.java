@@ -47,7 +47,7 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
         if (primaryKey == null) {
             throw new DAOException("primaryKey is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ItemReview WHERE itemReviewId = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ItemReview, User WHERE itemReviewId = ? AND ItemReview.userId = User.userId")) {
             stm.setInt(1, primaryKey);
             try (ResultSet rs = stm.executeQuery()) {
 
@@ -60,6 +60,8 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
                 itemReview.setItemId(rs.getInt("itemId"));
                 itemReview.setReviewTime(rs.getString("reviewTime"));
                 itemReview.setScore(rs.getInt("score"));
+                itemReview.setAuthorName(rs.getString("name"));
+                itemReview.setAuthorSurname(rs.getString("surname"));
 
                 return itemReview;
             }
@@ -70,7 +72,7 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
 
     @Override
     public List<ItemReview> getAll() throws DAOException {
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ItemReview")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ItemReview, User WHERE ItemReview.userId = User.userId")) {
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<ItemReview> itemReviews = new ArrayList<>();
                 while(rs.next())
@@ -83,6 +85,8 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
                     itemReview.setItemId(rs.getInt("itemId"));
                     itemReview.setReviewTime(rs.getString("reviewTime"));
                     itemReview.setScore(rs.getInt("score"));
+                    itemReview.setAuthorName(rs.getString("name"));
+                    itemReview.setAuthorSurname(rs.getString("surname"));
                     
                     itemReviews.add(itemReview);
                 }
@@ -151,7 +155,7 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
         if (itemId == null) {
             throw new DAOException("itemId is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ItemReview WHERE itemId = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ItemReview, User WHERE itemId = ? AND ItemReview.userId = User.userId")) {
             stm.setInt(1, itemId);
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<ItemReview> itemReviews = new ArrayList<>();
@@ -165,6 +169,8 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
                     itemReview.setItemId(rs.getInt("itemId"));
                     itemReview.setReviewTime(rs.getString("reviewTime"));
                     itemReview.setScore(rs.getInt("score"));
+                    itemReview.setAuthorName(rs.getString("name"));
+                    itemReview.setAuthorSurname(rs.getString("surname"));
                     
                     itemReviews.add(itemReview);
                 }

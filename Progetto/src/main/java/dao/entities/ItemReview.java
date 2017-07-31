@@ -17,6 +17,8 @@ public class ItemReview {
     private Integer itemId;
     private String reviewTime;
     private Integer score;
+    private String authorName;
+    private String authorSurname;
 
     public Integer getItemReviewId() {
         return itemReviewId;
@@ -44,6 +46,14 @@ public class ItemReview {
 
     public Integer getScore() {
         return score;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public String getAuthorSurname() {
+        return authorSurname;
     }
 
     public void setItemReviewId(Integer itemReviewId) {
@@ -74,8 +84,16 @@ public class ItemReview {
         this.score = score;
     }
 
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public void setAuthorSurname(String authorSurname) {
+        this.authorSurname = authorSurname;
+    }
+
     @Override
     public String toString() {
-        return "ItemReview{" + "itemReviewId=" + itemReviewId + ", reviewText=" + reviewText + ", reply=" + reply + ", userId=" + userId + ", itemId=" + itemId + ", reviewTime=" + reviewTime + ", score=" + score + '}';
+        return "ItemReview{" + "itemReviewId=" + itemReviewId + ", reviewText=" + reviewText + ", reply=" + reply + ", userId=" + userId + ", itemId=" + itemId + ", reviewTime=" + reviewTime + ", score=" + score + ", authorName=" + authorName + ", authorSurname=" + authorSurname + '}';
     }
 }
