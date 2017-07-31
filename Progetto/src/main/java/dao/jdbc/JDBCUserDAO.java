@@ -148,4 +148,60 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
             throw new DAOException("Impossible to remove the user", ex);
         }
     }
+
+    @Override
+    public User getUserByActivationCode(String activationCode) throws DAOException {
+         if (activationCode== null) {
+            throw new DAOException("activationCode is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User WHERE verificationCode = ?")) {
+            stm.setString(1, activationCode);
+            try (ResultSet rs = stm.executeQuery()) {
+
+                User user = new User();
+                while(rs.next())
+                {
+                    user.setUserId(rs.getInt("userId"));
+                    user.setName(rs.getString("name"));
+                    user.setSurname(rs.getString("surname"));
+                    user.setEmail(rs.getString("email"));
+                    user.setPassword(rs.getString("password"));
+                    user.setAddress(rs.getString("address"));
+                    user.setType(rs.getString("type"));
+                    user.setVerificationCode(rs.getString("verificationCode"));
+                }
+                return user;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the user for the passed activationCode", ex);
+        }
+    }
+
+    @Override
+    public User getUserByEmail(String email) throws DAOException {
+        if (email== null) {
+            throw new DAOException("email is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User WHERE email = ?")) {
+            stm.setString(1, email);
+            try (ResultSet rs = stm.executeQuery()) {
+
+                User user = new User();
+                while(rs.next())
+                {
+                    user.setUserId(rs.getInt("userId"));
+                    user.setName(rs.getString("name"));
+                    user.setSurname(rs.getString("surname"));
+                    user.setEmail(rs.getString("email"));
+                    user.setPassword(rs.getString("password"));
+                    user.setAddress(rs.getString("address"));
+                    user.setType(rs.getString("type"));
+                    user.setVerificationCode(rs.getString("verificationCode"));
+                }
+                return user;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the user for the passed email", ex);
+        }
+    }
 }

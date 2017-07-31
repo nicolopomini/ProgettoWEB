@@ -7,10 +7,13 @@ package dao;
 
 import dao.entities.User;
 import persistence.utils.dao.DAO;
+import persistence.utils.dao.exceptions.DAOException;
 
 /**
  *
  * @author Gabriele
  */
 public interface UserDAO extends DAO<User, Integer>{
+    public User getUserByActivationCode(String activationCode) throws DAOException;
+    public User getUserByEmail(String email) throws DAOException;
 }

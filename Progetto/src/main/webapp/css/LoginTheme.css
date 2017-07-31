@@ -9,5 +9,10 @@ and open the template in the editor.
 */
 .marginBottomFix
 {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+}
+
+.redText
+{
+    color: red;
 }

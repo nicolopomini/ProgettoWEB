@@ -4,7 +4,7 @@
     Author     : Marco
 --%>
 
-
+<%@page import="utils.MailUtils"%>
 <%@page import="java.security.SecureRandom"%>
 <%@page import="java.math.BigInteger"%>
 <%@page import="utils.BCrypt"%>
@@ -19,6 +19,7 @@
     logged = venditore = false;
     boolean validData = true;
     String tmpEmail, tmpPassword, tmpName, tmpSurname, tmpAddress;
+    tmpEmail = tmpPassword = tmpName = tmpSurname = tmpAddress = "";
     User toInsert = new User();
     
     session.setAttribute("user",null);
@@ -98,6 +99,7 @@
             
             if(validData)
             {
+                User toSearch;
                 toInsert.setUserId(null);
                 toInsert.setEmail(tmpEmail);
                 String hashedPassword = BCrypt.hashpw(tmpPassword, BCrypt.gensalt(12));
@@ -118,12 +120,21 @@
                 try 
                 {
                     user = daoFactory.getDAO(UserDAO.class);
+                    toSearch = user.getUserByEmail(tmpEmail);
                 } 
                 catch (DAOFactoryException ex) 
                 {
-                    throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+                    throw new ServletException("Impossible to get dao factory for registration", ex);
                 }
-                user.add(toInsert);
+                if(toSearch.getUserId() == null)
+                {
+                    user.add(toInsert);
+                    MailUtils.sendActivationEmail(toInsert);
+                }
+                else
+                {
+                    validData = false;
+                }
             }
         }
     }
@@ -185,7 +196,8 @@
                 %>
                 
                 <div class="col-xs-12">
-                    <label>Registration completed.</label>
+                    <label>Your registration was successful</label>
+                    <p class="redText">WARNING: To start using your account you will need to activate it. An activation email has been sent to the address "<%=tmpEmail%>", click on the button contained in the email to activate your account</p>
                 </div>
                 
                 <%      }
@@ -194,7 +206,7 @@
                 %>
                 
                 <div class="col-xs-12">
-                    <label>Registration failed, please try again.</label>
+                    <label>Oops, something went wrong</label>
                 </div>
                 
                 <%      }
@@ -202,44 +214,49 @@
                     else
                     {
                 %>
-                <form method="post" action="<%=request.getRequestURL() %>" class="form-horizontal">
+                <form id="registerForm" method="post" action="<%=request.getRequestURL() %>" class="form-horizontal">
                     <div class="col-xs-12 marginBottomFix">
                         <label class="col-xs-12">Fill the form and press "Register" to create a new user</label>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-4">
                         <div class="form-group col-xs-12">
                             <label for="Email" class="col-xs-12">Email</label>
+                            <label class="col-xs-12 redText" id="EmailError"></label>
                             <div class="col-xs-12">
-                                <input class="form-control" type="email" name="Email" id="Email">
+                                <input oninput="isUniqueEmail()" class="form-control" type="email" name="Email" id="Email">
                             </div>
                         </div>
                         <div class="form-group col-xs-12">
                             <label for="Password" class="col-xs-12">Password</label>
+                            <label class="col-xs-12 redText" id="PasswordError"></label>
                             <div class="col-xs-12">
                                 <input class="form-control" type="password" name="Password" id="Password">
                             </div>
                         </div>
                         <div class="form-group col-xs-12">
-                            <label for="example-text-input" class="col-xs-12">Name</label>
+                            <label for="Name" class="col-xs-12">Name</label>
+                            <label class="col-xs-12 redText" id="NameError"></label>
                             <div class="col-xs-12">
                                 <input class="form-control" type="text" name="Name" id="Name">
                             </div>
                         </div>
                         <div class="form-group col-xs-12">
-                            <label for="example-text-input" class="col-xs-12">Surname</label>
+                            <label for="Surname" class="col-xs-12">Surname</label>
+                            <label class="col-xs-12 redText" id="SurnameError"></label>
                             <div class="col-xs-12">
                                 <input class="form-control" type="text" name="Surname" id="Surname">
                             </div>
                         </div>
                         <div class="form-group col-xs-12">
-                            <label for="example-text-input" class="col-xs-12">Address</label>
+                            <label for="Address" class="col-xs-12">Address</label>
+                            <label class="col-xs-12 redText" id="AddressError"></label>
                             <div class="col-xs-12">
                                 <input class="form-control" type="text" name="Address" id="Address">
                             </div>
                         </div>
                         <div class="form-group col-xs-12"> 
                             <div class="col-xs-2">
-                                <button type="submit" class="btn btn-default">Register</button>
+                                <span onclick="registerAttempt()" class="btn btn-default">Register</button>
                             </div>
                         </div>
                     </div>
@@ -264,5 +281,6 @@
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
+        <script src="js/registrationJS.js"></script>
     </body>
 </html>
