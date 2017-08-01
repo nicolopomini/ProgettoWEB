@@ -192,9 +192,9 @@
                         %>
                         <ul class="list-group">
                             <fmt:formatDate value = "<%=date%>" /> : <%for(int i = 0; i < s.getScore(); i++) {%><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <%}%>
-                            <li class="list-group-item"><%=s.getReviewText()%></li>
+                            <li class="list-group-item"><b><%= s.getAuthorName() + " " + s.getAuthorSurname() %></b>: <%=s.getReviewText()%></li>
                             <% if(s.getReply() != null) { %>
-                            <li class="list-group-item"><%=s.getReply()%></li>
+                            <li class="list-group-item"><b>Venditore</b>: <%=s.getReply()%></li>
                             <% } else if(venditore) { %>
                             <form class="form-inline" method="POST" action="ShopCommentReply">
                                 <input type="hidden" name="reviewid" value="<%=s.getShopReviewId()%>">
