@@ -155,7 +155,7 @@ public class JDBCShopReviewDAO extends JDBCDAO<ShopReview, Integer> implements S
         if (shopId == null) {
             throw new DAOException("shopId is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ShopReview, User WHERE shopId = ? AND ShopReview.userId = User.userId")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ShopReview, User WHERE shopId = ? AND ShopReview.userId = User.userId order by reviewTime desc")) {
             stm.setInt(1, shopId);
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<ShopReview> shopReviews = new ArrayList<>();

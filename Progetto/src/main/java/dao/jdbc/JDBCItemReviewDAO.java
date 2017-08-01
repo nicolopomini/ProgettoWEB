@@ -155,7 +155,7 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
         if (itemId == null) {
             throw new DAOException("itemId is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ItemReview, User WHERE itemId = ? AND ItemReview.userId = User.userId")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ItemReview, User WHERE itemId = ? AND ItemReview.userId = User.userId order by reviewTime desc")) {
             stm.setInt(1, itemId);
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<ItemReview> itemReviews = new ArrayList<>();
