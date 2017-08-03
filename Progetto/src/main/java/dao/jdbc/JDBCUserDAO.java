@@ -157,7 +157,6 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User WHERE verificationCode = ?")) {
             stm.setString(1, activationCode);
             try (ResultSet rs = stm.executeQuery()) {
-
                 User user = new User();
                 while(rs.next())
                 {
