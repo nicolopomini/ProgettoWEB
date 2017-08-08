@@ -5,11 +5,30 @@
 --%>
 
 <%@page import="java.util.HashMap"%>
+<%@ page import="dao.entities.Item" %>
+<%@ page import="dao.ItemDAO" %>
+<%@ page import="persistence.utils.dao.factories.DAOFactory" %>
+<%@ page import="persistence.utils.dao.exceptions.DAOFactoryException" %>
+<%@ page import="persistence.utils.dao.factories.jdbc.JDBCDAOFactory" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     boolean logged = false;
+    ItemDAO itemDAO;
+    double totalprice = 0;
+
+    DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+    if (daoFactory == null) {
+        throw new ServletException("Impossible to get dao factory for storage system");
+    }
+    try {
+        itemDAO = daoFactory.getDAO(ItemDAO.class);
+    } catch (DAOFactoryException ex) {
+        throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+    }
+
     HashMap<Integer,Integer> cart = (HashMap<Integer,Integer>) session.getAttribute("cart");
     
 %>
@@ -56,27 +75,43 @@
             <!-- Fine menu -->
             <% if(cart == null || cart.isEmpty()) { //carrello vuoto%>
             <h2 style="text-align: center">Il carrello è vuoto</h2>
-            <% } else { //carrello pieno%>
+            <% } else { //carrello pieno
+                    HashMap<Item,Integer> items = new HashMap<>();
+                    ArrayList<Item> items_array = new ArrayList<>();
+                    for (Integer i : cart.keySet()){
+                        Item item = itemDAO.getByPrimaryKey(i);
+                        items_array.add(item);
+                        items.put(item,cart.get(i));
+                        totalprice += item.getPrice() * cart.get(i);
+
+                        pageContext.setAttribute("totalprice", totalprice);
+                        /*for(int j= 0; j< cart.get(i);j++)
+                            out.println("ASD PROVA PROVA");
+                        */
+                    }
+                pageContext.setAttribute("items", items);
+            %>
             <form action="" method="POST" class="form-inline">
+
                 <input type="hidden" name="total" value="32.5">
                 <input class="btn btn-default" type="submit" value="Procedi al pagamento">
             </form>
             <table class="table">
                 <thead>
                     <th><strong>Totale</strong></th>
-                    <th><strong><fmt:formatNumber value="32.5" type="currency"/></strong></th>
+                    <th><strong><fmt:formatNumber value="${totalprice}" type="currency"/></strong></th>
                 </thead>
                 <tbody>
-                <c:forEach items="${cart}" var="current">
+                <c:forEach items="${items}" var="current">
                     <tr>
-                        <td><a href="item.jsp?itemid=<c:out value="${current.key}"/>">Nome oggetto</a></td>
-                        <td><fmt:formatNumber value="9.49" type="currency"/></td>
+                        <td><a href="item.jsp?itemid=<c:out value="${current.key.itemId}"/>">${current.key.name}</a></td>
+                        <td><fmt:formatNumber value="${current.key.price}" type="currency"/></td>
                         <td>x<c:out value="${current.value}"/></td>
                     </tr>
                 </c:forEach>
                 </tbody>
             </table>
-            <form action="" method="POST" class="form-inline">
+            <form action="Payment.jsp" method="POST" class="form-inline">
                 <input type="hidden" name="total" value="32.5">
                 <input class="btn btn-default" type="submit" value="Procedi al pagamento">
             </form>
