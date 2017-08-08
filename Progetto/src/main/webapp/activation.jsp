@@ -14,6 +14,15 @@
 <%
     boolean logged, venditore;
     logged = venditore = false;
+    User sessionUser = (User)session.getAttribute("user");
+    if(sessionUser != null)
+    {
+        logged = true;
+        if(sessionUser.getType().equals("seller"))
+        {
+            venditore = true;
+        }
+    }
     String activationCode = "";
     boolean validCode = true;
     

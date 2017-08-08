@@ -17,13 +17,27 @@
 <%
     boolean logged, venditore;
     logged = venditore = false;
+    User sessionUser = (User)session.getAttribute("user");
+    if(sessionUser != null)
+    {
+        logged = true;
+        if(sessionUser.getType().equals("seller"))
+        {
+            venditore = true;
+        }
+    }
     boolean validData = true;
     String tmpEmail, tmpPassword, tmpName, tmpSurname, tmpAddress;
     tmpEmail = tmpPassword = tmpName = tmpSurname = tmpAddress = "";
     User toInsert = new User();
     
-    session.setAttribute("user",null);
-    if(session.getAttribute("user") == null)
+    String previousPage = "home.jsp";
+    if(request.getHeader("Referer") != null)
+    {
+        previousPage = request.getHeader("Referer");
+    }
+
+    if(!logged)
     {
         if(request.getMethod().equals("POST"))
         {
@@ -255,8 +269,11 @@
                             </div>
                         </div>
                         <div class="form-group col-xs-12"> 
-                            <div class="col-xs-2">
-                                <span onclick="registerAttempt()" class="btn btn-default">Register</button>
+                            <div class="col-xs-6">
+                                <span onclick="registerAttempt()" class="btn btn-default">Register</span>
+                            </div>
+                            <div class="col-xs-6">
+                                <a style="float:right;" href="<%=previousPage%>" class="btn btn-danger">Cancel</a>
                             </div>
                         </div>
                     </div>
