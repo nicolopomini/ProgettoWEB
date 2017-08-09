@@ -127,7 +127,7 @@
 <h2 style="text-align: center">Il carrello è vuoto</h2>
 <% } else { //carrello pieno%>
 <h1>Seleziona il metodo di pagamento:</h1>
-<form action="asd" name="payment-info" method="post">
+<form action="Checkout" name="payment-info" method="post">
     <input type="radio" name="type" value="cod" onClick="showDiv('COD');">C.O.D.   <img src="resources/icons/money.png" height="22">
     <div id="COD" style="visibility:hidden">
         asdasd

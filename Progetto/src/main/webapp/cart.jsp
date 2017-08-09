@@ -105,7 +105,9 @@
                 <c:forEach items="${items}" var="current">
                     <tr>
                         <td><a href="item.jsp?itemid=<c:out value="${current.key.itemId}"/>">${current.key.name}</a></td>
+                        <td></td>
                         <td><fmt:formatNumber value="${current.key.price}" type="currency"/></td>
+                        <td></td>
                         <td>x<c:out value="${current.value}"/></td>
                     </tr>
                 </c:forEach>

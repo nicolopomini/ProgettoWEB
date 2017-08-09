@@ -83,6 +83,10 @@
         <servlet-name>ItemCommentReply</servlet-name>
         <url-pattern>/ItemCommentReply</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Checkout</servlet-name>
+        <url-pattern>/Checkout</url-pattern>
+    </servlet-mapping>
     <listener>
         <description>ServletContextListener</description>
         <listener-class>listeners.WebAppContextListener</listener-class>
