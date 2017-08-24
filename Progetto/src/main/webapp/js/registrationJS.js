@@ -55,10 +55,19 @@ function registerAttempt()
             fieldError.innerHTML = "The Password field cannot contain invalid characters";
             field.setAttribute("style","border: 1px solid red");
         }
-        else
+        else 
         {
-            fieldError.innerHTML = "";
-            field.setAttribute("style","border: 1px solid #ccc");
+            if(field.value.length >= 8)
+            {
+                fieldError.innerHTML = "";
+                field.setAttribute("style","border: 1px solid #ccc");
+            }
+            else
+            {
+                validForm = false;
+                fieldError.innerHTML = "The Password field has to be at least 8 characters long";
+                field.setAttribute("style","border: 1px solid red");
+            }
         }
     }
     else
@@ -190,4 +199,9 @@ function isUniqueEmail()
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     var toSearch = encodeURIComponent(input.value);
     xhttp.send("Email="+toSearch);
+}
+
+function goBack()
+{
+    window.history.back();
 }

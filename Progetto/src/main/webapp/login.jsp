@@ -4,6 +4,7 @@
     Author     : Marco
 --%>
 
+<%@page import="utils.MailUtils"%>
 <%@page import="utils.BCrypt"%>
 <%@page import="persistence.utils.dao.exceptions.DAOFactoryException"%>
 <%@page import="persistence.utils.dao.factories.DAOFactory"%>
@@ -18,6 +19,7 @@
     String email = "";
     String password = "";
     Boolean valid = true;
+    Boolean active = true;
     User sessionUser = (User)session.getAttribute("user");
     if(sessionUser != null)
     {
@@ -66,19 +68,13 @@
                                 {
                                     if(!toSearch.getVerificationCode().equals("1"))
                                     {
-                                        
+                                        active = false;
+                                        MailUtils.sendActivationEmail(toSearch);
                                     }
                                     else
                                     {
-                                        
-                                        if(request.getParameter("wasPaying") != null)
-                                        {
-                                            response.sendRedirect("localhost/Progetto/Payment.jsp");
-                                        }
-                                        else
-                                        {
-                                            response.sendRedirect("Registration.jsp");
-                                        }
+                                        session.setAttribute("user", toSearch);
+                                        response.sendRedirect("/Progetto/login.jsp");
                                     }
                                 }
                             }
@@ -127,16 +123,22 @@
                         <li><a href="#">Modifica negozio</a></li>
                         <% } %>
                         <% if(logged) { %>
-                        <li><a href="#">Esci</a></li>
+                        <li><a href="/Progetto/Logout">Esci</a></li>
                         <% }else {%>
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#">Registrati</a></li>
+                        <li><a href="/Progetto/login.jsp">Login</a></li>
+                        <li><a href="/Progetto/Registration.jsp">Registrati</a></li>
                         <% } %>
                     </ul>
                   </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
             </nav>
             <div class="row">
+                <%
+                    if(!logged)
+                    {
+                        if(active)
+                        {
+                %>
                 <form id="registerForm" method="post" action="<%=request.getRequestURL() %>" class="form-horizontal">
                     <div class="col-xs-12 marginBottomFix">
                         <label class="col-xs-12">Fill the form an press the button to login</label>
@@ -165,12 +167,36 @@
                             </div>
                         </div>
                         <div class="form-group col-xs-12"> 
-                            <div class="col-xs-2">
+                            <div class="col-xs-6">
                                 <button type="submit" class="btn btn-default">Login</button>
+                            </div>
+                            <div class="col-xs-6">
+                                <span onclick="goBack()" style="float:right;" class="btn btn-danger">Cancel</a>
                             </div>
                         </div>
                     </div>
                 </form>
+                <%
+                        }
+                        else
+                        {
+                %>
+                <div class="col-xs-12">
+                    <label>Your account needs to be activated first!</label>
+                    <p class="redText">WARNING: To start using your account you will need to activate it. An activation email has been sent to the address "<%=email%>", click on the button contained in the email to activate your account</p>
+                </div>
+                <%
+                        }
+                    }
+                    else
+                    {
+                %>
+                <div class="col-xs-12">
+                    <label>Effettua il logout per accedere a questa pagina</label>
+                </div>
+                <%
+                    }
+                %>
             </div>
             <footer class="footer">
                 <center>
@@ -180,5 +206,6 @@
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
+        <script src="js/registrationJS.js"></script>
     </body>
 </html>

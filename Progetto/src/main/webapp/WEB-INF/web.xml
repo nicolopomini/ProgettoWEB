@@ -51,6 +51,10 @@
         <servlet-name>UniqueEmail</servlet-name>
         <servlet-class>servlets.UniqueEmail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>servlets.Logout</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DebugServlet</servlet-name>
         <url-pattern>/DebugServlet</url-pattern>
@@ -94,6 +98,10 @@
     <servlet-mapping>
         <servlet-name>UniqueEmail</servlet-name>
         <url-pattern>/UniqueEmail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/Logout</url-pattern>
     </servlet-mapping>
     <error-page>
         <exception-type>java.lang.NullPointerException</exception-type>

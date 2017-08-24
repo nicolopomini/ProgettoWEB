@@ -59,7 +59,7 @@
             {
                 tmpPassword = request.getParameter("Password");
                 String passwordRegex = "[^a-zA-Z0-9-_]";
-                if(!StringUtils.isValidString(tmpPassword,passwordRegex) || StringUtils.isEmpty(tmpPassword))
+                if(!StringUtils.isValidString(tmpPassword,passwordRegex) || StringUtils.isEmpty(tmpPassword) || tmpPassword.length() < 8)
                 {
                     validData = false;
                 }
@@ -191,10 +191,10 @@
                         <li><a href="#">Modifica negozio</a></li>
                         <% } %>
                         <% if(logged) { %>
-                        <li><a href="#">Esci</a></li>
+                        <li><a href="/Progetto/Logout">Esci</a></li>
                         <% }else {%>
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#">Registrati</a></li>
+                        <li><a href="/Progetto/login.jsp">Login</a></li>
+                        <li><a href="/Progetto/Registration.jsp">Registrati</a></li>
                         <% } %>
                     </ul>
                   </div><!-- /.navbar-collapse -->
@@ -273,7 +273,7 @@
                                 <span onclick="registerAttempt()" class="btn btn-default">Register</span>
                             </div>
                             <div class="col-xs-6">
-                                <a style="float:right;" href="<%=previousPage%>" class="btn btn-danger">Cancel</a>
+                                <span onclick="goBack()" style="float:right;" class="btn btn-danger">Cancel</a>
                             </div>
                         </div>
                     </div>
