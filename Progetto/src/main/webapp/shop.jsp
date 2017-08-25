@@ -77,42 +77,12 @@
         <title><%= shop.getName() %></title>
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
+        <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
     </head>
     <body>
         <div class="container">
             <!-- Menu -->
-            <nav class="navbar navbar-default">
-            <div class="container-fluid">
-              <!-- Brand and toggle get grouped for better mobile display -->
-              <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                  <span class="sr-only">Toggle navigation</span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Home</a>
-              </div>
-
-              <!-- Collect the nav links, forms, and other content for toggling -->
-              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <% if(venditore) { %>
-                    <li><a role="button" data-toggle="modal" data-target="#inserisciitem">Aggiungi un item</a></li>
-                    <li><a role="button" data-toggle="modal" data-target="#modificanegozio">Modifica il tuo negozio</a></li>
-                    <% } %>
-                  <li><a href="cart.jsp">Carrello</a></li>
-                  <% if(logged) { %>
-                  <li><a href="#"><%= user.getName() + " " + user.getSurname() %></a></li>
-                  <li><a href="#">Esci</a></li>
-                  <% }else {%>
-                  <li><a href="#">Login</a></li>
-                  <li><a href="#">Registrati</a></li>
-                  <% } %>
-                </ul>
-              </div><!-- /.navbar-collapse -->
-            </div><!-- /.container-fluid -->
-          </nav>
+            <jsp:include page="Header.jsp"/>
             <!-- Fine menu -->
             <% if(message != null) { %>
             <div class="alert alert-info alert-dismissable fade in" role="alert">
@@ -315,13 +285,8 @@
             <!--Fine nuovo item-->
             <% } %>
             <!--Footer-->
-            <footer class="footer">
-                <center>
-                  <p class="text-muted">Footer content</p>
-                </center>
-            </footer>
+            <jsp:include page="Footer.jsp"/>
         </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script type="text/javascript">
             var count = 1;
