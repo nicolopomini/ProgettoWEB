@@ -13,7 +13,7 @@
     <context-param>
         <description>Password for db</description>
         <param-name>dbpassword</param-name>
-        <param-value>root</param-value>
+        <param-value>ciao</param-value>
     </context-param>
     <servlet>
         <servlet-name>DebugServlet</servlet-name>
@@ -54,6 +54,10 @@
     <servlet>
         <servlet-name>Logout</servlet-name>
         <servlet-class>servlets.Logout</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CartManager</servlet-name>
+        <servlet-class>servlets.CartManager</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DebugServlet</servlet-name>
@@ -102,6 +106,10 @@
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
         <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CartManager</servlet-name>
+        <url-pattern>/CartManager</url-pattern>
     </servlet-mapping>
     <error-page>
         <exception-type>java.lang.NullPointerException</exception-type>

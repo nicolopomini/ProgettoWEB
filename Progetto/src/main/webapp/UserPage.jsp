@@ -34,6 +34,9 @@
     <body>
         <div class="container">
             <jsp:include page="Header.jsp"/>
+            
+            
+            
             <jsp:include page="Footer.jsp"/>
         </div>
         <script src="js/bootstrap.min.js"></script>

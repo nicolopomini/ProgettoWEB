@@ -69,7 +69,7 @@
             <form action="/Progetto/Payment.jsp" method="POST" class="form-inline">
                 <input class="btn btn-default" type="submit" value="Procedi al pagamento">
             </form>
-            <table class="table">
+            <table id="cartTable" class="table">
                 <thead>
                     <th><strong>Totale</strong></th>
                     <th><strong><fmt:formatNumber value="${totalprice}" type="currency"/></strong></th>
@@ -81,7 +81,7 @@
                         <td></td>
                         <td><fmt:formatNumber value="${current.key.price}" type="currency"/></td>
                         <td></td>
-                        <td>x<c:out value="${current.value}"/></td>
+                        <td><button style="margin-right: 5px" onclick="addRemoveItem(0,${current.key.itemId})" class="btn btn-xs btn-info">-</button><c:out value="${current.value}"/><button style="margin-left: 5px" onclick="addRemoveItem(1,${current.key.itemId})" class="btn btn-xs btn-info">+</button></td>
                     </tr>
                 </c:forEach>
                 </tbody>
@@ -94,5 +94,6 @@
             <jsp:include page="Footer.jsp"/>
         </div>
         <script src="js/bootstrap.min.js"></script>
+        <script src="js/cartJS.js"></script>
     </body>
 </html>
