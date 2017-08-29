@@ -4,6 +4,8 @@
     Author     : blast
 --%>
 
+<%@page import="dao.ItemReviewDAO"%>
+<%@page import="dao.entities.ItemReview"%>
 <%@page import="java.util.TreeSet"%>
 <%@page import="java.util.Set"%>
 <%@page import="dao.ShopDAO"%>
@@ -19,6 +21,7 @@
 <%
     ItemDAO itemDatabase;
     ShopDAO shopDatabase;
+    ItemReviewDAO reviewDatabase;
     DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
     if(daoFactory!=null){
         try{
@@ -30,6 +33,11 @@
             shopDatabase = daoFactory.getDAO(ShopDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+        try {
+            reviewDatabase = daoFactory.getDAO(ItemReviewDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for itemReview storage system", ex);
         }
     }else{
         throw new ServletException("Impossible to get dao factory for storage system");
@@ -54,12 +62,43 @@
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css"/>
 
+        
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
         
         <title>Home</title>
+        <script type="text/javascript">
+            $(document).ready(function($) {
+                $(".table-row").click(function() {
+                    window.document.location = $(this).data("href");
+                });
+                $.fn.dataTable.ext.search.push(
+                    function( settings, data, dataIndex ) {
+                        var min = parseInt( $('#minPrice').val(), 10 );
+                        var max = parseInt( $('#maxPrice').val(), 10 );
+                        var inputReview=parseFloat( $('#inputReview').val(), 10 );
+                        var price = parseFloat( data[3] ) || 0;
+                        var review = parseFloat( data[5] ) || 0;
+
+                        if ( ( ( isNaN( min ) && isNaN( max ) ) ||
+                             ( isNaN( min ) && price <= max ) ||
+                             ( min <= price   && isNaN( max ) ) ||
+                             ( min <= price   && price <= max ) ) &&
+                              ( (isNaN( inputReview ) || isNaN( review )) || review>=inputReview ) )
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                );
+                $('#minPrice, #maxPrice, #inputReview').keyup( function() {
+                    var table=$('#resultTable').DataTable();
+                    table.draw();
+                } );
+            });
+        </script>
     </head>
     <body>
         <div class="container">
@@ -72,9 +111,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="list-group stacked">
-                                    <li class="list-group-item">
-                                            <a href="#">Ricerca avanzata</a>
-                                    </li>
+                                    
                                     <li class="list-group-item dropdown">
                                         <a href="#" data-toggle="dropdown" class="dropdown-toggle">Categorie<strong class="caret"></strong></a>
                                         <ul class="dropdown-menu">
@@ -105,6 +142,9 @@
                                             <input type="search" class="form-control" name="shopName"/>
                                         </form>
                                     </div>
+                                    <li class="list-group-item">
+                                        <a href="#searchFilters" data-toggle="collapse" >Filtri di ricerca</a>
+                                    </li>
                                 </div>
                             </div>
                         </div>
@@ -189,23 +229,40 @@
 
                                             if(!queryItems.isEmpty()){
                                             %>
-                                            
-                                                <table class="table" id="resultTable">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Prodotto</th><th>Descrizione</th><th>Negozio</th><th>Prezzo</th>
-                                                        </tr>
-                                                    </thead>
+                                            <div class="row">
+                                                <table class="table collapse" id="searchFilters">
                                                     <tbody>
+                                                        <tr>
+                                                            <td>Prezzo minimo:</td>
+                                                            <td><input type="text" id="minPrice" name="minPrice"></td>
+                                                            <td>Prezzo massimo:</td>
+                                                            <td><input type="text" id="maxPrice" name="maxPrice"></td>
+                                                            <td>Recensione</td>
+                                                            <td><input type="text" id="inputReview" name="inputReview"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                 </table>
+                                            </div>
+                                            <table class="table" id="resultTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Prodotto</th><th>Descrizione</th><th>Negozio</th><th>Prezzo</th><th style="display:none;">Regione</th><th style="display:none;">Recensione</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
                                             <%
                                             for(Item i:queryItems){
                                                 String name=i.getName();
                                                 String description=i.getDescription();
                                                 String shop=(shopDatabase.getByPrimaryKey(i.getShopId())).getName();
                                                 String price=i.getPrice().toString();
+                                                String itemPage="item.jsp?itemid="+i.getItemId();
+                                                String strReview=reviewDatabase.getAverageScoreByItemId(i.getItemId()).toString();
+                                                //String region=shopDatabase.getByPrimaryKey(i.getShopId()).getAddress();
+                                                //REGIONI DA FARE
                                             %>
-                                                <tr>
-                                                    <th><% out.write(name); %> </th><th><% out.write(description); %></th><th><% out.write(shop); %></th><th><% out.write(price); %></th>
+                                                <tr class="table-row" data-href="<% out.write(itemPage); %>">
+                                                    <td><% out.write(name); %> </td><td><% out.write(description); %></td><td><% out.write(shop); %></td><td><% out.write(price); %></td><td style="display:none;"><!-- REGIONE --></td><td style="display:none;"><% out.write(strReview); %></td>
                                                 </tr>
                                                     <%--
                                                     <tr class="active">
@@ -232,7 +289,7 @@
                                     %>
                                     <script>
                                         $(document).ready(function() {
-                                            $('#resultTable').dataTable( {
+                                            $('#resultTable').DataTable( {
                                                 "language": {
                                                     "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Italian.json"
                                                 },
