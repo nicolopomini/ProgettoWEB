@@ -275,7 +275,6 @@
                 locationSelect.appendChild(option);
              }
         </script>
-        <script src="js/bootstrap.min.js"></script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYq_8A3Y0roix5fablhZIDZZ5GemSSUxo&callback=initMap"></script>
     </body>
 </html>

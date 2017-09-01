@@ -152,6 +152,5 @@
     <!--Footer-->
     <jsp:include page="Footer.jsp"/>
 </div>
-    <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

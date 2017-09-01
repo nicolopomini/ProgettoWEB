@@ -28,12 +28,12 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.jsp">Home</a>
+            <a class="navbar-brand" href="./">Home</a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right" id="voci_menu">
                 <% if(logged) { %>
                     <% if(type.equals("seller")) { %>
                     <li><a href="#">Notifiche</a></li>
@@ -45,19 +45,19 @@
                         if(type.equals("admin"))
                         {
                             %>
-                            <li><a href="/Progetto/UserPage.jsp"><%=sessionUser.getName() + " " + sessionUser.getSurname()%></a></li>
+                            <li><a href="UserPage.jsp"><%=sessionUser.getName() + " " + sessionUser.getSurname()%></a></li>
                             <%
                         }
                         else
                         {
                             %>
-                            <li><a href="/Progetto/cart.jsp">Cart</a></li>
+                            <li><a href="cart.jsp">Cart</a></li>
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#"><%=sessionUser.getName() + " " + sessionUser.getSurname()%>
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="/Progetto/UserPage.jsp">Profile</a></li>
+                                    <li><a href="UserPage.jsp">Profile</a></li>
                                     <li><a href="#">Complaint</a></li>
                                     <%
                                         if(type.equals("seller"))
@@ -73,15 +73,12 @@
                         } 
                     %>
 
-                <li><a href="/Progetto/Logout">Esci</a></li>
+                <li><a href="Logout">Esci</a></li>
                 <% }else {%>
-                <li><a href="/Progetto/login.jsp">Login</a></li>
-                <li><a href="/Progetto/Registration.jsp">Registrati</a></li>
+                <li><a href="login.jsp">Login</a></li>
+                <li><a href="Registration.jsp">Registrati</a></li>
                 <% } %>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-
-<script src="js/bootstrap.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>

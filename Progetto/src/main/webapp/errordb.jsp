@@ -37,7 +37,6 @@
                 <p class="lead">Si è verificato un errore nel collegamento con il database</p>
               </div>
             <jsp:include page="Footer.jsp"/>
-            <script src="js/bootstrap.min.js"></script>
         </div>
     </body>
 </html>

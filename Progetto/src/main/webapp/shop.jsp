@@ -58,7 +58,7 @@
     session.setAttribute("shop", shop);
     if(user == null) {  //non è loggato
         logged = false;
-        venditore = false;
+        venditore = true;
         cancomment = false;
     }
     else {
@@ -79,7 +79,7 @@
         <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
     </head>
-    <body>
+    <body onload="addButton()">
         <div class="container">
             <!-- Menu -->
             <jsp:include page="Header.jsp"/>
@@ -286,8 +286,6 @@
             <% } %>
             <!--Footer-->
             <jsp:include page="Footer.jsp"/>
-        </div>
-        <script src="js/bootstrap.min.js"></script>
         <script type="text/javascript">
             var count = 1;
             function addPhoto() {
@@ -297,5 +295,16 @@
                 document.getElementById("immaginiitem").innerHTML = content;
             }
         </script>
+        <% if(venditore) { %>
+        <script type="text/javascript">
+            function addButton() {
+                var menu = document.getElementById("voci_menu").innerHTML;
+                menu += '<li><a role="button" data-toggle="modal" data-target="#modificanegozio">Modifica negozio</a></li>';
+                menu += '<li><a role="button" data-toggle="modal" data-target="#inserisciitem">Aggiungi item</a></li>';
+                document.getElementById("voci_menu").innerHTML = menu;
+            }
+        </script>
+        <% } %>
+        </div>
     </body>
 </html>

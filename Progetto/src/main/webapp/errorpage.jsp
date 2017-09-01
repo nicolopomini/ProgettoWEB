@@ -37,7 +37,6 @@
                 <p class="lead">L'elemento richiesto non esiste o non è disponibile. Assicurati di aver cercato quello che effettivamente desideravi cercare.</p>
               </div>
             <jsp:include page="Footer.jsp"/>
-            <script src="js/bootstrap.min.js"></script>
         </div>
     </body>
 </html>

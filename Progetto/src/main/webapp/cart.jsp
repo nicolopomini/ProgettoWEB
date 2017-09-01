@@ -93,7 +93,6 @@
             <!--Footer-->
             <jsp:include page="Footer.jsp"/>
         </div>
-        <script src="js/bootstrap.min.js"></script>
         <script src="js/cartJS.js"></script>
     </body>
 </html>

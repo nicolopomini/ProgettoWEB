@@ -173,7 +173,6 @@
             </div>
             <jsp:include page="Footer.jsp"/>
         </div>
-        <script src="js/bootstrap.min.js"></script>
         <script src="js/registrationJS.js"></script>
     </body>
 </html>
