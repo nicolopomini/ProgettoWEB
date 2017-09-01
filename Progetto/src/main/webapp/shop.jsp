@@ -58,7 +58,7 @@
     session.setAttribute("shop", shop);
     if(user == null) {  //non è loggato
         logged = false;
-        venditore = true;
+        venditore = false;
         cancomment = false;
     }
     else {

@@ -315,7 +315,7 @@ public class DebugServlet extends HttpServlet {
         
         n.setNotificationText("asdf");
         n.setSeen(false);
-        n.setUserId(1);
+        n.setAuthor(1);
         
         notificationDAO.add(n);
         

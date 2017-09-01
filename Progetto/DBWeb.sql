@@ -99,10 +99,14 @@ DROP TABLE IF EXISTS Notification;
 CREATE TABLE Notification
 (
 	notificationId INT UNSIGNED AUTO_INCREMENT,
-	userId INT UNSIGNED NOT NULL,
+	author INT UNSIGNED NOT NULL,
+	recipient INT UNSIGNED NOT NULL,
 	notificationText VARCHAR(1000) NOT NULL,
+	notificationTime TIMESTAMP NOT NULL,
 	seen BOOLEAN NOT NULL DEFAULT 0,
-	FOREIGN KEY(userId) REFERENCES User(userId) ON UPDATE CASCADE ON DELETE RESTRICT,
+	type ENUM('newcommentshop','replycommentshop','newcommentitem','replycommentitem','newcomplaint','replycomplaint') NOT NULL,
+	FOREIGN KEY(author) REFERENCES User(userId) ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY(recipient) REFERENCES User(userId) ON UPDATE CASCADE ON DELETE RESTRICT,
 	PRIMARY KEY(notificationId)
 );
 
