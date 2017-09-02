@@ -6,7 +6,9 @@
 package dao;
 
 import dao.entities.Notification;
+import java.util.ArrayList;
 import persistence.utils.dao.DAO;
+import persistence.utils.dao.exceptions.DAOException;
 
 /**
  *
@@ -14,4 +16,5 @@ import persistence.utils.dao.DAO;
  */
 
 public interface NotificationDAO extends DAO<Notification, Integer>{
+    public ArrayList<Notification> getByRecipient(int UserId) throws DAOException;
 }

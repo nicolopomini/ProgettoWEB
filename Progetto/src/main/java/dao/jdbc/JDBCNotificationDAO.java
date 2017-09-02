@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
 
@@ -60,6 +62,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
                 notification.setNotificationTime(rs.getString("notificationTime"));
                 notification.setRecipient(rs.getInt("recipient"));
                 notification.setType(rs.getString("type"));
+                notification.setLink(rs.getString("link"));
 
                 return notification;
             }
@@ -83,6 +86,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
                     notification.setNotificationTime(rs.getString("notificationTime"));
                     notification.setRecipient(rs.getInt("recipient"));
                     notification.setType(rs.getString("type"));
+                    notification.setLink(rs.getString("link"));
                     notifications.add(notification);
                 }
                 return notifications;
@@ -94,13 +98,14 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
 
     @Override
     public Notification update(Notification notification) throws DAOException {
-        try (PreparedStatement stm = CON.prepareStatement("UPDATE Notification SET author = ?, notificationText = ?, seen = ?, recipient = ?, type = ?, notificationTime = ?  WHERE notificationId = ?;")) {
+        try (PreparedStatement stm = CON.prepareStatement("UPDATE Notification SET author = ?, notificationText = ?, seen = ?, recipient = ?, type = ?, notificationTime = ?, link = ?  WHERE notificationId = ?;")) {
             stm.setInt(1, notification.getAuthor());
             stm.setString(2, notification.getNotificationText());
             stm.setBoolean(3, notification.getSeen());
             stm.setInt(4, notification.getRecipient());
             stm.setString(5, notification.getType());
             stm.setString(6, notification.getNotificationTime());
+            stm.setString(7, notification.getLink());
             stm.executeUpdate();
             
             return notification;
@@ -111,13 +116,14 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
 
     @Override
     public Notification add(Notification notification) throws DAOException {
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Notification (author, notificationText, seen, recipient, type, notificationTime) VALUES (?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Notification (author, notificationText, seen, recipient, type, notificationTime, link) VALUES (?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS)) {
             stm.setInt(1, notification.getAuthor());
             stm.setString(2, notification.getNotificationText());
             stm.setBoolean(3, notification.getSeen());
             stm.setInt(4, notification.getRecipient());
             stm.setString(5, notification.getType());
             stm.setString(6, notification.getNotificationTime());
+            stm.setString(7, notification.getLink());
             stm.executeUpdate();
             
             ResultSet rs = stm.getGeneratedKeys();
@@ -144,4 +150,30 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
             throw new DAOException("Impossible to remove the notification", ex);
         }
     }
+
+    @Override
+    public ArrayList<Notification> getByRecipient(int UserId) throws DAOException {
+        try {
+            PreparedStatement stm = CON.prepareStatement("select * from notification where recipient = ? order by notificationTime;");
+            ResultSet rs = stm.executeQuery();
+            ArrayList<Notification> l = new ArrayList<>(); 
+            while(rs.next()) {
+                Notification n = new Notification();
+                n.setAuthor(rs.getInt("author"));
+                n.setLink(rs.getString("link"));
+                n.setNotificationId(rs.getInt("notificationId"));
+                n.setNotificationText(rs.getString("text"));
+                n.setNotificationTime(rs.getString("notificationTime"));
+                n.setRecipient(rs.getInt("recipient"));
+                n.setSeen(rs.getBoolean("seen"));
+                n.setType(rs.getString("type"));
+                l.add(n);
+            }
+            return l;
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get notifications", ex);
+        }
+        
+    }
+    
 }

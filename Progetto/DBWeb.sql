@@ -105,6 +105,7 @@ CREATE TABLE Notification
 	notificationTime TIMESTAMP NOT NULL,
 	seen BOOLEAN NOT NULL DEFAULT 0,
 	type ENUM('newcommentshop','replycommentshop','newcommentitem','replycommentitem','newcomplaint','replycomplaint') NOT NULL,
+	link VARCHAR(1000),
 	FOREIGN KEY(author) REFERENCES User(userId) ON UPDATE CASCADE ON DELETE RESTRICT,
 	FOREIGN KEY(recipient) REFERENCES User(userId) ON UPDATE CASCADE ON DELETE RESTRICT,
 	PRIMARY KEY(notificationId)

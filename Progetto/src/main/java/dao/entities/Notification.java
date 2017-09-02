@@ -16,7 +16,7 @@ public class Notification {
     private String notificationText;
     private String notificationTime;
     private Boolean seen;
-    private String type;
+    private String type, link;
 
     public Integer getNotificationId() {
         return notificationId;
@@ -46,6 +46,11 @@ public class Notification {
         return type;
     }
 
+    public String getLink() {
+        return link;
+    }
+    
+
     public void setNotificationTime(String notificationTime) {
         this.notificationTime = notificationTime;
     }
@@ -57,7 +62,10 @@ public class Notification {
     public void setType(String type) {
         this.type = type;
     }
-    
+
+    public void setLink(String link) {
+        this.link = link;
+    }
     
 
     public void setNotificationId(Integer notificationId) {
@@ -78,6 +86,6 @@ public class Notification {
 
     @Override
     public String toString() {
-        return "Notification{" + "notificationId=" + notificationId + ", userId=" + author + ", notificationText=" + notificationText + ", seen=" + seen + ", notificationTime=" + notificationTime + ", recipient=" + recipient + ", type=" + type + '}';
+        return "Notification{" + "notificationId=" + notificationId + ", userId=" + author + ", notificationText=" + notificationText + ", seen=" + seen + ", notificationTime=" + notificationTime + ", recipient=" + recipient + ", type=" + type + ",link=" + link + '}';
     }
 }
