@@ -14,8 +14,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
 
@@ -154,7 +152,8 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
     @Override
     public ArrayList<Notification> getByRecipient(int UserId) throws DAOException {
         try {
-            PreparedStatement stm = CON.prepareStatement("select * from notification where recipient = ? order by notificationTime;");
+            PreparedStatement stm = CON.prepareStatement("select notificationId, Notification.author as author, User.name as authorName, User.surname as authorSurname, notificationTime, notificationText, recipient, seen, Notification.type as type, link from Notification join User on (Notification.author = user.UserId)  where recipient = 1 order by notificationTime;");
+            //stm.setInt(1, UserId);
             ResultSet rs = stm.executeQuery();
             ArrayList<Notification> l = new ArrayList<>(); 
             while(rs.next()) {
@@ -162,11 +161,13 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
                 n.setAuthor(rs.getInt("author"));
                 n.setLink(rs.getString("link"));
                 n.setNotificationId(rs.getInt("notificationId"));
-                n.setNotificationText(rs.getString("text"));
+                n.setNotificationText(rs.getString("notificationText"));
                 n.setNotificationTime(rs.getString("notificationTime"));
                 n.setRecipient(rs.getInt("recipient"));
                 n.setSeen(rs.getBoolean("seen"));
                 n.setType(rs.getString("type"));
+                n.setAuthorName(rs.getString("authorName"));
+                n.setAuthorSurname(rs.getString("authorSurname"));
                 l.add(n);
             }
             return l;

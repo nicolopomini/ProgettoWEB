@@ -5,7 +5,9 @@
  */
 package servlets;
 
+import dao.NotificationDAO;
 import dao.ShopReviewDAO;
+import dao.entities.Notification;
 import dao.entities.Shop;
 import dao.entities.ShopReview;
 import dao.entities.User;
@@ -30,6 +32,7 @@ import utils.StringUtils;
 @WebServlet(name = "ShopComment", urlPatterns = {"/ShopComment"})
 public class ShopComment extends HttpServlet {
     private ShopReviewDAO shopReview;
+    private NotificationDAO notificationDAO;
 
     @Override
     public void init() throws ServletException {
@@ -40,6 +43,11 @@ public class ShopComment extends HttpServlet {
         }
         try {
             shopReview = daoFactory.getDAO(ShopReviewDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+        try {
+            notificationDAO = daoFactory.getDAO(NotificationDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
@@ -85,8 +93,17 @@ public class ShopComment extends HttpServlet {
         review.setReviewTime(new Timestamp(new Date().getTime()).toString());
         review.setShopId(shop.getShopId());
         review.setUserId(user.getUserId());
+        Notification notification = new Notification();
+        notification.setAuthor(review.getUserId());
+        notification.setRecipient(shop.getUserId());
+        notification.setType(Notification.NEWCOMMENTSHOP);
+        notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
+        notification.setNotificationText("");
+        notification.setLink("./item.jsp?itemid= " + shop.getShopId() + "#commenti");
+        notification.setSeen(false);
         try {
             shopReview.add(review);
+            notificationDAO.add(notification);
         } catch (DAOException ex) {
             throw new ServletException("Error during insering the shop review",ex);
         }

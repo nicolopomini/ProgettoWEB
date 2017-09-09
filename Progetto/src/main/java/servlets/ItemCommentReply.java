@@ -6,9 +6,13 @@
 package servlets;
 
 import dao.ItemReviewDAO;
+import dao.NotificationDAO;
 import dao.entities.Item;
 import dao.entities.ItemReview;
+import dao.entities.Notification;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,6 +31,7 @@ import utils.StringUtils;
 @WebServlet(name = "ItemCommentReply", urlPatterns = {"/ItemCommentReply"})
 public class ItemCommentReply extends HttpServlet {
     private ItemReviewDAO itemReviewDAO;
+    private NotificationDAO notificationDAO;
 
     @Override
     public void init() throws ServletException {
@@ -37,6 +42,11 @@ public class ItemCommentReply extends HttpServlet {
         }
         try {
             itemReviewDAO = daoFactory.getDAO(ItemReviewDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+        try {
+            notificationDAO = daoFactory.getDAO(NotificationDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
@@ -74,6 +84,15 @@ public class ItemCommentReply extends HttpServlet {
             ItemReview review = itemReviewDAO.getByPrimaryKey(reviewid);
             review.setReply(StringUtils.checkInputString(request.getParameter("replycomment")));
             itemReviewDAO.update(review);
+            Notification notification = new Notification();
+            notification.setAuthor(itemReviewDAO.getItemSeller(item.getItemId()));
+            notification.setRecipient(review.getUserId());
+            notification.setType(Notification.REPLYCOMMENTITEM);
+            notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
+            notification.setNotificationText("");
+            notification.setLink("./item.jsp?itemid= " + item.getItemId() + "#commenti");
+            notification.setSeen(false);
+            notificationDAO.add(notification);
         } catch (DAOException ex) {
             throw new ServletException("Impossible to reply the review", ex);
         }

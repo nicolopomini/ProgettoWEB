@@ -5,11 +5,15 @@
  */
 package servlets;
 
+import dao.NotificationDAO;
 import dao.ShopReviewDAO;
+import dao.entities.Notification;
 import dao.entities.Shop;
 import dao.entities.ShopReview;
 import java.io.IOException;
 import java.rmi.ServerException;
+import java.sql.Timestamp;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,6 +32,7 @@ import utils.StringUtils;
 @WebServlet(name = "ShopCommentReply", urlPatterns = {"/ShopCommentReply"})
 public class ShopCommentReply extends HttpServlet {
     private ShopReviewDAO shopReview;
+    private NotificationDAO notificationDAO;
 
     @Override
     public void init() throws ServletException {
@@ -76,6 +81,15 @@ public class ShopCommentReply extends HttpServlet {
             String reply = StringUtils.checkInputString(request.getParameter("replycomment"));
             review.setReply(reply);
             shopReview.update(review);
+            Notification notification = new Notification();
+            notification.setAuthor(shop.getUserId());
+            notification.setRecipient(review.getUserId());
+            notification.setType(Notification.REPLYCOMMENTSHOP);
+            notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
+            notification.setNotificationText("");
+            notification.setLink("./item.jsp?itemid= " + shop.getShopId() + "#commenti");
+            notification.setSeen(false);
+            notificationDAO.add(notification);
         } catch (DAOException ex) {
             throw new ServerException("Impossible to reply the review", ex);
         }

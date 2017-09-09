@@ -142,4 +142,8 @@ insert into ItemReview (reviewText, reply, userId, itemId, reviewTime, score) va
 	("Bello",null, 11, 3, now(), 4),
 	("Lungo!!","eddai!", 11, 3, now(), 3);
 
-
+insert into Notification (author,recipient, notificationTime, notificationText, type, link) values
+	(12,1,"2015-2-3","Notifica di prova",'newcommentshop',""),
+	(12,1,"2014-2-3","Notifica 2",'replycommentshop',""),
+	(12,1,"2000-4-23","3",'newcommentitem',""),
+	(12,1,"2016-2-3","4",'replycommentitem',"");

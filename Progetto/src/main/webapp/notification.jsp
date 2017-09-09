@@ -28,8 +28,9 @@
         throw new ServletException("Impossible to get dao factory for shop storage system", ex);
     }
     ArrayList<Notification> notifiche = new ArrayList<>();
-    if(user != null)
-        notifiche = notificationDAO.getByRecipient(user.getUserId());
+    notifiche = notificationDAO.getByRecipient(0);
+    //if(user != null)
+        //notifiche = notificationDAO.getByRecipient(user.getUserId());
 %>
 <!DOCTYPE html>
 <html>
@@ -45,22 +46,29 @@
     <body>
         <div class="container">
             <jsp:include page="Header.jsp"/>
-            <% if(user == null) { %>
+            <% if(user != null) //TO CHANGE!! { %>
             <p class="text-center">Per visualizzare le notifiche <a href="login.jsp">accedi</a>.</p>
             <% } else { %>
-            <h1>Notifiche</h1>
+            <h1 style="text-align: center">Notifiche</h1>
             <% if(notifiche.isEmpty()) { %>
             <p class="text-center">Nessuna notifica.</p>
-            <% } else { %>
+            <% } else { %> <!--Notifiche-->
             <ul class="list-group">
             <%
                for(Notification n : notifiche) {
                    SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
                    Date date = dt.parse(n.getNotificationTime());
+                   String textType = "";
+                   if(n.getType().equals(Notification.NEWCOMMENTITEM))
+                      textType = "Nuovo commento su un item da ";
+                   else if(n.getType().equals(Notification.REPLYCOMMENTITEM) || n.getType().equals(Notification.REPLYCOMMENTSHOP))
+                      textType = "Il tuo commento è stato risposto da ";
+                   else if(n.getType().equals(Notification.NEWCOMMENTSHOP))
+                      textType = "Nuovo commento su un negozio da ";
             %>
-            <li class="list-group-item">
+            <li class="list-group-item" style="text-align: center">
                 <a href="<%= n.getLink() %>" target="_blank">
-                <fmt:formatDate value = "<%=date%>" /> : <%= n.getNotificationText() %>
+                <fmt:formatDate value = "<%=date%>" /> :  <%= textType + n.getAuthorName() + " " + n.getAuthorSurname() %>
                 </a>
             </li>
             <%}%>

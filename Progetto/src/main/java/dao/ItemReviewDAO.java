@@ -24,4 +24,6 @@ public interface ItemReviewDAO extends DAO<ItemReview, Integer>{
     public ArrayList<ItemReview> getByItemId(Integer itemId) throws DAOException;
     
     public Double getAverageScoreByItemId(Integer itemId) throws DAOException;
+    
+    public int getItemSeller(Integer itemId) throws DAOException;
 }

@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
 
@@ -197,4 +199,22 @@ public class JDBCItemReviewDAO extends JDBCDAO<ItemReview, Integer> implements I
         }
         return 0d;
     }
+
+    @Override
+    public int getItemSeller(Integer itemId) throws DAOException {
+        if (itemId == null) {
+            throw new DAOException("itemId is null");
+        }
+        try {
+            PreparedStatement stm = CON.prepareStatement("select User.userId as userId from User, Shop, Item where User.userId = Shop.userId and Shop.shopId = Item.ShopId and Item.itemId = ?;");
+            stm.setInt(1, itemId);
+            ResultSet rs = stm.executeQuery();
+            if(rs.next())
+                return rs.getInt("userId");
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the id of the seller", ex);
+        }
+        return -1;
+    }
+    
 }

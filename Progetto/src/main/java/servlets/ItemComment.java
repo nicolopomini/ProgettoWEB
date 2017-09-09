@@ -6,8 +6,10 @@
 package servlets;
 
 import dao.ItemReviewDAO;
+import dao.NotificationDAO;
 import dao.entities.Item;
 import dao.entities.ItemReview;
+import dao.entities.Notification;
 import dao.entities.User;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -30,6 +32,7 @@ import utils.StringUtils;
 @WebServlet(name = "ItemComment", urlPatterns = {"/ItemComment"})
 public class ItemComment extends HttpServlet {
     private ItemReviewDAO itemReviewDAO;
+    private NotificationDAO notificationDAO;
 
     @Override
     public void init() throws ServletException {
@@ -40,6 +43,11 @@ public class ItemComment extends HttpServlet {
         }
         try {
             itemReviewDAO = daoFactory.getDAO(ItemReviewDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+        try {
+            notificationDAO = daoFactory.getDAO(NotificationDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
@@ -84,8 +92,17 @@ public class ItemComment extends HttpServlet {
         review.setReviewTime(new Timestamp(new Date().getTime()).toString());
         review.setScore(score);
         review.setUserId(user.getUserId());
+        Notification notification = new Notification();
+        notification.setAuthor(user.getUserId());
+        notification.setType(Notification.NEWCOMMENTITEM);
+        notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
+        notification.setNotificationText("");
+        notification.setLink("./item.jsp?itemid= " + item.getItemId() + "#commenti");
+        notification.setSeen(false);
         try {
+            notification.setRecipient(itemReviewDAO.getItemSeller(item.getItemId()));
             itemReviewDAO.add(review);
+            notificationDAO.add(notification);
         } catch (DAOException ex) {
             throw new ServletException("Impossible to add the item review", ex);
         }

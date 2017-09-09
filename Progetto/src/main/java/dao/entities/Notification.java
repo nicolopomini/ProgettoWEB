@@ -11,12 +11,23 @@ package dao.entities;
  * @author Gabriele
  */
 public class Notification {
+    public static final String NEWCOMMENTSHOP = "newcommentshop", REPLYCOMMENTSHOP = "replycommentshop", NEWCOMMENTITEM = "newcommentitem", REPLYCOMMENTITEM = "replycommentitem", NEWCOMPLAINT = "newcomplaint", REPLYCOMPLAINT = "replycomplaint";
+    
     private Integer notificationId;
     private Integer author, recipient;
     private String notificationText;
     private String notificationTime;
     private Boolean seen;
     private String type, link;
+    private String authorName, authorSurname;
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public String getAuthorSurname() {
+        return authorSurname;
+    }
 
     public Integer getNotificationId() {
         return notificationId;
@@ -84,6 +95,15 @@ public class Notification {
         this.seen = seen;
     }
 
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public void setAuthorSurname(String authorSurname) {
+        this.authorSurname = authorSurname;
+    }
+
+    
     @Override
     public String toString() {
         return "Notification{" + "notificationId=" + notificationId + ", userId=" + author + ", notificationText=" + notificationText + ", seen=" + seen + ", notificationTime=" + notificationTime + ", recipient=" + recipient + ", type=" + type + ",link=" + link + '}';
