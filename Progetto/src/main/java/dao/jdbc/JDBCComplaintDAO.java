@@ -140,4 +140,28 @@ public class JDBCComplaintDAO extends JDBCDAO<Complaint, Integer> implements Com
             throw new DAOException("Impossible to remove the complaint", ex);
         }
     }
+
+    @Override
+    public ArrayList<Complaint> getNewComplaints() throws DAOException {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Complaint where status = \"" + Complaint.STATUS_NEW + "\"order by complaintTime")) {
+            try (ResultSet rs = stm.executeQuery()) {
+                ArrayList<Complaint> complaints = new ArrayList<>();
+                while(rs.next())
+                {
+                    Complaint complaint = new Complaint();
+                    complaint.setComplaintId(rs.getInt("complaintId"));
+                    complaint.setPurchaseId(rs.getInt("purchaseId"));
+                    complaint.setComplaintTime(rs.getString("complaintTime"));
+                    complaint.setComplaintText(rs.getString("complaintText"));
+                    complaint.setReply(rs.getString("reply"));
+                    complaint.setStatus(rs.getString("status"));
+                    complaints.add(complaint);
+                }
+                return complaints;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get complaints", ex);
+        }
+    }
+    
 }

@@ -10,6 +10,8 @@ package dao.entities;
  * @author Gabriele
  */
 public class Complaint {
+    public static final String STATUS_NEW = "new", STATUS_SEEN = "seen", STATUS_REJECTED = "rejected";
+    
     private Integer complaintId;
     private Integer purchaseId;
     private String complaintTime;

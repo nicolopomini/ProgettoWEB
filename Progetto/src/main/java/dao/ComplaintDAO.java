@@ -6,11 +6,14 @@
 package dao;
 
 import dao.entities.Complaint;
+import java.util.ArrayList;
 import persistence.utils.dao.DAO;
+import persistence.utils.dao.exceptions.DAOException;
 
 /**
  *
  * @author Gabriele
  */
 public interface ComplaintDAO extends DAO<Complaint, Integer>{
+    public ArrayList<Complaint> getNewComplaints() throws DAOException;
 }

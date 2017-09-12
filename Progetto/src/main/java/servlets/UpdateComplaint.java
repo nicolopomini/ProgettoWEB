@@ -5,15 +5,19 @@
  */
 package servlets;
 
+import dao.ComplaintDAO;
 import dao.NotificationDAO;
-import dao.ShopReviewDAO;
+import dao.PurchaseDAO;
+import dao.entities.Complaint;
 import dao.entities.Notification;
-import dao.entities.Shop;
-import dao.entities.ShopReview;
+import dao.entities.User;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.rmi.ServerException;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,17 +27,17 @@ import javax.servlet.http.HttpSession;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.exceptions.DAOFactoryException;
 import persistence.utils.dao.factories.DAOFactory;
-import utils.StringUtils;
 
 /**
  *
  * @author pomo
  */
-@WebServlet(name = "ShopCommentReply", urlPatterns = {"/ShopCommentReply"})
-public class ShopCommentReply extends HttpServlet {
-    private ShopReviewDAO shopReview;
+@WebServlet(name = "UpdateComplaint", urlPatterns = {"/UpdateComplaint"})
+public class UpdateComplaint extends HttpServlet {
     private NotificationDAO notificationDAO;
-
+    private ComplaintDAO complaintDAO;
+    private PurchaseDAO purchaseDAO;
+    
     @Override
     public void init() throws ServletException {
         super.init(); 
@@ -42,16 +46,24 @@ public class ShopCommentReply extends HttpServlet {
             throw new ServletException("Impossible to get dao factory for storage system");
         }
         try {
-            shopReview = daoFactory.getDAO(ShopReviewDAO.class);
-        } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
-        }
-        try {
             notificationDAO = daoFactory.getDAO(NotificationDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
+        try {
+            complaintDAO = daoFactory.getDAO(ComplaintDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+        try {
+            purchaseDAO = daoFactory.getDAO(PurchaseDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
     }
+    
+
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -79,30 +91,37 @@ public class ShopCommentReply extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Shop shop = (Shop)session.getAttribute("shop");
-        int reviewid = Integer.parseInt(request.getParameter("reviewid"));
+        User user = (User)session.getAttribute("user");
+        int complaintId = Integer.parseInt(request.getParameter("complaintid"));
+        String reply = request.getParameter("risposta");
+        String reject = request.getParameter("reject");
+        boolean addNotification = false;
         try {
-            ShopReview review = shopReview.getByPrimaryKey(reviewid);
-            String reply = StringUtils.checkInputString(request.getParameter("replycomment"));
-            review.setReply(reply);
-            shopReview.update(review);
+            Complaint complaint = complaintDAO.getByPrimaryKey(complaintId);
             Notification notification = new Notification();
-            notification.setAuthor(shop.getUserId());
-            notification.setRecipient(review.getUserId());
-            notification.setType(Notification.REPLYCOMMENTSHOP);
-            notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
-            notification.setNotificationText("");
-            notification.setLink("./item.jsp?itemid= " + shop.getShopId() + "#commenti");
-            notification.setSeen(false);
-            notificationDAO.add(notification);
+            if(reply != null && reply.equals("")) {
+                complaint.setReply(reply);
+                notification.setNotificationText(reply);
+                addNotification = true;
+            }
+            if(reject.equals("on")) {
+                complaint.setStatus(Complaint.STATUS_REJECTED);
+                addNotification = true;
+                notification.setNotificationText(notification.getNotificationText() + "\nL'anomalia è stata respinta.");
+            }
+            else
+                complaint.setStatus(Complaint.STATUS_SEEN);
+            if(addNotification) {
+                notification.setAuthor(user.getUserId());
+                notification.setLink("#");
+                notification.setSeen(false);
+                notification.setRecipient(purchaseDAO.getByPrimaryKey(complaint.getPurchaseId()).getUserId());
+                notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
+                notification.setType(Notification.REPLYCOMPLAINT);
+            }
         } catch (DAOException ex) {
-            throw new ServerException("Impossible to reply the review", ex);
+            throw new ServerException("Impossible to update the complaint", ex);
         }
-        String contextPath = getServletContext().getContextPath();
-        if(!contextPath.endsWith("/"))
-            contextPath += "/";
-        contextPath += "shop.jsp?shopid=" + shop.getShopId() + "&message=replied";
-        response.sendRedirect(response.encodeRedirectURL(contextPath));
     }
 
     /**

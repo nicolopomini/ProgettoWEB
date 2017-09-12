@@ -10,6 +10,8 @@ package dao.entities;
  * @author Gabriele
  */
 public class User {
+    public static final String ADMIN = "admin", SELLER = "seller", REGISTERED = "registered";
+    
     private Integer userId;
     private String name;
     private String surname;

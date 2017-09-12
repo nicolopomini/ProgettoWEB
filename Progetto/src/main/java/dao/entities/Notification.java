@@ -11,7 +11,7 @@ package dao.entities;
  * @author Gabriele
  */
 public class Notification {
-    public static final String NEWCOMMENTSHOP = "newcommentshop", REPLYCOMMENTSHOP = "replycommentshop", NEWCOMMENTITEM = "newcommentitem", REPLYCOMMENTITEM = "replycommentitem", NEWCOMPLAINT = "newcomplaint", REPLYCOMPLAINT = "replycomplaint";
+    public static final String NEWCOMMENTSHOP = "newcommentshop", REPLYCOMMENTSHOP = "replycommentshop", NEWCOMMENTITEM = "newcommentitem", REPLYCOMMENTITEM = "replycommentitem", REPLYCOMPLAINT = "replycomplaint";
     
     private Integer notificationId;
     private Integer author, recipient;

@@ -104,7 +104,7 @@ CREATE TABLE Notification
 	notificationText VARCHAR(1000) NOT NULL,
 	notificationTime TIMESTAMP NOT NULL,
 	seen BOOLEAN NOT NULL DEFAULT 0,
-	type ENUM('newcommentshop','replycommentshop','newcommentitem','replycommentitem','newcomplaint','replycomplaint') NOT NULL,
+	type ENUM('newcommentshop','replycommentshop','newcommentitem','replycommentitem','replycomplaint') NOT NULL,
 	link VARCHAR(1000),
 	FOREIGN KEY(author) REFERENCES User(userId) ON UPDATE CASCADE ON DELETE RESTRICT,
 	FOREIGN KEY(recipient) REFERENCES User(userId) ON UPDATE CASCADE ON DELETE RESTRICT,
@@ -119,7 +119,7 @@ CREATE TABLE Complaint
 	complaintTime TIMESTAMP NOT NULL,
 	complaintText VARCHAR(1000) NOT NULL,
 	reply VARCHAR(1000),
-	status ENUM('new', 'seen', 'rejected'),
+	status ENUM('new', 'seen', 'rejected') DEFAULT 'new',
 	FOREIGN KEY(purchaseId) REFERENCES Purchase(purchaseId) ON UPDATE CASCADE ON DELETE RESTRICT,
 	PRIMARY KEY(complaintId)
 );

@@ -147,3 +147,9 @@ insert into Notification (author,recipient, notificationTime, notificationText, 
 	(12,1,"2014-2-3","Notifica 2",'replycommentshop',""),
 	(12,1,"2000-4-23","3",'newcommentitem',""),
 	(12,1,"2016-2-3","4",'replycommentitem',"");
+
+insert into Purchase (userId, itemId, quantity, purchaseTime) values
+	(1,1,2,now());
+
+insert into Complaint (purchaseId, complaintTime, complaintText, status) values
+	(1,now(),"Complaint di prova.","new");
