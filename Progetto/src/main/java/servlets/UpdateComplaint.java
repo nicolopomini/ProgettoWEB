@@ -12,12 +12,9 @@ import dao.entities.Complaint;
 import dao.entities.Notification;
 import dao.entities.User;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.rmi.ServerException;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -122,6 +119,11 @@ public class UpdateComplaint extends HttpServlet {
         } catch (DAOException ex) {
             throw new ServerException("Impossible to update the complaint", ex);
         }
+        String contextPath = getServletContext().getContextPath();
+        if(!contextPath.endsWith("/"))
+            contextPath += "/";
+        contextPath += "notifications.jsp";
+        response.sendRedirect(response.encodeRedirectURL(contextPath));
     }
 
     /**

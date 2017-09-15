@@ -11,7 +11,7 @@ CREATE TABLE User
 	name VARCHAR(50) NOT NULL,
 	surname VARCHAR(50) NOT NULL,
 	email VARCHAR(50) NOT NULL UNIQUE,
-	password VARCHAR(50) NOT NULL,
+	password VARCHAR(100) NOT NULL,
 	address VARCHAR(100) NOT NULL,
 	verificationCode CHAR(50) NOT NULL,
 	type ENUM('admin','seller','registered') NOT NULL
