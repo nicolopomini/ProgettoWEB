@@ -40,7 +40,7 @@
                     <li><a href="#">Notifiche</a></li>
                     <% } %>
                     <% if(type.equals("admin")) { %>
-                    <li><a href="#">Notifiche</a></li>
+                    <li><a href="notifications.jsp">Notifiche</a></li>
                     <% } %>
                     <%
                         if(type.equals("admin"))

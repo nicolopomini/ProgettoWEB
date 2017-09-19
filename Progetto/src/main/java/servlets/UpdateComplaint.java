@@ -96,18 +96,17 @@ public class UpdateComplaint extends HttpServlet {
         try {
             Complaint complaint = complaintDAO.getByPrimaryKey(complaintId);
             Notification notification = new Notification();
-            if(reply != null && reply.equals("")) {
+            complaint.setStatus(Complaint.STATUS_SEEN);
+            if(reply != null && !reply.equals("")) {
                 complaint.setReply(reply);
                 notification.setNotificationText(reply);
                 addNotification = true;
             }
-            if(reject.equals("on")) {
+            if(reject != null && reject.equals("on")) {
                 complaint.setStatus(Complaint.STATUS_REJECTED);
                 addNotification = true;
                 notification.setNotificationText(notification.getNotificationText() + "\nL'anomalia è stata respinta.");
             }
-            else
-                complaint.setStatus(Complaint.STATUS_SEEN);
             if(addNotification) {
                 notification.setAuthor(user.getUserId());
                 notification.setLink("#");
@@ -115,7 +114,9 @@ public class UpdateComplaint extends HttpServlet {
                 notification.setRecipient(purchaseDAO.getByPrimaryKey(complaint.getPurchaseId()).getUserId());
                 notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
                 notification.setType(Notification.REPLYCOMPLAINT);
+                notificationDAO.add(notification);
             }
+            complaintDAO.update(complaint);
         } catch (DAOException ex) {
             throw new ServerException("Impossible to update the complaint", ex);
         }

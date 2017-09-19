@@ -230,10 +230,10 @@
                 locationSelect = document.getElementById("locationSelect");
 
                 var locations = [
-                    ["<%= shop.getName() %>","<%= shop.getAddress() %>",<%= shop.getLat() %>,<%= shop.getLon() %>]
+                    ["<%= shop.getName() %>","<%= shop.getAddress() %>",<%= shop.getLat() %>,<%= shop.getLon() %>, <%=shop.getShopId()%>]
                 ];
                 <% for(Shop s : nearby) { %>
-                    locations.push(["<%=s.getName()%>","<%= s.getAddress() %>",<%= s.getLat() %>,<%= s.getLon() %>]);
+                    locations.push(["<%=s.getName()%>","<%= s.getAddress() %>",<%= s.getLat() %>,<%= s.getLon() %>, <%= s.getShopId() %>]);
                 <%}%>
                 var bounds = new google.maps.LatLngBounds();
                 for(var i = 0; i < locations.length; i++) {
@@ -242,8 +242,9 @@
                     var latlng = new google.maps.LatLng(
                         parseFloat(locations[i][2]),
                         parseFloat(locations[i][3]));
+                    var id = locations[i][4];
                     createOption(name,i);
-                    createMarker(latlng, name, address);
+                    createMarker(latlng, name, address, id);
                     bounds.extend(latlng);
                 } 
                 map.fitBounds(bounds);
@@ -255,8 +256,8 @@
                 google.maps.event.trigger(markers[0], 'click');
               }
 
-             function createMarker(latlng, name, address) {
-                var html = "<b>" + name + "</b> <br/>" + address;
+             function createMarker(latlng, name, address, id) {
+                var html = "<a href=\"shop.jsp?shopid=" + id + "\" target=\"_blank\"><b>" + name + "</b> <br/>" + address + "</a>";
                 var marker = new google.maps.Marker({
                   map: map,
                   position: latlng

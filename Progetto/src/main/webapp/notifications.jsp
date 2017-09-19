@@ -4,6 +4,7 @@
     Author     : pomo
 --%>
 
+<%@page import="utils.StringUtils"%>
 <%@page import="dao.entities.Purchase"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -63,6 +64,19 @@
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
+        <script>
+            function readNotifications(userId) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "ReadNotifications", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("userid="+userId);
+            }
+        </script>
+        <style>
+            .daleggere {
+                background-color: #f5f5f5;
+            }
+        </style>
     </head>
     <body>
         <jsp:include page="Header.jsp"/>
@@ -76,15 +90,23 @@
                 <% if(complaints.isEmpty()) { %>
                     <p class="text-center">Nessuna anomalia.</p>
                 <% } else { %>
-                    <ul class="list-group">
+                <ul>
                         <%
                             for(Complaint c : complaints) {
                                 SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
-                                Date date = dt.parse(c.getComplaintTime());
+                                String date = StringUtils.printDate(dt.parse(c.getComplaintTime()));
                         %>
-                        <li class="list-group-item" style="text-align: center"><a role="button" data-toggle="modal" data-target="#<%= c.getComplaintId() %>"><%= date %>, <b>Purchase ID</b>: <%= c.getPurchaseId() %> <b>Stato</b>: <%= c.getStatus() %></a></li>
+                        <li class="list-group-item" style="text-align: center">
+                            <a role="button" data-toggle="modal" data-target="#<%= c.getComplaintId() %>">
+                            <ul class="list-inline">
+                                <li><%= date %></li>
+                                <li><%= c.getPurchaseId() %></li>
+                                <li><%= c.getStatus() %></li>
+                            </ul>
+                            </a>
+                        </li>
                         <% } %>
-                    </ul>
+                </ul>
                 <% } %>
                 <!--End complaint-->
             <% } %>
@@ -93,10 +115,11 @@
             <% if(notifiche.isEmpty()) { %>
                 <p class="text-center">Nessuna notifica.</p>
             <% } else { %>
+            <ul>
                 <%
                for(Notification n : notifiche) {
                    SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
-                   Date date = dt.parse(n.getNotificationTime());
+                   String date = StringUtils.printDate(dt.parse(n.getNotificationTime()));
                    String textType = "";
                    if(n.getType().equals(Notification.NEWCOMMENTITEM))
                       textType = "Nuovo commento su un item da ";
@@ -107,23 +130,27 @@
                    else if(n.getType().equals(Notification.REPLYCOMPLAINT))
                       textType = "Risposta alla segnalazione di anomalia.";
             %>
-            <li class="list-group-item" style="text-align: center">
+            <li class="list-group-item <%if(!n.getSeen()){%> daleggere <%}%>" style="text-align: center">
                 <a href="<%= n.getLink() %>" target="_blank">
-                <%=date%> :
-                <%= textType %>
-                <% if(!n.getType().equals(Notification.REPLYCOMPLAINT)) { %>
-                <%= n.getAuthorName() + " " + n.getAuthorSurname() %>
-                <% } %>
+                    <ul class="list-inline">
+                        <li><%=date%></li>
+                        <li><%= textType %>
+                        <% if(!n.getType().equals(Notification.REPLYCOMPLAINT)) { %>
+                        <%= n.getAuthorName() + " " + n.getAuthorSurname() %>
+                        </li>
+                        <% } %>
+                    </ul>
                 </a>
             </li>
             <%}%>
             </ul>
+            <script>readNotifications(<%= user.getUserId() %>);</script>
             <% } %>
 
             <% if(user.getType().equals(User.ADMIN)) { 
                 for(Complaint c : complaints) {  
                     SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
-                    Date date = dt.parse(c.getComplaintTime());
+                    String date = StringUtils.printDate(dt.parse(c.getComplaintTime()));
                     Purchase purchase = purchaseDAO.getByPrimaryKey(c.getPurchaseId());
             %>
             <div class="modal fade" id="<%= c.getComplaintId() %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -151,7 +178,7 @@
                     <h4>Gestisci anomalia</h4>
                     <div class="form-group">
                         <label for="Risposta">Risposta</label>
-                        <textarea class="form-control" rows="3" name="risposta" id="risposta" placeholder="Risposta" maxlength="1000"></textarea>
+                        <textarea class="form-control" rows="3" name="risposta" id="risposta" <% if(c.getReply() != null && !c.getReply().equals("")) { %> placeholder="<%= c.getReply() %>" <%} else {%> placeholder="Risposta" <% } %> maxlength="1000"></textarea>
                     </div>
                     <div class="checkbox">
                         <label>
