@@ -32,4 +32,8 @@ public interface ItemDAO extends DAO<Item, Integer>{
      * @throws persistence.utils.dao.exceptions.DAOException
      */
     public boolean canComment(Integer itemId, Integer userId) throws DAOException;
+    
+    public ArrayList<Item> getItemsByNameFilterByCategoryShop(String name, String category, String shop) throws DAOException;
+    
+    public ArrayList<String> getAllCategories() throws DAOException;
 }

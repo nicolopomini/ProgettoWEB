@@ -18,9 +18,14 @@
     logged = venditore = false;
     String email = "";
     String password = "";
+    String toRedirect = "";
     Boolean valid = true;
     Boolean active = true;
     User sessionUser = (User)session.getAttribute("user");
+    if(request.getParameter("ToRedirect") != null)
+    {
+        toRedirect = request.getParameter("ToRedirect");
+    }
     if(sessionUser != null)
     {
         logged = true;
@@ -74,7 +79,14 @@
                                     else
                                     {
                                         session.setAttribute("user", toSearch);
-                                        response.sendRedirect("/Progetto/login.jsp");
+                                        if(!toRedirect.equals(""))
+                                        {
+                                            response.sendRedirect(toRedirect);
+                                        }
+                                        else
+                                        {
+                                            response.sendRedirect("index.jsp");
+                                        }
                                     }
                                 }
                             }
@@ -138,8 +150,33 @@
                             <div class="col-xs-12">
                                 <input class="form-control" type="password" name="Password" id="Password">
                             </div>
+                            <%
+                                if(!toRedirect.equals(""))
+                                {
+                                    %>
+                                        <div class="col-xs-12">
+                                            <input class="form-control" type="hidden" name="ToRedirect" value="<%=toRedirect%>" id="ToRedirect">
+                                        </div>
+                                    <%
+                                }
+                                else
+                                {
+                                    %>
+                                        <div class="col-xs-12">
+                                            <input class="form-control" type="hidden" name="ToRedirect" id="ToRedirect">
+                                        </div>
+                                        <script>
+                                            var input = document.getElementById("ToRedirect");
+                                            input.value = document.referrer;
+                                        </script>
+                                    <%
+                                }
+                            %>
                         </div>
                         <div class="form-group col-xs-12"> 
+                            <div class="col-xs-12">
+                                <a href='/'>Ho dimenticato la mia password</a>
+                            </div>
                             <div class="col-xs-6">
                                 <button type="submit" class="btn btn-default">Login</button>
                             </div>
