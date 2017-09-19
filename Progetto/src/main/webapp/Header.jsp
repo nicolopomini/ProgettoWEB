@@ -37,7 +37,7 @@
             <ul class="nav navbar-nav navbar-right" id="voci_menu">
                 <% if(logged) { %>
                     <% if(type.equals("seller")) { %>
-                    <li><a href="#">Notifiche</a></li>
+                    <li><a href="notifications.jsp">Notifiche</a></li>
                     <% } %>
                     <% if(type.equals("admin")) { %>
                     <li><a href="notifications.jsp">Notifiche</a></li>
