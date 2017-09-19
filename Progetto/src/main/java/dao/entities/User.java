@@ -20,6 +20,7 @@ public class User {
     private String address;
     private String type;
     private String verificationCode;
+    private String token;
 
     public Integer getUserId() {
         return userId;
@@ -51,6 +52,10 @@ public class User {
 
     public String getVerificationCode() {
         return verificationCode;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public void setUserId(Integer userId) {
@@ -85,8 +90,12 @@ public class User {
         this.verificationCode = verificationCode;
     }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public String toString() {
-        return "User{" + "userId=" + userId + ", name=" + name + ", surname=" + surname + ", email=" + email + ", password=" + password + ", address=" + address + ", type=" + type + ", verificationCode=" + verificationCode + '}';
+        return "User{" + "userId=" + userId + ", name=" + name + ", surname=" + surname + ", email=" + email + ", password=" + password + ", address=" + address + ", type=" + type + ", verificationCode=" + verificationCode + ", token=" + token + '}';
     }
 }

@@ -190,7 +190,8 @@ public class DebugServlet extends HttpServlet {
         u.setPassword("asdf");
         u.setSurname("asdf");
         u.setType("admin");
-        u.setVerificationCode("asdf");
+        u.setVerificationCode("1");
+        u.setToken("asdf");
         
         userDAO.add(u);
         

@@ -16,4 +16,5 @@ import persistence.utils.dao.exceptions.DAOException;
 public interface UserDAO extends DAO<User, Integer>{
     public User getUserByActivationCode(String activationCode) throws DAOException;
     public User getUserByEmail(String email) throws DAOException;
+    public User getUserByToken(String token) throws DAOException;
 }
