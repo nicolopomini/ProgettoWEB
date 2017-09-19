@@ -100,7 +100,7 @@ insert into User (name, surname, email, password, address, verificationCode, typ
 	("Giorgio","Maule","maulegiorgio@email.com","$2a$10$2Gs/9VUQJTfuCnH9zVSndusINLOvBuewsl.Q6znYMijiKls4ZIlUq","via garibaldi 25 Predazzo","","seller"),
 	("Massimo","Vita","vitamax@email.com","$2a$10$2Gs/9VUQJTfuCnH9zVSndusINLOvBuewsl.Q6znYMijiKls4ZIlUq","via garibaldi 50 Predazzo","","seller"),
 	("Claudio","Filippi","claudiofilippi@email.com","$2a$10$2Gs/9VUQJTfuCnH9zVSndusINLOvBuewsl.Q6znYMijiKls4ZIlUq","via garibaldi 100 Predazzo","","seller"),
-	("Nicolò","Pomini","nicolopomini@gmail.com","$2a$10$2Gs/9VUQJTfuCnH9zVSndusINLOvBuewsl.Q6znYMijiKls4ZIlUq"," ","","admin"),
+	("Nicolò","Pomini","nicolopomini@gmail.com","$2a$10$2Gs/9VUQJTfuCnH9zVSndusINLOvBuewsl.Q6znYMijiKls4ZIlUq"," ","1","admin"),
 	("Gabriele","Maurina","gabrielemaurina95@gmail.com","$2a$10$2Gs/9VUQJTfuCnH9zVSndusINLOvBuewsl.Q6znYMijiKls4ZIlUq"," ","","admin"),
 	("Michele","Armellini","michelearmellini@gmail.com","$2a$10$2Gs/9VUQJTfuCnH9zVSndusINLOvBuewsl.Q6znYMijiKls4ZIlUq"," ","","admin"),
 	("Marco","Merlin","marcomerlin@gmail.com","$2a$10$2Gs/9VUQJTfuCnH9zVSndusINLOvBuewsl.Q6znYMijiKls4ZIlUq"," ","","admin");
