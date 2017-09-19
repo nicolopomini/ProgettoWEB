@@ -215,4 +215,74 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
             throw new DAOException("Impossible to get shops", ex);
         }
     }
+
+    @Override
+    public ArrayList<Item> getItemsByNameFilterByCategoryShop(String name, String category, String shop) throws DAOException {
+        String statement = "";
+        
+        if(name == null)
+        {
+            statement = "SELECT * FROM Item";
+        }
+        else
+        {
+            statement = "((SELECT * FROM Item WHERE name LIKE \"%" + name + "%\") UNION DISTINCT (SELECT * FROM Item WHERE description LIKE \"%" + name + "%\")) AS Item";
+        }
+        
+        if(category != null || shop != null)
+        {
+            statement += " WHERE";
+        }
+        
+        if(category != null)
+        {
+            statement += " Item.category LIKE \"%" + category + "%\"";
+        }
+        
+        if(category != null && shop != null)
+        {
+            statement += " AND";
+        }
+        
+        if(shop != null)
+        {
+            statement += " Item.shopId IN (SELECT shopId FROM Shop WHERE name LIKE \"%" + shop + "%\");";
+        }
+        
+        try (PreparedStatement stm = CON.prepareStatement(statement)) {
+            try (ResultSet rs = stm.executeQuery()) {
+                ArrayList<Item> items = new ArrayList<>();
+                while(rs.next())
+                {
+                    Item item = new Item();
+                    item.setItemId(rs.getInt("itemId"));
+                    item.setName(rs.getString("name"));
+                    item.setDescription(rs.getString("description"));
+                    item.setCategory(rs.getString("category"));
+                    item.setPrice(rs.getDouble("price"));
+                    item.setShopId(rs.getInt("shopId"));
+                    items.add(item);
+                }
+                return items;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get items", ex);
+        }
+    }
+
+    @Override
+    public ArrayList<String> getAllCategories() throws DAOException {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT TRIM(TRAILING ')' FROM TRIM(LEADING '(' FROM TRIM(LEADING 'enum' FROM column_type))) column_type AS category FROM information_schema.columns WHERE table_name = 'Item' AND column_name = 'categories';")) {
+            try (ResultSet rs = stm.executeQuery()) {
+                ArrayList<String> categories = new ArrayList<>();
+                while(rs.next())
+                {
+                    categories.add(rs.getString("category"));
+                }
+                return categories;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get categories", ex);
+        }
+    }
 }
