@@ -63,6 +63,10 @@
         <servlet-name>UpdateComplaint</servlet-name>
         <servlet-class>servlets.UpdateComplaint</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ReadNotifications</servlet-name>
+        <servlet-class>servlets.ReadNotifications</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DebugServlet</servlet-name>
         <url-pattern>/DebugServlet</url-pattern>
@@ -118,6 +122,10 @@
     <servlet-mapping>
         <servlet-name>UpdateComplaint</servlet-name>
         <url-pattern>/UpdateComplaint</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReadNotifications</servlet-name>
+        <url-pattern>/ReadNotifications</url-pattern>
     </servlet-mapping>
     <error-page>
         <exception-type>java.lang.NullPointerException</exception-type>

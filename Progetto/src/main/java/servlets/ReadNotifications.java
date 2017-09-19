@@ -5,47 +5,32 @@
  */
 package servlets;
 
+import dao.ItemReviewDAO;
 import dao.NotificationDAO;
-import dao.ShopReviewDAO;
-import dao.entities.Notification;
-import dao.entities.Shop;
-import dao.entities.ShopReview;
 import java.io.IOException;
-import java.rmi.ServerException;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.exceptions.DAOFactoryException;
 import persistence.utils.dao.factories.DAOFactory;
-import utils.StringUtils;
 
 /**
  *
  * @author pomo
  */
-@WebServlet(name = "ShopCommentReply", urlPatterns = {"/ShopCommentReply"})
-public class ShopCommentReply extends HttpServlet {
-    private ShopReviewDAO shopReview;
+@WebServlet(name = "ReadNotifications", urlPatterns = {"/ReadNotifications"})
+public class ReadNotifications extends HttpServlet {
     private NotificationDAO notificationDAO;
 
     @Override
     public void init() throws ServletException {
-        super.init(); 
+        super.init();
         DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
         if (daoFactory == null) {
             throw new ServletException("Impossible to get dao factory for storage system");
-        }
-        try {
-            shopReview = daoFactory.getDAO(ShopReviewDAO.class);
-        } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
         try {
             notificationDAO = daoFactory.getDAO(NotificationDAO.class);
@@ -53,6 +38,8 @@ public class ShopCommentReply extends HttpServlet {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
     }
+    
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -79,33 +66,8 @@ public class ShopCommentReply extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Shop shop = (Shop)session.getAttribute("shop");
-        int reviewid = Integer.parseInt(request.getParameter("reviewid"));
-        try {
-            ShopReview review = shopReview.getByPrimaryKey(reviewid);
-            String reply = StringUtils.checkInputString(request.getParameter("replycomment"));
-            review.setReply(reply);
-            shopReview.update(review);
-            Notification notification = new Notification();
-            notification.setAuthor(shop.getUserId());
-            notification.setRecipient(review.getUserId());
-            notification.setType(Notification.REPLYCOMMENTSHOP);
-            notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
-            notification.setNotificationText("");
-            notification.setLink("./item.jsp?itemid= " + shop.getShopId() + "#commenti");
-            notification.setSeen(false);
-            notificationDAO.add(notification);
-        } catch (DAOException ex) {
-            throw new ServerException("Impossible to reply the review", ex);
-        }
-        Cookie c = new Cookie("shop_message","replied");
-        response.addCookie(c);
-        String contextPath = getServletContext().getContextPath();
-        if(!contextPath.endsWith("/"))
-            contextPath += "/";
-        contextPath += "shop.jsp?shopid=" + shop.getShopId();
-        response.sendRedirect(response.encodeRedirectURL(contextPath));
+        int userid = Integer.parseInt(request.getParameter("userid"));
+        notificationDAO.readByUser(userid);
     }
 
     /**

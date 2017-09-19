@@ -8,6 +8,7 @@ package utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Date;
 
 /**
  *
@@ -38,5 +39,8 @@ public class StringUtils {
             toRtn = true;
         }
         return toRtn;
+    }
+    public static String printDate(Date d) {
+        return "<b>" + d.getDate() + "/" + (d.getMonth() + 1) + "/" + (d.getYear()+1900) + "</b> alle <b>" + d.getHours() + ":" + d.getMinutes() + "</b>";
     }
 }
