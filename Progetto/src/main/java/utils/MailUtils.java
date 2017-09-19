@@ -69,6 +69,7 @@ public class MailUtils
                    + "<input type='hidden' name='ActivationCode' value='"+user.getVerificationCode()+"'>"
                    + "<button type='submit'>Activate account</button>"
                    + "</form>"
+                   + "<p>Oppure http://localhost/Progetto/activation.jsp?ActivationCode="+user.getVerificationCode()
                    + "</body>"
                    + "</html>",
              "text/html");

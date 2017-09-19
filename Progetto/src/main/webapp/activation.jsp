@@ -25,45 +25,41 @@
     }
     String activationCode = "";
     boolean validCode = true;
-    
-    if(request.getMethod().equals("POST"))
+    if(request.getParameter("ActivationCode") != null)
     {
-        if(request.getParameter("ActivationCode") != null)
+        activationCode = request.getParameter("ActivationCode");
+        String activationCodeRegex = "[^a-zA-Z0-9]";
+        if(StringUtils.isValidString(activationCode,activationCodeRegex) && !StringUtils.isEmpty(activationCode))
         {
-            activationCode = request.getParameter("ActivationCode");
-            String activationCodeRegex = "[^a-zA-Z0-9]";
-            if(StringUtils.isValidString(activationCode,activationCodeRegex) && !StringUtils.isEmpty(activationCode))
+            UserDAO user;
+            User toUpdate;
+            DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+            if (daoFactory == null) 
             {
-                UserDAO user;
-                User toUpdate;
-                DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-                if (daoFactory == null) 
-                {
-                    throw new ServletException("Impossible to get dao factory for storage system");
-                }
-                try 
-                {
-                    user = daoFactory.getDAO(UserDAO.class);
-                } 
-                catch (DAOFactoryException ex) 
-                {
-                    throw new ServletException("Impossible to get dao factory for user activation", ex);
-                }
-                toUpdate = user.getUserByActivationCode(activationCode);
-                if(toUpdate.getUserId() != null)
-                {
-                    toUpdate.setVerificationCode("1");
-                    user.update(toUpdate);
-                }
-                else
-                {
-                    validCode = false;
-                }
+                throw new ServletException("Impossible to get dao factory for storage system");
+            }
+            try 
+            {
+                user = daoFactory.getDAO(UserDAO.class);
+            } 
+            catch (DAOFactoryException ex) 
+            {
+                throw new ServletException("Impossible to get dao factory for user activation", ex);
+            }
+            toUpdate = user.getUserByActivationCode(activationCode);
+            if(toUpdate.getUserId() != null)
+            {
+                toUpdate.setVerificationCode("1");
+                user.update(toUpdate);
             }
             else
             {
                 validCode = false;
             }
+        }
+        else
+        {
+            validCode = false;
         }
     }
 %>

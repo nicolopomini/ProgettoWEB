@@ -73,7 +73,8 @@ public class CartManager extends HttpServlet {
         HashMap<Integer,Integer> cart = (HashMap<Integer,Integer>) request.getSession().getAttribute("cart");
         ItemDAO itemDAO;
         double totalprice = 0;
-        response.setContentType("text/html; charset=UTF-8");
+        response.setContentType("text/html");
+        response.setCharacterEncoding("UTF-8");
 
         DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
         if (daoFactory == null) 
