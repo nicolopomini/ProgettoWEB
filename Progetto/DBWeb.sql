@@ -13,7 +13,8 @@ CREATE TABLE User
 	email VARCHAR(50) NOT NULL UNIQUE,
 	password VARCHAR(100) NOT NULL,
 	address VARCHAR(100) NOT NULL,
-	verificationCode CHAR(50) NOT NULL,
+	verificationCode CHAR(100) NOT NULL,
+        token CHAR(100) NOT NULL,
 	type ENUM('admin','seller','registered') NOT NULL
 );
 

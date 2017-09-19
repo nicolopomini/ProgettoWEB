@@ -60,6 +60,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
                 user.setAddress(rs.getString("address"));
                 user.setType(rs.getString("type"));
                 user.setVerificationCode(rs.getString("verificationCode"));
+                user.setToken(rs.getString("token"));
 
                 return user;
             }
@@ -84,6 +85,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
                     user.setAddress(rs.getString("address"));
                     user.setType(rs.getString("type"));
                     user.setVerificationCode(rs.getString("verificationCode"));
+                    user.setToken(rs.getString("token"));
                     users.add(user);
                 }
                 return users;
@@ -95,7 +97,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
 
     @Override
     public User update(User user) throws DAOException {
-        try (PreparedStatement stm = CON.prepareStatement("UPDATE User SET name = ?, surname = ?, email = ?, password = ?, address = ?, type = ?, verificationCode = ? WHERE userId = ?;")) {
+        try (PreparedStatement stm = CON.prepareStatement("UPDATE User SET name = ?, surname = ?, email = ?, password = ?, address = ?, type = ?, verificationCode = ?, token = ? WHERE userId = ?;")) {
             stm.setString(1, user.getName());
             stm.setString(2, user.getSurname());
             stm.setString(3, user.getEmail());
@@ -103,7 +105,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
             stm.setString(5, user.getAddress());
             stm.setString(6, user.getType());
             stm.setString(7, user.getVerificationCode());
-            stm.setInt(8, user.getUserId());
+            stm.setString(8, user.getToken());
+            stm.setInt(9, user.getUserId());
             stm.executeUpdate();
             
             return user;
@@ -114,7 +117,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
 
     @Override
     public User add(User user) throws DAOException {
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO User (name, surname, email, password, address, type, verificationCode) VALUES (?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO User (name, surname, email, password, address, type, verificationCode, token) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS)) {
             stm.setString(1, user.getName());
             stm.setString(2, user.getSurname());
             stm.setString(3, user.getEmail());
@@ -122,6 +125,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
             stm.setString(5, user.getAddress());
             stm.setString(6, user.getType());
             stm.setString(7, user.getVerificationCode());
+            stm.setString(8, user.getToken());
             stm.executeUpdate();
             
             ResultSet rs = stm.getGeneratedKeys();
@@ -168,11 +172,40 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
                     user.setAddress(rs.getString("address"));
                     user.setType(rs.getString("type"));
                     user.setVerificationCode(rs.getString("verificationCode"));
+                    user.setToken(rs.getString("token"));
                 }
                 return user;
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the user for the passed activationCode", ex);
+        }
+    }
+    
+    @Override
+    public User getUserByToken(String token) throws DAOException {
+         if (token == null) {
+            throw new DAOException("token is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User WHERE token = ?")) {
+            stm.setString(1, token);
+            try (ResultSet rs = stm.executeQuery()) {
+                User user = new User();
+                while(rs.next())
+                {
+                    user.setUserId(rs.getInt("userId"));
+                    user.setName(rs.getString("name"));
+                    user.setSurname(rs.getString("surname"));
+                    user.setEmail(rs.getString("email"));
+                    user.setPassword(rs.getString("password"));
+                    user.setAddress(rs.getString("address"));
+                    user.setType(rs.getString("type"));
+                    user.setVerificationCode(rs.getString("verificationCode"));
+                    user.setToken(rs.getString("token"));
+                }
+                return user;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the user for the passed token", ex);
         }
     }
 
@@ -196,6 +229,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
                     user.setAddress(rs.getString("address"));
                     user.setType(rs.getString("type"));
                     user.setVerificationCode(rs.getString("verificationCode"));
+                    user.setToken(rs.getString("token"));
                 }
                 return user;
             }
