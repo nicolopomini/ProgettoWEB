@@ -1,4 +1,4 @@
-DROP DATABASE WebProject;
+DROP DATABASE IF EXISTS WebProject;
 
 CREATE DATABASE WebProject;
 
