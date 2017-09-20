@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
@@ -226,7 +227,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
         }
         else
         {
-            statement = "((SELECT * FROM Item WHERE name LIKE \"%" + name + "%\") UNION DISTINCT (SELECT * FROM Item WHERE description LIKE \"%" + name + "%\")) AS Item";
+            statement = "SELECT * FROM ((SELECT * FROM Item WHERE name LIKE \"%" + name + "%\") UNION (SELECT * FROM Item WHERE description LIKE \"%" + name + "%\")) AS Item";
         }
         
         if(category != null || shop != null)
@@ -271,14 +272,16 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
     }
 
     @Override
+    //
     public ArrayList<String> getAllCategories() throws DAOException {
-        try (PreparedStatement stm = CON.prepareStatement("SELECT TRIM(TRAILING ')' FROM TRIM(LEADING '(' FROM TRIM(LEADING 'enum' FROM column_type))) column_type AS category FROM information_schema.columns WHERE table_name = 'Item' AND column_name = 'categories';")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT column_type AS category FROM information_schema.columns WHERE table_name = 'Item' AND column_name = 'category';")) {
             try (ResultSet rs = stm.executeQuery()) {
-                ArrayList<String> categories = new ArrayList<>();
-                while(rs.next())
-                {
-                    categories.add(rs.getString("category"));
-                }
+                rs.next();
+                String result = rs.getString("category");
+                result = result.replace("enum(", "");
+                result = result.replace(")", "");
+                String[] cat = result.split(",");
+                ArrayList<String> categories = new ArrayList<>(Arrays.asList(cat));
                 return categories;
             }
         } catch (SQLException ex) {
