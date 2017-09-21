@@ -180,15 +180,31 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
     }
 
     @Override
-    public void readByUser(int userId) {
+    public void readByUser(int userId) throws DAOException{
         try {
             PreparedStatement stm = CON.prepareStatement("update Notification set seen = 1 where recipient = ?");
             stm.setInt(1, userId);
             stm.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(JDBCNotificationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DAOException("Impossible to read notifications", ex);
         }
     }
+
+    @Override
+    public int getUnreadCount(int userId) throws DAOException{
+        try {
+            PreparedStatement stm = CON.prepareStatement("select count(*) as c from Notification where seen = 0 and recipient = ? group by recipient;");
+            stm.setInt(1, userId);
+            ResultSet rs = stm.executeQuery();
+            if(rs.next())
+                return rs.getInt("c");
+            else 
+                return 0;
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to read notifications", ex);
+        }
+    }
+    
     
     
 }

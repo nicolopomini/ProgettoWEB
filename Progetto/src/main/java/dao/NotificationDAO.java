@@ -17,5 +17,6 @@ import persistence.utils.dao.exceptions.DAOException;
 
 public interface NotificationDAO extends DAO<Notification, Integer>{
     public ArrayList<Notification> getByRecipient(int UserId) throws DAOException;
-    public void readByUser(int userId);
+    public void readByUser(int userId) throws DAOException;
+    public int getUnreadCount(int userId) throws DAOException;
 }

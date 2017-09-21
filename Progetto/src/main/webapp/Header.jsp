@@ -4,18 +4,42 @@
     Author     : Dva
 --%>
 
+<%@page import="dao.ComplaintDAO"%>
+<%@page import="persistence.utils.dao.exceptions.DAOFactoryException"%>
+<%@page import="dao.NotificationDAO"%>
+<%@page import="persistence.utils.dao.factories.DAOFactory"%>
 <%@page import="dao.entities.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%
+    DAOFactory daoFactory;
+    NotificationDAO notificationDAO;
+    ComplaintDAO complaintDAO;
+    daoFactory = (DAOFactory) application.getAttribute("daoFactory");
+    if (daoFactory == null) {
+        throw new ServletException("Impossible to get dao factory for storage system");
+    }
+    try {
+            notificationDAO = daoFactory.getDAO(NotificationDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for notification storage system", ex);
+        }
+    try {
+            complaintDAO = daoFactory.getDAO(ComplaintDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for complaint storage system", ex);
+        }
     boolean logged = false;
     String type = "";
     User sessionUser = (User)session.getAttribute("user");
+    int unread = 0;
+    int complaints = 0;
     if(sessionUser != null)
     {
         logged = true;
         type = sessionUser.getType();
-                
+        unread = notificationDAO.getUnreadCount(sessionUser.getUserId());
+        complaints = complaintDAO.getUnread();
     }
 %>
 <div class="container">
@@ -37,10 +61,10 @@
             <ul class="nav navbar-nav navbar-right" id="voci_menu">
                 <% if(logged) { %>
                     <% if(type.equals("seller")) { %>
-                    <li><a href="notifications.jsp">Notifiche</a></li>
+                    <li><a href="notifications.jsp">Notifiche<% if(unread > 0) { %> <span class="badge"><%=unread%></span> <% } %></a></li>
                     <% } %>
                     <% if(type.equals("admin")) { %>
-                    <li><a href="notifications.jsp">Notifiche</a></li>
+                    <li><a href="notifications.jsp">Notifiche<% if(unread > 0 || complaints > 0) { %> <span class="badge"><%=unread + complaints%></span> <% } %></a></li>
                     <% } %>
                     <%
                         if(type.equals("admin"))

@@ -9,11 +9,15 @@ import dao.ItemReviewDAO;
 import dao.NotificationDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.rmi.ServerException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.exceptions.DAOFactoryException;
 import persistence.utils.dao.factories.DAOFactory;
 
@@ -66,8 +70,12 @@ public class ReadNotifications extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int userid = Integer.parseInt(request.getParameter("userid"));
-        notificationDAO.readByUser(userid);
+        try {
+            int userid = Integer.parseInt(request.getParameter("userid"));
+            notificationDAO.readByUser(userid);
+        } catch (DAOException ex) {
+            throw new ServerException("Impossible to read notifications",ex);
+        }
     }
 
     /**
