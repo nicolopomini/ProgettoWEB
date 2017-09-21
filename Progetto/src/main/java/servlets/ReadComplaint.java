@@ -5,9 +5,12 @@
  */
 package servlets;
 
-import dao.NotificationDAO;
+import dao.ComplaintDAO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.rmi.ServerException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,24 +24,24 @@ import persistence.utils.dao.factories.DAOFactory;
  *
  * @author pomo
  */
-@WebServlet(name = "ReadNotifications", urlPatterns = {"/ReadNotifications"})
-public class ReadNotifications extends HttpServlet {
-    private NotificationDAO notificationDAO;
+@WebServlet(name = "ReadComplaint", urlPatterns = {"/ReadComplaint"})
+public class ReadComplaint extends HttpServlet {
+    private ComplaintDAO complaintDAO;
 
     @Override
     public void init() throws ServletException {
-        super.init();
+        super.init(); 
         DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
         if (daoFactory == null) {
             throw new ServletException("Impossible to get dao factory for storage system");
         }
         try {
-            notificationDAO = daoFactory.getDAO(NotificationDAO.class);
+        complaintDAO = daoFactory.getDAO(ComplaintDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
     }
-    
+
     
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -67,10 +70,10 @@ public class ReadNotifications extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            int userid = Integer.parseInt(request.getParameter("userid"));
-            notificationDAO.readByUser(userid);
+            int complaintId = Integer.parseInt(request.getParameter("complaintid"));
+            complaintDAO.readComplaint(complaintId);
         } catch (DAOException ex) {
-            throw new ServerException("Impossible to read notifications",ex);
+            throw new ServerException("Impossible to read the complaint", ex);
         }
     }
 

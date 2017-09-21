@@ -17,4 +17,5 @@ import persistence.utils.dao.exceptions.DAOException;
 public interface ComplaintDAO extends DAO<Complaint, Integer>{
     public ArrayList<Complaint> getNewComplaints() throws DAOException;
     public int getUnread() throws DAOException;
+    public void readComplaint(int complaintId) throws DAOException;
 }

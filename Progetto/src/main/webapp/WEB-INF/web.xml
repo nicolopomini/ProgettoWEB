@@ -40,6 +40,10 @@
         <servlet-class>servlets.InsertItem</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>ReadComplaint</servlet-name>
+        <servlet-class>servlets.ReadComplaint</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ShopCommentReply</servlet-name>
         <servlet-class>servlets.ShopCommentReply</servlet-class>
     </servlet>
@@ -94,6 +98,10 @@
     <servlet-mapping>
         <servlet-name>ShopCommentReply</servlet-name>
         <url-pattern>/ShopCommentReply</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReadComplaint</servlet-name>
+        <url-pattern>/ReadComplaint</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ItemCommentReply</servlet-name>

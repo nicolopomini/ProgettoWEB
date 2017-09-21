@@ -14,8 +14,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
 
@@ -179,6 +177,18 @@ public class JDBCComplaintDAO extends JDBCDAO<Complaint, Integer> implements Com
             throw new DAOException("Impossible to get unread complaints",ex);
         }
     }
+
+    @Override
+    public void readComplaint(int complaintId) throws DAOException {
+        try {
+            PreparedStatement stm = CON.prepareStatement("update Complaint set status = 'seen' where complaintId = ?;");
+            stm.setInt(1, complaintId);
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to read the complaint",ex);
+        }
+    }
+    
     
     
 }

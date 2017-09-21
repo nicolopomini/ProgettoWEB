@@ -71,6 +71,12 @@
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send("userid="+userId);
             }
+            function readComplaint(complaintId) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "ReadComplaint", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("complaintid="+complaintId);
+            }
         </script>
         <style>
             .daleggere {
@@ -159,7 +165,7 @@
                   <form action="UpdateComplaint" method="POST">
                       <input type="hidden" name="complaintid" value="<%= c.getComplaintId() %>">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="readComplaint(<%=c.getComplaintId()%>)"><span aria-hidden="true">&times;</span></button>
                   <h4 class="modal-title" id="myModalLabel">Gestione anomalia <%= c.getComplaintId() %></h4>
                 </div>
                 <div class="modal-body">
@@ -187,7 +193,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal" onclick="readComplaint(<%=c.getComplaintId()%>)">Close</button>
                   <button type="submit" class="btn btn-primary">Salva</button>
                 </div>
                   </form>
