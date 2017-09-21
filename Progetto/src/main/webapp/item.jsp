@@ -81,6 +81,11 @@
     }
     session.setAttribute("item", item);
     String message = request.getParameter("message");
+    Cookie[] cookies = request.getCookies();
+    Cookie c = null;
+    for(Cookie cookie : cookies) 
+        if(cookie.getName().equals("item_message"))
+            c = cookie;
 %>
 <!DOCTYPE html>
 <html>
@@ -98,19 +103,20 @@
             <!-- Menu -->
             <jsp:include page="Header.jsp"/>
             <!-- Fine menu -->
-            <% if(message != null) { %>
+            <% if(c != null) { %>
             <div class="alert alert-info alert-dismissable fade in" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="close">
                     <span aria-hidden="true">x</span>
                 </button>
-                <%if(message.equals("ok")) {%>
+                <%if(c.getValue().equals("ok")) {%>
                 <%=item.getName()%> aggiunto al carrello
-                <%}else if(message.equals("insered")) {%>
+                <%}else if(c.getValue().equals("insered")) {%>
                 Commento inserito.
-                <%} else if(message.equals("replied")) {%>
+                <%} else if(c.getValue().equals("replied")) {%>
                 Risposto al commento.
                 <%}%>
             </div>
+            <% c.setMaxAge(0); %>
             <% } %>
             <div class="row">
                 <% if(!commenti.isEmpty()){ %>

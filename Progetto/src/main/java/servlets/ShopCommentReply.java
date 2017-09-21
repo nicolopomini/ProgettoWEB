@@ -100,6 +100,7 @@ public class ShopCommentReply extends HttpServlet {
             throw new ServerException("Impossible to reply the review", ex);
         }
         Cookie c = new Cookie("shop_message","replied");
+        c.setMaxAge(1);
         response.addCookie(c);
         String contextPath = getServletContext().getContextPath();
         if(!contextPath.endsWith("/"))

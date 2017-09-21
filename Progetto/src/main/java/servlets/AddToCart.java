@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,10 +61,13 @@ public class AddToCart extends HttpServlet {
         else
             cart.replace(itemid, obj + 1);
         session.setAttribute("cart", cart);
+        Cookie c = new Cookie("item_message","ok");
+        c.setMaxAge(1);
+        response.addCookie(c);
         String contextPath = getServletContext().getContextPath();
         if(!contextPath.endsWith("/"))
             contextPath += "/";
-        contextPath += "item.jsp?itemid=" + itemid + "&message=ok";
+        contextPath += "item.jsp?itemid=" + itemid;
         response.sendRedirect(response.encodeRedirectURL(contextPath));
     }
 

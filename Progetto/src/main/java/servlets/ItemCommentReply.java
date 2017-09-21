@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -96,10 +97,13 @@ public class ItemCommentReply extends HttpServlet {
         } catch (DAOException ex) {
             throw new ServletException("Impossible to reply the review", ex);
         }
+        Cookie c = new Cookie("item_message","replied");
+        c.setMaxAge(1);
+        response.addCookie(c);
         String contextPath = getServletContext().getContextPath();
         if(!contextPath.endsWith("/"))
             contextPath += "/";
-        contextPath += "item.jsp?itemid=" + item.getItemId() + "&message=replied";
+        contextPath += "item.jsp?itemid=" + item.getItemId();
         response.sendRedirect(response.encodeRedirectURL(contextPath));
     }
 

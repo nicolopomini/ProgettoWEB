@@ -132,6 +132,7 @@ public class ModifyShop extends HttpServlet {
             throw new ServletException("Impossible to update the shop", ex);
         }
         Cookie c = new Cookie("shop_message","updated");
+        c.setMaxAge(1);
         response.addCookie(c);
         String contextPath = getServletContext().getContextPath();
         if(!contextPath.endsWith("/"))

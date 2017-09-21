@@ -248,7 +248,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
         {
             statement += " Item.shopId IN (SELECT shopId FROM Shop WHERE name LIKE \"%" + shop + "%\");";
         }
-        
+        System.out.println(statement);
         try (PreparedStatement stm = CON.prepareStatement(statement)) {
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<Item> items = new ArrayList<>();

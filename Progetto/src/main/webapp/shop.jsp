@@ -303,9 +303,10 @@
         <% if(venditore) { %>
         <script type="text/javascript">
             function addButton() {
-                var menu = document.getElementById("voci_menu").innerHTML;
+                var menu = "";
                 menu += '<li><a role="button" data-toggle="modal" data-target="#modificanegozio">Modifica negozio</a></li>';
                 menu += '<li><a role="button" data-toggle="modal" data-target="#inserisciitem">Aggiungi item</a></li>';
+                menu += document.getElementById("voci_menu").innerHTML;
                 document.getElementById("voci_menu").innerHTML = menu;
             }
         </script>
