@@ -6,6 +6,7 @@
 package dao;
 
 import dao.entities.Shop;
+import java.util.ArrayList;
 import persistence.utils.dao.DAO;
 import persistence.utils.dao.exceptions.DAOException;
 
@@ -23,4 +24,5 @@ public interface ShopDAO extends DAO<Shop, Integer>{
      * @throws persistence.utils.dao.exceptions.DAOException
      */
     public boolean canComment(Integer shopId, Integer userId) throws DAOException;
+    public ArrayList<Shop> getShopsByOwner(Integer userId) throws DAOException;
 }

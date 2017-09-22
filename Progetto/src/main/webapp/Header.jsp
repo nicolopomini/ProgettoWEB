@@ -60,44 +60,12 @@
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right" id="voci_menu">
                 <% if(logged) { %>
-                    <% if(type.equals("seller")) { %>
-                    <li><a href="notifications.jsp">Notifiche<% if(unread > 0) { %> <span class="badge"><%=unread%></span> <% } %></a></li>
-                    <% } %>
                     <% if(type.equals("admin")) { %>
                     <li><a href="notifications.jsp">Notifiche<% if(unread > 0 || complaints > 0) { %> <span class="badge"><%=unread + complaints%></span> <% } %></a></li>
+                    <% } else { %>
+                    <li><a href="notifications.jsp">Notifiche<% if(unread > 0) { %> <span class="badge"><%=unread%></span> <% } %></a></li>
                     <% } %>
-                    <%
-                        if(type.equals("admin"))
-                        {
-                            %>
-                            <li><a href="UserPage.jsp"><%=sessionUser.getName() + " " + sessionUser.getSurname()%></a></li>
-                            <%
-                        }
-                        else
-                        {
-                            %>
-                            <li><a href="cart.jsp">Cart</a></li>
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><%=sessionUser.getName() + " " + sessionUser.getSurname()%>
-                                    <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="UserPage.jsp">Profile</a></li>
-                                    <li><a href="#">Complaint</a></li>
-                                    <%
-                                        if(type.equals("seller"))
-                                        {
-                                    %>
-                                        <li><a href="#">My shop</a></li>
-                                    <%
-                                        }
-                                    %>
-                                </ul>
-                            </li>
-                            <%
-                        } 
-                    %>
-
+                    <li><a href="userpage.jsp"><%=sessionUser.getName() + " " + sessionUser.getSurname()%></a></li>
                 <li><a href="Logout">Esci</a></li>
                 <% }else {%>
                 <li><a href="login.jsp">Login</a></li>

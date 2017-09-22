@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
 
@@ -175,4 +177,33 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO{
         }
         return false;
     }
+
+    @Override
+    public ArrayList<Shop> getShopsByOwner(Integer userId) throws DAOException {
+        try {
+            PreparedStatement stm = CON.prepareStatement("select * from Shop where userId = ?;");
+            stm.setInt(1, userId);
+            ResultSet rs = stm.executeQuery();
+            ArrayList<Shop> shops = new ArrayList<>();
+                while(rs.next())
+                {
+                    Shop shop = new Shop();
+                    shop.setShopId(rs.getInt("shopId"));
+                    shop.setUserId(rs.getInt("userId"));
+                    shop.setName(rs.getString("name"));
+                    shop.setWebsite(rs.getString("website"));
+                    shop.setAddress(rs.getString("address"));
+                    shop.setLat(rs.getDouble("lat"));
+                    shop.setLon(rs.getDouble("lon"));
+                    shop.setOpeningHours(rs.getString("openingHours"));
+                    shop.setImagePath(rs.getString("imagePath"));
+                    
+                    shops.add(shop);
+                }
+                return shops;
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get shops", ex);
+        }
+    }
+    
 }

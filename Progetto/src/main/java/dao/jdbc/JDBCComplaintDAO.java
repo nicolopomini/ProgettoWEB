@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
 
@@ -188,6 +190,31 @@ public class JDBCComplaintDAO extends JDBCDAO<Complaint, Integer> implements Com
             throw new DAOException("Impossible to read the complaint",ex);
         }
     }
+
+    @Override
+    public ArrayList<Complaint> getComplaintByAuthor(int userId) throws DAOException {
+        try {
+            PreparedStatement stm = CON.prepareStatement("select Complaint.purchaseId as purchaseId, complaintId, complaintTime, complaintText, reply, status from Complaint, Purchase where Complaint.purchaseId = Purchase.purchaseId and Purchase.userId = ?;");
+            stm.setInt(1, userId);
+            ResultSet rs = stm.executeQuery();
+            ArrayList<Complaint> complaints = new ArrayList<>();
+                while(rs.next())
+                {
+                    Complaint complaint = new Complaint();
+                    complaint.setComplaintId(rs.getInt("complaintId"));
+                    complaint.setPurchaseId(rs.getInt("purchaseId"));
+                    complaint.setComplaintTime(rs.getString("complaintTime"));
+                    complaint.setComplaintText(rs.getString("complaintText"));
+                    complaint.setReply(rs.getString("reply"));
+                    complaint.setStatus(rs.getString("status"));
+                    complaints.add(complaint);
+                }
+                return complaints;
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the complaints",ex);
+        }
+    }
+    
     
     
     

@@ -158,6 +158,7 @@
                     SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
                     String date = StringUtils.printDate(dt.parse(c.getComplaintTime()));
                     Purchase purchase = purchaseDAO.getByPrimaryKey(c.getPurchaseId());
+                    String purDate = StringUtils.printDate(dt.parse(purchase.getPurchaseTime()));
             %>
             <div class="modal fade" id="<%= c.getComplaintId() %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
@@ -179,7 +180,7 @@
                         <li><b>Utente</b>: <%= purchase.getUserId() %></li>
                         <li><a href="item.jsp?itemid=<%=purchase.getItemId()%>" target="_blank"><b>ID Prodotto</b>: <%= purchase.getItemId() %></a></li>
                         <li><b>Quantità</b>: <%= purchase.getQuantity() %></li>
-                        <li><b>Data</b>: <%= purchase.getPurchaseTime() %></li>
+                        <li><b>Data</b>: <%= purDate %></li>
                     </ul>
                     <h4>Gestisci anomalia</h4>
                     <div class="form-group">
