@@ -101,7 +101,6 @@
                 Risposto al commento.
                 <%}%>
             </div>
-            <% c.setMaxAge(0); %>
             <% } %>
             
             <!-- Contenuto pagina -->

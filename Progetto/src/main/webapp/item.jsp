@@ -116,7 +116,6 @@
                 Risposto al commento.
                 <%}%>
             </div>
-            <% c.setMaxAge(0); %>
             <% } %>
             <div class="row">
                 <% if(!commenti.isEmpty()){ %>

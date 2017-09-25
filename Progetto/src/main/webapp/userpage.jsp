@@ -92,73 +92,78 @@
             <h1 style="text-align: center">Accesso negato</h1>
             <p class="text-center">Per visualizzare il tuo profilo <a href="login.jsp">accedi</a>.</p>
             <% }else { %>
-            <div class="container-fluid">
-                <div class="row">
-                  <div class="col-sm-3 col-md-2 sidebar">
-                    <ul class="nav nav-sidebar">
-                      <li class="active"><a href="#profilo">Profilo <span class="sr-only">(current)</span></a></li>
-                      <li><a href="#anomalie">Segnalazione anomalie</a></li>
-                      <% if(venditore) { %>
-                      <li><a href="#shops">I miei negozi</a></li>
-                      <% } %>
-                    </ul>
-                  </div>
-                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                    <div id="profilo">
-                        <h2><%= sessionUser.getName() + " " + sessionUser.getSurname() %></h2>
-                        <form method="post" action="">
-                            <div class="form-group">
-                                <label for="inidirizzo">Modifica indirizzo</label>
-                                <input type="text" class="form-control" id="indirizzo" placeholder="<%= sessionUser.getAddress() %>" name="indirizzo">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Modifica email</label>
-                                <input type="email" class="form-control" id="email" placeholder="<%= sessionUser.getEmail() %>" name="email">
-                            </div>
-                            <p>Modifica password:</p><br/>
-                            <div class="form-group">
-                                <label for="oldpassword">Vecchia password</label>
-                                <input type="password" class="form-control" id="oldpassword" placeholder="Vecchia password" name="oldpassword">
-                            </div>
-                            <div class="form-group">
-                                <label for="newpassword">Nuova password</label>
-                                <input type="password" class="form-control" id="newpassword" placeholder="Nuova password" name="newpassword">
-                            </div>
-                            <div class="form-group">
-                                <label for="repeatpassword">Ripeti password</label>
-                                <input type="password" class="form-control" id="repeatpassword" placeholder="Ripeti password" name="repeatpassword">
-                            </div>
-                            <button type="submit" class="btn btn-default">Modifica</button>
-                        </form>
-                    </div>
-                    <div id="anomalie">
-                        <h2>Segnalazione anomalie</h2>
-                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#anomalia">
-                            Segnala anomalia
-                        </button>
-                        <% if(!complaints.isEmpty()) { %>
-                            <p>Le tue anomalie:</p>
-                            <ul>
-                            <% for(Complaint c : complaints) { 
-                                SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
-                                String date = StringUtils.printDate(dt.parse(c.getComplaintTime()));
-                            %>
-                            <li>
-                                <a role="button" data-toggle="modal" data-target="#<%= c.getComplaintId() %>">
-                                <ul class="list-inline">
-                                    <li><%= date %></li>
-                                    <li><%= c.getPurchaseId() %></li>
-                                    <li><%= c.getStatus() %></li>
-                                </ul>
-                                </a>
-                            </li>
-                            <% } %>
-                            </ul>
-                        <% } %>
-                    </div>
+                <div id="profilo">
+                    <h2><%= sessionUser.getName() + " " + sessionUser.getSurname() %></h2>
+                    <form method="post" action="">
+                        <div class="form-group">
+                            <label for="inidirizzo">Modifica indirizzo</label>
+                            <input type="text" class="form-control" id="indirizzo" placeholder="<%= sessionUser.getAddress() %>" name="indirizzo">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Modifica email</label>
+                            <input type="email" class="form-control" id="email" placeholder="<%= sessionUser.getEmail() %>" name="email">
+                        </div>
+                        <p>Modifica password:</p><br/>
+                        <div class="form-group">
+                            <label for="oldpassword">Vecchia password</label>
+                            <input type="password" class="form-control" id="oldpassword" placeholder="Vecchia password" name="oldpassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="newpassword">Nuova password</label>
+                            <input type="password" class="form-control" id="newpassword" placeholder="Nuova password" name="newpassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="repeatpassword">Ripeti password</label>
+                            <input type="password" class="form-control" id="repeatpassword" placeholder="Ripeti password" name="repeatpassword">
+                        </div>
+                        <button type="submit" class="btn btn-default">Modifica</button>
+                    </form>
                 </div>
-            </div>
-          </div>
+                <div id="anomalie">
+                    <h2>Segnalazione anomalie</h2>
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#anomalia">
+                        Segnala anomalia
+                    </button>
+                    <% if(!complaints.isEmpty()) { %>
+                        <p>Le tue anomalie:</p>
+                        <ul>
+                        <% for(Complaint c : complaints) { 
+                            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
+                            String date = StringUtils.printDate(dt.parse(c.getComplaintTime()));
+                        %>
+                        <li>
+                            <a role="button" data-toggle="modal" data-target="#<%= c.getComplaintId() %>">
+                            <ul class="list-inline">
+                                <li><%= date %></li>
+                                <li><%= c.getPurchaseId() %></li>
+                                <li><%= c.getStatus() %></li>
+                            </ul>
+                            </a>
+                        </li>
+                        <% } %>
+                        </ul>
+                    <% } %>
+                </div>
+                <% if(venditore) { %>
+                <div id="shops">
+                    <h2>Negozi</h2>
+                    <% if(shops.isEmpty()) { %>
+                    <p>Nessun negozio</p>
+                    <% } else {%>
+                    <table class="table">
+                        <tbody>
+                            <% for(Shop s : shops) { %>
+                            <tr>
+                                <td><b><%= s.getName() %></b></td>
+                                <td><%= s.getAddress() %></td>
+                                <td><a href="shop.jsp?shopid=<%= s.getShopId() %>"><img src="${pageContext.request.contextPath}/<%=s.getImagePath()%>" alt="<%= s.getName() %>" class="img-rounded" height="100" width="177"></a></td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                    <% } %>
+                </div>
+                <% } %>
           <!--Modals-->
           <%for(Complaint c : complaints) {  
                     SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
