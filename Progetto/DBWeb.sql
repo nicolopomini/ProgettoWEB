@@ -14,7 +14,7 @@ CREATE TABLE User
 	password VARCHAR(100) NOT NULL,
 	address VARCHAR(100) NOT NULL,
 	verificationCode CHAR(100) NOT NULL,
-    token CHAR(100) NOT NULL DEFAULT "",
+        token CHAR(100) NOT NULL DEFAULT "",
 	type ENUM('admin','seller','registered') NOT NULL
 );
 
