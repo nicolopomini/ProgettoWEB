@@ -154,12 +154,12 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
     }
 
     @Override
-    public User getUserByActivationCode(String activationCode) throws DAOException {
-         if (activationCode== null) {
-            throw new DAOException("activationCode is null");
+    public User getUserByVerificationCode(String verificationCode) throws DAOException {
+         if (verificationCode== null) {
+            throw new DAOException("verificationCode is null");
         }
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User WHERE verificationCode = ?")) {
-            stm.setString(1, activationCode);
+            stm.setString(1, verificationCode);
             try (ResultSet rs = stm.executeQuery()) {
                 User user = new User();
                 while(rs.next())
@@ -177,7 +177,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO{
                 return user;
             }
         } catch (SQLException ex) {
-            throw new DAOException("Impossible to get the user for the passed activationCode", ex);
+            throw new DAOException("Impossible to get the user for the passed verificationCode", ex);
         }
     }
     
