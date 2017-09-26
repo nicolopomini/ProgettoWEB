@@ -3,12 +3,12 @@
     <context-param>
         <description>The url of the JDBC persistence system database position</description>
         <param-name>dburl</param-name>
-        <param-value>jdbc:mysql://127.0.0.1:3306/webproject</param-value>
+        <param-value>jdbc:mysql://127.0.0.1:3306/WebProject</param-value>
     </context-param>
     <context-param>
         <description>Username for db</description>
         <param-name>dbusername</param-name>
-        <param-value>root</param-value>
+        <param-value>user</param-value>
     </context-param>
     <context-param>
         <description>Password for db</description>

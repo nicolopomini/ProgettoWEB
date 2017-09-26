@@ -1,3 +1,4 @@
+USE WebProject;
 insert into User (name, surname, email, password, address, verificationCode, type) values
 	("Luca","Patron","lucapatron@email.com","$2a$10$2Gs/9VUQJTfuCnH9zVSndusINLOvBuewsl.Q6znYMijiKls4ZIlUq","via del pigneto 11, Roma","1","registered"),
 	("Massimo","Casale","massimocasale@email.com","$2a$10$2Gs/9VUQJTfuCnH9zVSndusINLOvBuewsl.Q6znYMijiKls4ZIlUq","via pompei 2, Roma","1","seller"),

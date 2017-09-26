@@ -116,18 +116,18 @@
                                         <a href="#" data-toggle="dropdown" class="dropdown-toggle">Categorie<strong class="caret"></strong></a>
                                         <ul class="dropdown-menu">
                                             <%
-                                                ArrayList<Item>allitems=new ArrayList<>(itemDatabase.getAll());
-                                                TreeSet<String>categories=new TreeSet<>();
-                                                Iterator<Item>itrCat=allitems.iterator();
-                                                while(itrCat.hasNext()) {
-                                                        Item elem = itrCat.next();
-                                                        categories.add(elem.getCategory());
-                                                    }
+                                                ArrayList<String>categories=itemDatabase.getAllCategories();
                                                 Iterator<String>strItr=categories.iterator();
                                                 while (strItr.hasNext()) {
                                                         String elem = strItr.next();
-                                                        String red=(shopName!=null)?"?category="+elem+"&shopName="+shopName:"?category="+elem;
-                                                        out.write("<a href='index.jsp"+red+"' class='list-group-item'>"+elem+"</a>");
+                                                        if(query!=null){
+                                                            String s="?inputSearch="+query;
+                                                            s=(shopName!=null)?s+"&shopame="+shopName:s;
+                                                            s=s+"&category="+elem;
+                                                            out.write("<a href='index.jsp"+s+"' class='list-group-item'>"+elem+"</a>");
+                                                        }else{
+                                                            out.write("<a href='index.jsp?category="+elem+"' class='list-group-item'>"+elem+"</a>");
+                                                        }
                                                     }
                                             %>
                                         </ul>
@@ -303,8 +303,7 @@
                     </div>
                 </div>                                      
             </div>
-            
-            <jsp:include page="Footer.jsp"/>
+        </div>
         </div>
     </body>
 </html>

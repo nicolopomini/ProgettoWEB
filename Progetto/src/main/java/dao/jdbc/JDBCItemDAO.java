@@ -280,7 +280,9 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
                 String result = rs.getString("category");
                 result = result.replace("enum(", "");
                 result = result.replace(")", "");
+                result = result.replace("'", "");
                 String[] cat = result.split(",");
+                
                 ArrayList<String> categories = new ArrayList<>(Arrays.asList(cat));
                 return categories;
             }
