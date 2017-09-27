@@ -51,6 +51,7 @@
             {
                 toUpdate.setVerificationCode("1");
                 user.update(toUpdate);
+                session.setAttribute("user", toUpdate);
             }
             else
             {
@@ -85,6 +86,22 @@
                 <div class="col-xs-12">
                     <label>Your account has been activated</label>
                     <p>You will now be able to access your customer area and buy our products</p>
+                    <p id="redirectTimer"></p>
+                    <script>
+                        function timedRedirect(timeLeft)
+                        {
+                            document.getElementById("redirectTimer").innerHTML = "An automatic redirect to the home page will happen in " + timeLeft;
+                            if(timeLeft > 0)
+                            {
+                                setTimeout(function() {timedRedirect(timeLeft-1)},1000);
+                            }
+                            else
+                            {
+                                window.location.replace("index.jsp");
+                            }
+                        }
+                        timedRedirect(8);
+                    </script>
                 </div>
             </div>
             <% } else { %>

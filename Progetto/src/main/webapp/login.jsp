@@ -74,7 +74,6 @@
                                     if(!toSearch.getVerificationCode().equals("1"))
                                     {
                                         active = false;
-                                        MailUtils.sendActivationEmail(toSearch);
                                     }
                                     else
                                     {
@@ -174,7 +173,7 @@
                             %>
                         </div>
                         <div class="form-group col-xs-12"> 
-                            <div class="col-xs-12">
+                            <div class="col-xs-12 marginBottomFix">
                                 <a href='passwordRecovery.jsp'>I forgot my password</a>
                             </div>
                             <div class="col-xs-6">
@@ -193,7 +192,9 @@
                 %>
                 <div class="col-xs-12">
                     <label>Your account needs to be activated first!</label>
-                    <p class="redText">WARNING: To start using your account you will need to activate it. An activation email has been sent to the address "<%=email%>", click on the button contained in the email to activate your account</p>
+                    <p class="redText">WARNING: To start using your account you will need to activate it. Click the button below to send another activation email.</p>
+                    <button onclick="sendActivationEmail('<%=email%>')" class="btn btn-success marginBottomFix">Send Activation</button>
+                    <p class="hiddenText" id="emailSent">An activation email has been sent to the address "<%=email%>".</p>
                 </div>
                 <%
                         }
@@ -211,5 +212,6 @@
             <jsp:include page="Footer.jsp"/>
         </div>
         <script src="js/registrationJS.js"></script>
+        <script src="js/loginJS.js"></script>
     </body>
 </html>

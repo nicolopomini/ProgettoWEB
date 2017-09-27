@@ -16,3 +16,8 @@ and open the template in the editor.
 {
     color: red;
 }
+
+.hiddenText
+{
+    display: none;
+}
