@@ -55,12 +55,7 @@ public class MailUtils
            message.setSentDate(new Date());
            message.setHeader("MIME-Version", "1.0");
 	   // Send the actual HTML message, as big as you like
-	   message.setContent("<html>"
-                   + "<head>"
-                   + "<title>Activation email</title>"
-                   + "</head>"
-                   + "<body>"
-                   + "<h3>Account activation</h3>"
+	   message.setContent("<h3>Account activation</h3>"
                    + "<p>Email: "+user.getEmail()+"</p>"
                    + "<p>Name: "+user.getName()+"</p>"
                    + "<p>Surname: "+user.getSurname()+"</p>"
@@ -69,7 +64,58 @@ public class MailUtils
                    + "<input type='hidden' name='ActivationCode' value='"+user.getVerificationCode()+"'>"
                    + "<button type='submit'>Activate account</button>"
                    + "</form>"
-                   + "<p>Oppure http://localhost/Progetto/activation.jsp?ActivationCode="+user.getVerificationCode()
+                   + "<p>Oppure http://localhost/Progetto/activation.jsp?ActivationCode="+user.getVerificationCode(),
+             "text/html; charset=utf-8");
+
+	   // Send message
+	   Transport.send(message, username,password);
+
+      } catch (MessagingException e) {
+	   e.printStackTrace();
+	   throw new RuntimeException(e);
+      }
+    }
+    public static void sendPasswordResetEmail(User user)
+    {
+        String from = "webprojecttest2017@gmail.com";
+        final String username = "webprojecttest2017@gmail.com";
+        final String password = "WebProject2017Safe";
+        final String port = "587";
+        String host = "smtp.gmail.com";
+        
+        Properties props = new Properties();
+        props.setProperty("mail.smtp.host", host);
+        props.setProperty("mail.smtp.port", port);
+        props.setProperty("mail.smtp.auth", "true");
+        props.setProperty("mail.smtp.starttls.enable", "true");
+        props.setProperty("mail.smtp.ssl.trust","*");
+
+        Session session = Session.getInstance(props);
+        
+        
+            // Create a default MimeMessage object.
+            Message message = new MimeMessage(session);
+        try {        
+   	   // Set From: header field of the header.
+	   message.setFrom(new InternetAddress(username));
+
+	   // Set To: header field of the header.
+	   message.setRecipients(Message.RecipientType.TO,
+              InternetAddress.parse(user.getEmail(), false));
+
+	   // Set Subject: header field
+	   message.setSubject("Password Reset");
+           message.setSentDate(new Date());
+           message.setHeader("MIME-Version", "1.0");
+	   // Send the actual HTML message, as big as you like
+	   message.setContent("<html>"
+                   + "<head>"
+                   + "<title>Activation email</title>"
+                   + "</head>"
+                   + "<body>"
+                   + "<h3>Password Reset</h3>"
+                   + "<p>Clicca il seguente link per resettare la tua password.</p>"
+                   + "<p>http://localhost/Progetto/passwordRecovery.jsp?Token="+user.getToken()
                    + "</body>"
                    + "</html>",
              "text/html");

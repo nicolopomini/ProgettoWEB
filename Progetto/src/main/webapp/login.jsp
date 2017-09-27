@@ -175,7 +175,7 @@
                         </div>
                         <div class="form-group col-xs-12"> 
                             <div class="col-xs-12">
-                                <a href='/'>Ho dimenticato la mia password</a>
+                                <a href='passwordRecovery.jsp'>I forgot my password</a>
                             </div>
                             <div class="col-xs-6">
                                 <button type="submit" class="btn btn-default">Login</button>

@@ -46,7 +46,7 @@
             {
                 throw new ServletException("Impossible to get dao factory for user activation", ex);
             }
-            toUpdate = user.getUserByActivationCode(activationCode);
+            toUpdate = user.getUserByVerificationCode(activationCode);
             if(toUpdate.getUserId() != null)
             {
                 toUpdate.setVerificationCode("1");

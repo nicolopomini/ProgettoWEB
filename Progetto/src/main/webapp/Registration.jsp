@@ -122,6 +122,7 @@
                 toInsert.setSurname(tmpSurname);
                 toInsert.setAddress(tmpAddress);
                 toInsert.setType("registered");
+                toInsert.setToken("");
                 SecureRandom random = new SecureRandom();
                 String verificationCode = new BigInteger(130, random).toString(32);
                 toInsert.setVerificationCode(verificationCode);
