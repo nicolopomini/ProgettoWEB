@@ -75,6 +75,10 @@
         <servlet-name>SendActivationEmail</servlet-name>
         <servlet-class>servlets.SendActivationEmail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateUser</servlet-name>
+        <servlet-class>servlets.UpdateUser</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DebugServlet</servlet-name>
         <url-pattern>/DebugServlet</url-pattern>
@@ -114,6 +118,10 @@
     <servlet-mapping>
         <servlet-name>Checkout</servlet-name>
         <url-pattern>/Checkout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateUser</servlet-name>
+        <url-pattern>/UpdateUser</url-pattern>
     </servlet-mapping>
     <listener>
         <description>ServletContextListener</description>

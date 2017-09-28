@@ -78,13 +78,10 @@ public class UpdateUser extends HttpServlet {
         oldpassword = request.getParameter("oldpassword");
         newpassword = request.getParameter("newpassword");
         repeatpassword = request.getParameter("repeatpassword");
-        System.out.println("Old password user: " + user.getPassword() + ":: insered: " + oldpassword + "(" + BCrypt.hashpw(oldpassword, BCrypt.gensalt()) + ")");
         boolean error = false;
         Cookie c;
         if((oldpassword != null && !oldpassword.equals("")) || (newpassword != null && !newpassword.equals("")) || (repeatpassword != null && !repeatpassword.equals(""))) { //cambio password
-            System.out.println("1");
             if(oldpassword != null && newpassword != null && repeatpassword != null) {
-                System.out.println("2");
                 if(BCrypt.checkpw(oldpassword, user.getPassword()) && newpassword.equals(repeatpassword)) 
                     user.setPassword(BCrypt.hashpw(newpassword, BCrypt.gensalt(12)));
                 else

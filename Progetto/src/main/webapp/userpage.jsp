@@ -91,14 +91,11 @@
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
         <script>
             function validate() {
-                var old = document.update-profile.oldpassword.value;
-                var np = document.update-profile.newpassword.value;
-                var rep = document.update-profile.repeatpassword.value;
-                alert(old);
-                alert(np);
-                alert(rep);
+                var np = document.forms["update-profile"]["newpassword"].value;
+                var rep = document.forms["update-profile"]["repeatpassword"].value;
+                var old = document.forms["update-profile"]["oldpassword"].value;
                 var message = document.getElementById("messaggio-errore").innerHTML;
-                if(old !== null && old !== "") {
+                if((old !== null && old !== "") || (rep !== null && rep !== "") || (np !== null && np !== "")) {
                     if(np === null || np === "" || rep === null || rep === "") {
                         message += "Inserisci una nuova password e ripetila."
                         document.getElementById("messaggio-errore").innerHTML = message;
@@ -135,7 +132,7 @@
             <% }else { %>
                 <div id="profilo">
                     <h2><%= sessionUser.getName() + " " + sessionUser.getSurname() %></h2>
-                    <form name="update-profile" method="post" action="UpdateUser" onsubmit="validate()">
+                    <form name="update-profile" method="post" action="UpdateUser" onsubmit="return validate()">
                         <div class="form-group">
                             <label for="inidirizzo">Modifica indirizzo</label>
                             <input type="text" class="form-control" id="indirizzo" placeholder="<%= sessionUser.getAddress() %>" name="indirizzo">
