@@ -115,7 +115,7 @@
                     <br/>
                     <div id="info">
                         <ul class="list-group">
-                            <li class="list-group-item">Website: <a href="<%= shop.getWebsite() %>" target="_blank"><%= shop.getWebsite() %></a></li>
+                            <li class="list-group-item">Website: <a href="http://<%= shop.getWebsite() %>" target="_blank"><%= shop.getWebsite() %></a></li>
                             <li class="list-group-item">Orari del negozio: <%=shop.getOpeningHours()%></li>
                         </ul>
                         <br/>

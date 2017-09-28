@@ -64,6 +64,7 @@
                     <li><a href="notifications.jsp">Notifiche<% if(unread > 0 || complaints > 0) { %> <span class="badge"><%=unread + complaints%></span> <% } %></a></li>
                     <% } else { %>
                     <li><a href="notifications.jsp">Notifiche<% if(unread > 0) { %> <span class="badge"><%=unread%></span> <% } %></a></li>
+                    <li><a href="cart.jsp">Carrello</a></li>
                     <% } %>
                     <li><a href="userpage.jsp"><%=sessionUser.getName() + " " + sessionUser.getSurname()%></a></li>
                 <li><a href="Logout">Esci</a></li>

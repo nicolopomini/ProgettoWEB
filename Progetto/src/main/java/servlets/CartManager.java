@@ -67,14 +67,14 @@ public class CartManager extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         String action = request.getParameter("Action");
         String itemId = request.getParameter("Id");
         HashMap<Integer,Integer> cart = (HashMap<Integer,Integer>) request.getSession().getAttribute("cart");
         ItemDAO itemDAO;
         double totalprice = 0;
-        response.setContentType("text/html");
-        response.setCharacterEncoding("UTF-8");
 
         DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
         if (daoFactory == null) 
