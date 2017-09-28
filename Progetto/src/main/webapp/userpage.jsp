@@ -67,6 +67,11 @@
         if(venditore) 
             shops = shopDAO.getShopsByOwner(sessionUser.getUserId());
     }
+    Cookie[] cookies = request.getCookies();
+    Cookie coo = null;
+    for(Cookie cookie : cookies)
+        if(cookie.getName().equals("user_message"))
+            coo = cookie;
 %>
 <!DOCTYPE html>
 <html>
@@ -84,17 +89,53 @@
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
+        <script>
+            function validate() {
+                var old = document.update-profile.oldpassword.value;
+                var np = document.update-profile.newpassword.value;
+                var rep = document.update-profile.repeatpassword.value;
+                alert(old);
+                alert(np);
+                alert(rep);
+                var message = document.getElementById("messaggio-errore").innerHTML;
+                if(old !== null && old !== "") {
+                    if(np === null || np === "" || rep === null || rep === "") {
+                        message += "Inserisci una nuova password e ripetila."
+                        document.getElementById("messaggio-errore").innerHTML = message;
+                        return false;
+                    } else if(np !== rep){
+                        message += "Password ripetuta non corretta."
+                        document.getElementById("messaggio-errore").innerHTML = message;
+                        return false;
+                    }
+                    return true;
+                }
+                return true;
+            }
+        </script>
     </head>
     <body>
         <div class="container">
             <jsp:include page="Header.jsp"/>
+            <% if(coo != null) { %>
+            <div class="alert <% if(coo.getValue().equals("error")) { %> alert-danger <% }else{ %> alert-info <% } %> alert-dismissable fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                    <span aria-hidden="true">x</span>
+                </button>
+                <%if(coo.getValue().equals("ok")) {%>
+                Profilo utente aggiornato.
+                <%} else if(coo.getValue().equals("error")) {%>
+                Errore nell'aggiornamento dell'utente
+                <%}%>
+            </div>
+            <% } %>
             <% if(sessionUser == null) { %>
             <h1 style="text-align: center">Accesso negato</h1>
             <p class="text-center">Per visualizzare il tuo profilo <a href="login.jsp">accedi</a>.</p>
             <% }else { %>
                 <div id="profilo">
                     <h2><%= sessionUser.getName() + " " + sessionUser.getSurname() %></h2>
-                    <form method="post" action="">
+                    <form name="update-profile" method="post" action="UpdateUser" onsubmit="validate()">
                         <div class="form-group">
                             <label for="inidirizzo">Modifica indirizzo</label>
                             <input type="text" class="form-control" id="indirizzo" placeholder="<%= sessionUser.getAddress() %>" name="indirizzo">
@@ -103,7 +144,7 @@
                             <label for="email">Modifica email</label>
                             <input type="email" class="form-control" id="email" placeholder="<%= sessionUser.getEmail() %>" name="email">
                         </div>
-                        <p>Modifica password:</p><br/>
+                        <h4>Modifica password:</h4>
                         <div class="form-group">
                             <label for="oldpassword">Vecchia password</label>
                             <input type="password" class="form-control" id="oldpassword" placeholder="Vecchia password" name="oldpassword">
@@ -115,6 +156,7 @@
                         <div class="form-group">
                             <label for="repeatpassword">Ripeti password</label>
                             <input type="password" class="form-control" id="repeatpassword" placeholder="Ripeti password" name="repeatpassword">
+                            <p class="help-block" id="messaggio-errore" style="color: red"></p>
                         </div>
                         <button type="submit" class="btn btn-default">Modifica</button>
                     </form>
