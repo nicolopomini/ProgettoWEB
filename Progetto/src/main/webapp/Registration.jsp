@@ -144,7 +144,6 @@
                 if(toSearch.getUserId() == null)
                 {
                     user.add(toInsert);
-                    MailUtils.sendActivationEmail(toInsert);
                 }
                 else
                 {
@@ -187,7 +186,29 @@
                     <label>Your registration was successful</label>
                     <p class="redText">WARNING: To start using your account you will need to activate it. An activation email has been sent to the address "<%=tmpEmail%>", click on the button contained in the email to activate your account</p>
                 </div>
-                
+                <script>
+                    function sendActivationEmail(email)
+                    {
+                        var xhttp;
+                        var label;
+                        label = document.getElementById("emailSent");
+                        xhttp = new XMLHttpRequest();
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200)
+                            {
+                                if(this.responseText == "sent")
+                                {
+                                    label.setAttribute("style","display:block");
+                                }
+                            }
+                        };
+                        xhttp.open("POST", "SendActivationEmail", true);
+                        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        var toSend = encodeURIComponent(email);
+                        xhttp.send("Email="+toSend);
+                    }
+                    sendActivationEmail("<%=tmpEmail%>");
+                </script>
                 <%      }
                         else
                         {
