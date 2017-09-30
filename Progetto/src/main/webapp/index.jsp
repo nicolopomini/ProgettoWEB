@@ -120,26 +120,33 @@
                                                 Iterator<String>strItr=categories.iterator();
                                                 while (strItr.hasNext()) {
                                                         String elem = strItr.next();
+                                                        String s;
                                                         if(query!=null){
-                                                            String s="?inputSearch="+query;
-                                                            s=(shopName!=null)?s+"&shopame="+shopName:s;
+                                                            s="?inputSearch="+query;
+                                                            s=(shopName!=null)?s+"&shopName="+shopName:s;
                                                             s=s+"&category="+elem;
-                                                            out.write("<a href='index.jsp"+s+"' class='list-group-item'>"+elem+"</a>");
                                                         }else{
-                                                            out.write("<a href='index.jsp?category="+elem+"' class='list-group-item'>"+elem+"</a>");
+                                                            s="?category="+elem;
+                                                            s=(shopName!=null)?s+"&shopName="+shopName:s;
                                                         }
+                                                        out.write("<a href='index.jsp"+s+"' class='list-group-item'>"+elem+"</a>");
+                                                        
                                                     }
                                             %>
                                         </ul>
                                     </li>
                                     <div class="list-group-item">
                                         <h5 class="list-group-item-heading">Negozio</h5>
-                                        <form role="form" action="index.jsp<%
-                                            if(category!=null){
-                                                out.write("?category="+category);
-                                            }
-                                            %>" method="GET">
+                                        <form role="form" action="index.jsp" method="GET">
                                             <input type="search" class="form-control" name="shopName"/>
+                                            <%
+                                                if(query!=null){
+                                                    out.write("<input type='hidden' name='inputSearch' value='"+query+"'>");
+                                                }
+                                                if(category!=null){
+                                                    out.write("<input type='hidden' name='category' value='"+category+"'>");
+                                                }
+                                            %>
                                         </form>
                                     </div>
                                     <li class="list-group-item">
@@ -154,19 +161,17 @@
                     <div class="col-md-10">
                         
                         <div class="row">
-                            <form class="form-horizontal" role="form" action="index.jsp<%
-                                            if(category!=null){
-                                                out.write("?category="+category);
-                                            }
-                                            if(category!=null&&shopName!=null){
-                                                 out.write("&shopName="+shopName);
-                                            }else if(shopName!=null){
-                                                out.write("?shopName="+shopName);
-                                            }
-                                        
-                                        %>" method="POST">
+                            <form class="form-horizontal" role="form" action="index.jsp" method="GET"/>
+                                <%
+                                    if(shopName!=null){
+                                        out.write("<input type='hidden' name='shopName' value='"+shopName+"'>");
+                                    }
+                                    if(category!=null){
+                                        out.write("<input type='hidden' name='category' value='"+category+"'>");
+                                    }
+                                %>
                                 <div class="col-md-2">
-                                    <button type="submit" class="btn btn-default">Cerca nel negozio</button>
+                                    <button type="submit" class="btn btn-default">Ricerca</button>
                                 </div>
                                 <div class="col-md-10">
                                     <input type="search" class="form-control" name="inputSearch" />
@@ -181,53 +186,8 @@
                                         
                                         if(query!=null||category!=null||shopName!=null){
                                             
-                                            ArrayList<Item>items=new ArrayList<>(itemDatabase.getAll());
-                                            ArrayList<Item>queryItems=new ArrayList<>();
-                                            
-                                            if(items!=null){
-                                                Iterator<Item>itr=items.iterator();
-                                                if(shopName!=null){
-                                                    itr=items.iterator();
-                                                    while (itr.hasNext()) {
-                                                        Item alpha=itr.next();
-                                                        String name=shopDatabase.getByPrimaryKey(alpha.getShopId()).getName();
-                                                        if(!name.toLowerCase().contains(shopName.toLowerCase()))
-                                                            itr.remove();
-                                                    }
-                                                }
-                                                if(category!=null){
-                                                    itr=items.iterator();
-                                                    while (itr.hasNext()) {
-                                                        Item alpha=itr.next();
-                                                        if (!alpha.getCategory().equalsIgnoreCase(category))
-                                                            itr.remove();
-                                                    }
-                                                }
-                                                if(query!=null){
-                                                    while (itr.hasNext()) {
-                                                        Item alpha=itr.next();
-                                                        if(alpha.getName().toLowerCase().contains(query.toLowerCase())){
-                                                            queryItems.add(alpha);
-                                                            itr.remove();
-                                                        }
-                                                    }
-                                                    itr=items.iterator();
-                                                    while (itr.hasNext()) {
-                                                        Item alpha=itr.next();
-                                                        if(alpha.getDescription().toLowerCase().contains(query.toLowerCase())){
-                                                            queryItems.add(alpha);
-                                                            itr.remove();
-                                                        }
-                                                    }
-                                                }else{
-                                                    queryItems=items;
-                                                }
-                                                
-                                            }else{
-                                                %> vuoto <%
-                                            }
-
-                                            if(!queryItems.isEmpty()){
+                                            ArrayList<Item>items=itemDatabase.getItemsByNameFilterByCategoryShop(query, category, shopName);
+                                            if(!items.isEmpty()){
                                             %>
                                             <div class="row">
                                                 <table class="table collapse" id="searchFilters">
@@ -246,23 +206,23 @@
                                             <table class="table" id="resultTable">
                                                 <thead>
                                                     <tr>
-                                                        <th>Prodotto</th><th>Descrizione</th><th>Negozio</th><th>Prezzo</th><th style="display:none;">Regione</th><th style="display:none;">Recensione</th>
+                                                        <th>Prodotto</th><th>Descrizione</th><th>Negozio</th><th>Prezzo</th><th style="display:none;">Regione</th><th>Recensioni</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                             <%
-                                            for(Item i:queryItems){
+                                            for(Item i:items){
                                                 String name=i.getName();
                                                 String description=i.getDescription();
                                                 String shop=(shopDatabase.getByPrimaryKey(i.getShopId())).getName();
                                                 String price=i.getPrice().toString();
                                                 String itemPage="item.jsp?itemid="+i.getItemId();
-                                                String strReview=reviewDatabase.getAverageScoreByItemId(i.getItemId()).toString();
+                                                String strReview=reviewDatabase.getAverageScoreByItemId(i.getItemId()).toString()+"/5";
                                                 //String region=shopDatabase.getByPrimaryKey(i.getShopId()).getAddress();
                                                 //REGIONI DA FARE
                                             %>
-                                                <tr class="table-row" data-href="<% out.write(itemPage); %>">
-                                                    <td><% out.write(name); %> </td><td><% out.write(description); %></td><td><% out.write(shop); %></td><td><% out.write(price); %></td><td style="display:none;"><!-- REGIONE --></td><td style="display:none;"><% out.write(strReview); %></td>
+                                                <tr style="cursor: pointer;" class="table-row" data-href="<% out.write(itemPage); %>">
+                                                    <td><% out.write(name); %> </td><td><% out.write(description); %></td><td><% out.write(shop); %></td><td><% out.write(price); %></td><td style="display:none;"><!-- REGIONE --></td><td><% out.write(strReview); %></td>
                                                 </tr>
                                                     <%--
                                                     <tr class="active">
@@ -281,10 +241,14 @@
                                                 </table>
                                                 <%
                                             }else{
-                                            %> Nessun prodotto trovato <%
+                                            %>
+                                                <div class="alert alert-warning">
+                                                    Nessun prodotto trovato.
+                                                </div>
+                                            <%
                                             }
                                         }else{
-                                        %> Nessuna ricerca effettuata <%
+                                            //nessuna ricerca effettuata
                                         }
                                     %>
                                     <script>
