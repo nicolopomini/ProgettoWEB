@@ -39,15 +39,16 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Carrello</title>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/cartJS.js"></script>
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
-        <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
     </head>
     <body>
+        <jsp:include page="Header.jsp"/>
         <div class="container">
-        <!-- Menu -->
-            <jsp:include page="Header.jsp"/>
-            <!-- Fine menu -->
             <% if(cart == null || cart.isEmpty()) { //carrello vuoto%>
             <h2 style="text-align: center">Il carrello è vuoto</h2>
             <% } else { //carrello pieno
@@ -72,14 +73,14 @@
             <table id="cartTable" class="table">
                 <thead>
                     <th><strong>Totale</strong></th>
-                    <th><strong><fmt:formatNumber value="${totalprice}" type="currency"/></strong></th>
+                    <th><strong><fmt:formatNumber value="${totalprice}" type="currency" currencySymbol="€"/></strong></th>
                 </thead>
                 <tbody>
                 <c:forEach items="${items}" var="current">
                     <tr>
                         <td><a href="item.jsp?itemid=<c:out value="${current.key.itemId}"/>">${current.key.name}</a></td>
                         <td></td>
-                        <td><fmt:formatNumber value="${current.key.price}" type="currency"/></td>
+                        <td><fmt:formatNumber value="${current.key.price}" type="currency" currencySymbol="€"/></td>
                         <td></td>
                         <td><button style="margin-right: 5px" onclick="addRemoveItem(0,${current.key.itemId})" class="btn btn-xs btn-info">-</button><c:out value="${current.value}"/><button style="margin-left: 5px" onclick="addRemoveItem(1,${current.key.itemId})" class="btn btn-xs btn-info">+</button></td>
                     </tr>
@@ -90,9 +91,7 @@
                 <input class="btn btn-default" type="submit" value="Procedi al pagamento">
             </form>
             <% } %>
-            <!--Footer-->
-            <jsp:include page="Footer.jsp"/>
         </div>
-        <script src="js/cartJS.js"></script>
+        <jsp:include page="Footer.jsp"/>
     </body>
 </html>

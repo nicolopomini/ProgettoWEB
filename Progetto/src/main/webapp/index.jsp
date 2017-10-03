@@ -174,7 +174,10 @@
                                     <button type="submit" class="btn btn-default">Ricerca</button>
                                 </div>
                                 <div class="col-md-10">
-                                    <input type="search" class="form-control" name="inputSearch" />
+                                    <input id="inputSearch" type="search" class="form-control" name="inputSearch" />
+                                </div>
+                                <div class="col-md-offset-2 col-md-10" style="background-color: yellow">
+                                    <p>vbeiowiofneionioge</p>
                                 </div>
                             </form>
                         </div>

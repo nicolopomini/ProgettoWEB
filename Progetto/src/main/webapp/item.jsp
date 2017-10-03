@@ -94,15 +94,15 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><%= item.getName() %></title>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+        <script src="js/bootstrap.min.js"></script>
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
-        <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
     </head>
     <body>
+        <jsp:include page="Header.jsp"/>
         <div class="container">
-            <!-- Menu -->
-            <jsp:include page="Header.jsp"/>
-            <!-- Fine menu -->
             <% if(c != null) { %>
             <div class="alert alert-info alert-dismissable fade in" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="close">
@@ -118,40 +118,46 @@
             </div>
             <% } %>
             <div class="row">
-                <% if(!commenti.isEmpty()){ %>
-                <div class="col-md-8">
-                <%}%>
-                    <center>
-                        <h1><%= item.getName() %></h1>
-                    </center>
-                    <p>Prezzo: <fmt:formatNumber value="<%= item.getPrice() %>" type="currency"/></p>
-                    <form action="AddToCart" method="POST" class="form-inline">
-                        <input type="hidden" name="itemid" value="<%=itemid%>">
-                        <input class="btn btn-default" type="submit" value="Aggiungi al carrello">
-                    </form>
-                    <p>Venduto da <a href="shop.jsp?shopid=<%= shop.getShopId() %>" target="_blank"><%= shop.getName() %></a>: <a href="#map">Vedi sulla mappa</a></p>
-                    <center>
-                        <div id="itemimages" >
-                         <% for(Picture p : immagini) {%>
-                        <img src="${pageContext.request.contextPath}/<%=p.getPath()%>" class="img-responsive" alt="Responsive image">
-                        <br/>
-                        <%}%>
+                <div class="col col-xs-12 col-xl-6">
+                    <div class="row">
+                        <div class="col col-xs-12">
+                            <h1><%= item.getName() %></h1>
                         </div>
-                        <br/>
-                        <% if(commenti.isEmpty()) { %>
-                        <h5 style="text-align: center">Nessuna recensione</h5>
-                        <%}%>
-                        <br/>
-                        <div>
-                            <h3>Dove puoi trovare il prodotto</h3>
-                            <div><select class="form-control" id="locationSelect" visibility: hidden"></select></div>
-                            <div id="map" class="embed-responsive embed-responsive-16by9"></div>
-                            <div id="venditori"></div>
+                    </div>
+                    <div class="row">
+                        <div class=" col col-xs-12">
+                            <p>Prezzo: <fmt:formatNumber value="<%= item.getPrice() %>" type="currency"/></p>
+                            <form action="AddToCart" method="POST" class="form-inline">
+                                <input type="hidden" name="itemid" value="<%=itemid%>">
+                                <input class="btn btn-default" type="submit" value="Aggiungi al carrello">
+                            </form>
+                            <p>Venduto da <a href="shop.jsp?shopid=<%= shop.getShopId() %>" target="_blank"><%= shop.getName() %></a>: <a href="#map">Vedi sulla mappa</a></p>
+                            <center>
+                                <div id="itemimages" >
+                                 <% for(Picture p : immagini) {%>
+                                <img src="${pageContext.request.contextPath}/<%=p.getPath()%>" class="img-responsive" alt="Responsive image">
+                                <br/>
+                                <%}%>
+                                </div>
+                                <br/>
+                                <% if(commenti.isEmpty()) { %>
+                                <h5 style="text-align: center">Nessuna recensione</h5>
+                                <%}%>
+                                <br/>
+                                <div>
+                                    <h3>Dove puoi trovare il prodotto</h3>
+                                    <div><select class="form-control" id="locationSelect" visibility: hidden"></select></div>
+                                    <div id="map" class="embed-responsive embed-responsive-16by9"></div>
+                                    <div id="venditori"></div>
+                                </div>
+                            </center>
                         </div>
-                    </center>
+                    </div>
                 </div>
+                <div class="col col-xs-12 col-xl-6">
+                <div class="row">
                 <% if(!commenti.isEmpty()) { %>
-                <div class="col-md-4" id="comments">
+                <div class=" col col-xs-12" id="comments">
                     <h5>Valutazione media degli utenti: <%=media%>/5</h5>
                     <div class="progress">
                         <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="<%=progress%>" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
@@ -198,6 +204,7 @@
                     <p>Per lasciare un commento devi aver aquistato in questo negozio.</p>
                     <% } %>
                 </div>
+                </div>
             </div>
                 <%}else if(cancomment) {%>
                 <h4>Inserisci un commento</h4>
@@ -214,9 +221,9 @@
                         <button type="submit" class="btn btn-default">Invia</button>
                       </form>
                 <%}%>
-            <!--Footer-->
-            <jsp:include page="Footer.jsp"/>
         </div>
+        </div>
+        <jsp:include page="Footer.jsp"/>
         <!--Script mappa-->
         <script type="text/javascript">
             var map;

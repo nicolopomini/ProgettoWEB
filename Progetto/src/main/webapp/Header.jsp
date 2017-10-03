@@ -42,37 +42,28 @@
         complaints = complaintDAO.getUnread();
     }
 %>
-<div class="container">
-<nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="./">Home</a>
-          </div>
-
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right" id="voci_menu">
-                <% if(logged) { %>
-                    <% if(type.equals("admin")) { %>
-                    <li><a href="notifications.jsp">Notifiche<% if(unread > 0 || complaints > 0) { %> <span class="badge"><%=unread + complaints%></span> <% } %></a></li>
-                    <% } else { %>
-                    <li><a href="notifications.jsp">Notifiche<% if(unread > 0) { %> <span class="badge"><%=unread%></span> <% } %></a></li>
-                    <li><a href="cart.jsp">Carrello</a></li>
-                    <% } %>
-                    <li><a href="userpage.jsp"><%=sessionUser.getName() + " " + sessionUser.getSurname()%></a></li>
-                <li><a href="Logout">Esci</a></li>
-                <% }else {%>
-                <li><a href="login.jsp">Login</a></li>
-                <li><a href="Registration.jsp">Registrati</a></li>
-                <% } %>
-            </ul>
-          </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-    </nav>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="./">Home</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarText">
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="cart.jsp">Carrello</a>
+        </li>
+        <% if(logged) { %>
+            <% if(type.equals("admin")) { %>
+            <li class="nav-item"><a class="nav-link" href="notifications.jsp">Notifiche<% if(unread > 0 || complaints > 0) { %> <span class="badge"><%=unread + complaints%></span> <% } %></a></li>
+            <% } else { %>
+            <li class="nav-item"><a class="nav-link" href="notifications.jsp">Notifiche<% if(unread > 0) { %> <span class="badge"><%=unread%></span> <% } %></a></li>
+            <% } %>
+            <li class="nav-item"><a class="nav-link" href="userpage.jsp"><%=sessionUser.getName() + " " + sessionUser.getSurname()%></a></li>
+            <li class="nav-item"><a class="nav-link" href="Logout">Esci</a></li>
+        <% }else {%>
+            <li class="nav-item"><a class="nav-link" href="login.jsp">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="Registration.jsp">Registrati</a></li>
+        <% } %>
+    </ul>
+  </div>
+</nav>
