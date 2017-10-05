@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
 
@@ -139,4 +141,27 @@ public class JDBCPurchaseDAO extends JDBCDAO<Purchase, Integer> implements Purch
             throw new DAOException("Impossible to remove the purchase", ex);
         }
     }
+
+    @Override
+    public ArrayList<Purchase> getByUserId(int userId) throws DAOException {
+        try {
+            PreparedStatement stm = CON.prepareStatement("select * from Purchase where userId = ?;");
+            stm.setInt(1, userId);
+            ResultSet rs = stm.executeQuery();
+            ArrayList<Purchase> purchases = new ArrayList<>();
+            while(rs.next()) {
+                Purchase purchase = new Purchase();
+                purchase.setPurchaseId(rs.getInt("purchaseId"));
+                purchase.setPurchaseTime(rs.getString("purchaseTime"));
+                purchase.setUserId(rs.getInt("userId"));
+                purchase.setItemId(rs.getInt("itemId"));
+                purchase.setQuantity(rs.getInt("quantity"));
+                purchases.add(purchase);
+            }
+            return purchases;
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the purchases", ex);
+        }
+    }
+    
 }

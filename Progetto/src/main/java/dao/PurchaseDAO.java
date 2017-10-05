@@ -6,7 +6,9 @@
 package dao;
 
 import dao.entities.Purchase;
+import java.util.ArrayList;
 import persistence.utils.dao.DAO;
+import persistence.utils.dao.exceptions.DAOException;
 
 /**
  *
@@ -14,4 +16,5 @@ import persistence.utils.dao.DAO;
  */
 
 public interface PurchaseDAO extends DAO<Purchase, Integer>{
+    public ArrayList<Purchase> getByUserId(int userId) throws DAOException;
 }

@@ -4,6 +4,8 @@
     Author     : Dva
 --%>
 
+<%@page import="dao.ItemDAO"%>
+<%@page import="dao.entities.Item"%>
 <%@page import="dao.PurchaseDAO"%>
 <%@page import="dao.entities.Purchase"%>
 <%@page import="utils.StringUtils"%>
@@ -36,6 +38,7 @@
     ComplaintDAO complaintDAO;
     ShopDAO shopDAO;
     PurchaseDAO purchaseDAO;
+    ItemDAO itemDAO;
     daoFactory = (DAOFactory) application.getAttribute("daoFactory");
     if (daoFactory == null) {
         throw new ServletException("Impossible to get dao factory for storage system");
@@ -60,10 +63,17 @@
     } catch (DAOFactoryException ex) {
         throw new ServletException("Impossible to get dao factory for purchase storage system", ex);
     }
+    try {
+        itemDAO = daoFactory.getDAO(ItemDAO.class);
+    } catch (DAOFactoryException ex) {
+        throw new ServletException("Impossible to get dao factory for item storage system", ex);
+    }
     ArrayList<Shop> shops = new ArrayList<>();
     ArrayList<Complaint> complaints = new ArrayList<>();
+    ArrayList<Purchase> purchases = new ArrayList<>();
     if(logged) {
         complaints = complaintDAO.getComplaintByAuthor(sessionUser.getUserId());
+        purchases = purchaseDAO.getByUserId(sessionUser.getUserId());
         if(venditore) 
             shops = shopDAO.getShopsByOwner(sessionUser.getUserId());
     }
@@ -159,10 +169,12 @@
                     </form>
                 </div>
                 <div id="anomalie">
+                    <% if(!purchases.isEmpty()) { %>
                     <h2>Segnalazione anomalie</h2>
                     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#anomalia">
                         Segnala anomalia
                     </button>
+                    <% } %>
                     <% if(!complaints.isEmpty()) { %>
                         <p>Le tue anomalie:</p>
                         <ul>
@@ -244,6 +256,38 @@
             </div>
             </div>
             <% } %>
+            <!--Modal segnalazione-->
+            <div class="modal fade" id="anomalia" tabindex="-1" role="dialog" aria-labelledby="anomaliaLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="anomaliaLabel">Segnala anomalia</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="InsertComplaint" method="POST">
+                            <div class="form-group">
+                            <label for="selectPurchase">Example select</label>
+                            <select class="form-control" id="selectPurchase" name="purchaseid">
+                              <% for(Purchase p : purchases) { 
+                                Item item = itemDAO.getByPrimaryKey(p.getItemId());
+                              %>
+                              <option value="<%= p.getPurchaseId() %>"><b><%= item.getName() %></b> acquistato il <%= StringUtils.printDate(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S").parse(p.getPurchaseTime())) %> <% if(p.getQuantity()>1) { %> X<%=p.getQuantity()%> <%}%></option>
+                              <% } %>
+                            </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="testoComplaint">Messaggio</label>
+                                <textarea class="form-control" id="testoComplaint" rows="3" max="1000" name="testo" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Segnala</button>
+                        </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
             <% } %>
             <jsp:include page="Footer.jsp"/>
         </div>

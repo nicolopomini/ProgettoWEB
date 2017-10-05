@@ -60,6 +60,10 @@
         <servlet-class>servlets.Logout</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>InsertComplaint</servlet-name>
+        <servlet-class>servlets.InsertComplaint</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>CartManager</servlet-name>
         <servlet-class>servlets.CartManager</servlet-class>
     </servlet>
@@ -122,6 +126,10 @@
     <servlet-mapping>
         <servlet-name>UpdateUser</servlet-name>
         <url-pattern>/UpdateUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InsertComplaint</servlet-name>
+        <url-pattern>/InsertComplaint</url-pattern>
     </servlet-mapping>
     <listener>
         <description>ServletContextListener</description>
