@@ -218,38 +218,77 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
     }
 
     @Override
-    public ArrayList<Item> getItemsByNameFilterByCategoryShop(String name, String category, String shop) throws DAOException {
+    public ArrayList<Item> findItems(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore, Integer pageSize, Integer pageNumber) throws DAOException {
         String statement = "";
+        
+        String columns = "Item.itemId, Item.name, Item.description, Item.category, Item.price, Item.shopId";
         
         if(name == null)
         {
-            statement = "SELECT * FROM Item";
+            statement = "SELECT " + columns + ", COUNT(*) FROM Item";
         }
         else
         {
-            statement = "SELECT * FROM ((SELECT * FROM Item WHERE name LIKE \"%" + name + "%\") UNION (SELECT * FROM Item WHERE description LIKE \"%" + name + "%\")) AS Item";
+            statement = "SELECT " + columns + ", COUNT(*) FROM ("
+                    + "(SELECT * FROM Item WHERE name LIKE \"%" + name + "%\") UNION "
+                    + "(SELECT * FROM Item WHERE description LIKE \"%" + name + "%\") UNION "
+                    + "(SELECT * FROM Item, Shop WHERE Item.shopId = Shop.shopId AND Shop.name LIKE \"%" + name + "%\")) AS Item";
         }
         
-        if(category != null || shop != null)
+        if(minAvgScore != null)
         {
-            statement += " WHERE";
+            statement += ", ItemReview";
         }
+        
+        ArrayList<String> filters = new ArrayList<>();
         
         if(category != null)
         {
-            statement += " Item.category LIKE \"%" + category + "%\"";
-        }
-        
-        if(category != null && shop != null)
-        {
-            statement += " AND";
+            filters.add("Item.category LIKE \"%" + category + "%\"");
         }
         
         if(shop != null)
         {
-            statement += " Item.shopId IN (SELECT shopId FROM Shop WHERE name LIKE \"%" + shop + "%\");";
+            filters.add("Item.shopId IN (SELECT shopId FROM Shop WHERE name LIKE \"%" + shop + "%\")");
         }
+        
+        if(minPrice != null)
+        {
+            filters.add("Item.price >= " + minPrice);
+        }
+        
+        if(maxPrice != null)
+        {
+            filters.add("Item.price <= " + maxPrice);
+        }
+        
+        if(minAvgScore != null)
+        {
+            filters.add("Item.itemId = ItemReview.itemId");
+        }
+        
+        if(filters.size() > 0)
+        {
+            statement += " WHERE";
+        }
+        statement += String.join(" AND ", filters);
+        
+        if(minAvgScore != null)
+        {
+            statement += " GROUP BY " + columns + " HAVING AVG(ItemReview.Score) >= " + minAvgScore;
+        }
+        
+        if(pageSize != null)
+        {
+            statement += " LIMIT " + pageSize;
+            if(pageNumber != null)
+            {
+                statement += " OFFSET " + (pageNumber * pageSize);
+            }
+        }
+        
         System.out.println(statement);
+        
         try (PreparedStatement stm = CON.prepareStatement(statement)) {
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<Item> items = new ArrayList<>();
