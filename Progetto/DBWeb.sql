@@ -37,8 +37,8 @@ DROP TABLE IF EXISTS Item;
 CREATE TABLE Item
 (
 	itemId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	name VARCHAR(50) NOT NULL,
-	description VARCHAR(500) NOT NULL,
+	name VARCHAR(200) NOT NULL,
+	description VARCHAR(1000) NOT NULL,
 	category ENUM('electronics', 'home', 'books', 'sport', 'other') NOT NULL,
 	price DECIMAL(10, 2) NOT NULL,
 	shopId INT UNSIGNED NOT NULL,
