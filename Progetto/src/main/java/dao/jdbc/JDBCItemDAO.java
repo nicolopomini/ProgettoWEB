@@ -232,7 +232,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
             statement = "SELECT " + columns + ", COUNT(*) FROM ("
                     + "(SELECT * FROM Item WHERE name LIKE \"%" + name + "%\") UNION "
                     + "(SELECT * FROM Item WHERE description LIKE \"%" + name + "%\") UNION "
-                    + "(SELECT * FROM Item, Shop WHERE Item.shopId = Shop.shopId AND Shop.name LIKE \"%" + name + "%\")) AS Item";
+                    + "(SELECT " + columns + " FROM Item, Shop WHERE Item.shopId = Shop.shopId AND Shop.name LIKE \"%" + name + "%\")) AS Item";
         }
         
         if(minAvgScore != null)
@@ -269,7 +269,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
         
         if(filters.size() > 0)
         {
-            statement += " WHERE";
+            statement += " WHERE ";
         }
         statement += String.join(" AND ", filters);
         
@@ -286,8 +286,6 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
                 statement += " OFFSET " + (pageNumber * pageSize);
             }
         }
-        
-        System.out.println(statement);
         
         try (PreparedStatement stm = CON.prepareStatement(statement)) {
             try (ResultSet rs = stm.executeQuery()) {
