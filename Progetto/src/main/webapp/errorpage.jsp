@@ -28,15 +28,17 @@
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
     </head>
     <body>
+        <jsp:include page="Header.jsp"/>
         <div class="container">
             <!-- Menu -->
-            <jsp:include page="Header.jsp"/>
+            
             <!-- Fine menu -->
             <div class="starter-template">
                 <h1>Errore</h1>
                 <p class="lead">L'elemento richiesto non esiste o non è disponibile. Assicurati di aver cercato quello che effettivamente desideravi cercare.</p>
               </div>
-            <jsp:include page="Footer.jsp"/>
+            
         </div>
+        <jsp:include page="Footer.jsp"/>
     </body>
 </html>

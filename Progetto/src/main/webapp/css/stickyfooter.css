@@ -26,3 +26,17 @@ body {
   text-align: center;
   line-height: 60px;
 }
+
+.containerFix
+{
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+
+.defaultImage
+{
+    max-width: 600px;
+    max-height: 600px;
+}

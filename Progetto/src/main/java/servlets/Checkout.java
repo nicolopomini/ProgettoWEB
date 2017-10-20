@@ -96,7 +96,7 @@ public class Checkout extends HttpServlet {
                     p.setItemId(i);
                     p.setQuantity(cart.get(i));
                     p.setPurchaseTime(new Timestamp(new Date().getTime()).toString());
-                    p.setUserId(1/*user.getUserId()*/);
+                    p.setUserId(user.getUserId());
                     purchaseDAO.add(p);
                 }
             }

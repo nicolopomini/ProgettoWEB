@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import dao.ItemDAO;
 import dao.ItemReviewDAO;
 import dao.NotificationDAO;
 import dao.entities.Item;
@@ -12,6 +13,7 @@ import dao.entities.ItemReview;
 import dao.entities.Notification;
 import dao.entities.User;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.Date;
 import javax.servlet.ServletException;
@@ -80,13 +82,37 @@ public class ItemComment extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        int itemId = Integer.parseInt(request.getParameter("itemid"));
+        PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
-        Item item = (Item)session.getAttribute("item");
+        ItemDAO item;
+        ItemReviewDAO itemReview;
+        Item toComment = null;
+        double avgScore;
+        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+        if (daoFactory == null) 
+        {
+            throw new ServletException("Impossible to get dao factory for storage system");
+        }
+        try 
+        {
+            item = daoFactory.getDAO(ItemDAO.class);
+            toComment = item.getByPrimaryKey(itemId);
+        } 
+        catch (DAOFactoryException ex) 
+        {
+            throw new ServletException("Impossible to get dao factory for user activation", ex);
+        } 
+        catch (DAOException ex) 
+        {
+            throw new ServletException("Impossible to get dao factory for user activation", ex);
+        }
         String comment = StringUtils.checkInputString(request.getParameter("newcomment"));
-        int score = Integer.parseInt(request.getParameter("score"));
+        int score = Integer.parseInt(request.getParameter("itemscore"));
         ItemReview review = new ItemReview();
-        review.setItemId(item.getItemId());
+        review.setItemId(toComment.getItemId());
         review.setItemReviewId(null);
         review.setReply(null);
         review.setReviewText(comment);
@@ -98,23 +124,16 @@ public class ItemComment extends HttpServlet {
         notification.setType(Notification.NEWCOMMENTITEM);
         notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
         notification.setNotificationText("");
-        notification.setLink("./item.jsp?itemid= " + item.getItemId() + "#commenti");
+        notification.setLink("./item.jsp?itemid= " + toComment.getItemId() + "#commenti");
         notification.setSeen(false);
         try {
-            notification.setRecipient(itemReviewDAO.getItemSeller(item.getItemId()));
+            notification.setRecipient(itemReviewDAO.getItemSeller(toComment.getItemId()));
             itemReviewDAO.add(review);
             notificationDAO.add(notification);
         } catch (DAOException ex) {
             throw new ServletException("Impossible to add the item review", ex);
         }
-        Cookie c = new Cookie("item_message","insered");
-        c.setMaxAge(1);
-        response.addCookie(c);
-        String contextPath = getServletContext().getContextPath();
-        if(!contextPath.endsWith("/"))
-            contextPath += "/";
-        contextPath += "item.jsp?itemid=" + item.getItemId();
-        response.sendRedirect(response.encodeRedirectURL(contextPath));
+        out.print("<h5>Valutazione media degli utenti: ");
     }
 
     /**

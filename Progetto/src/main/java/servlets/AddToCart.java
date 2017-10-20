@@ -6,6 +6,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -49,6 +50,7 @@ public class AddToCart extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
         int itemid = Integer.parseInt(request.getParameter("itemid"));
         HashMap<Integer,Integer> cart;
         HttpSession session = request.getSession();
@@ -61,14 +63,8 @@ public class AddToCart extends HttpServlet {
         else
             cart.replace(itemid, obj + 1);
         session.setAttribute("cart", cart);
-        Cookie c = new Cookie("item_message","ok");
-        c.setMaxAge(1);
-        response.addCookie(c);
-        String contextPath = getServletContext().getContextPath();
-        if(!contextPath.endsWith("/"))
-            contextPath += "/";
-        contextPath += "item.jsp?itemid=" + itemid;
-        response.sendRedirect(response.encodeRedirectURL(contextPath));
+        String message = "added";
+        out.print(message);
     }
 
     /**
