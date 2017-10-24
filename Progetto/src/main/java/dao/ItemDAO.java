@@ -36,4 +36,6 @@ public interface ItemDAO extends DAO<Item, Integer>{
     public ArrayList<Item> findItems(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore, Integer pageSize, Integer pageNumber) throws DAOException;
     
     public ArrayList<String> getAllCategories() throws DAOException;
+    
+    public boolean isOwner(int idemId, int userId) throws DAOException;
 }

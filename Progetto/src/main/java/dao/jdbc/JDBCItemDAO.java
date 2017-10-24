@@ -16,6 +16,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
 
@@ -166,6 +168,20 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
         }
         return false;
     }
+
+    @Override
+    public boolean isOwner(int idemId, int userId) throws DAOException {
+        try {
+            PreparedStatement stm = CON.prepareStatement("select * from item join shop on (item.shopId = shop.shopId) where shop.userId = ? and item.itemId = ?;");
+            stm.setInt(1, userId);
+            stm.setInt(2, idemId);
+            ResultSet rs = stm.executeQuery();
+            return rs.next();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to count purchases", ex);
+        }
+    }
+    
 
     @Override
     public ArrayList<Shop> getItemNearby(Item item) throws DAOException {
