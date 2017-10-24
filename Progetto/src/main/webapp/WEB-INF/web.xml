@@ -8,7 +8,7 @@
     <context-param>
         <description>Username for db</description>
         <param-name>dbusername</param-name>
-        <param-value>user</param-value>
+        <param-value>root</param-value>
     </context-param>
     <context-param>
         <description>Password for db</description>
