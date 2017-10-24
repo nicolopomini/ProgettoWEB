@@ -225,11 +225,11 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
         
         if(name == null)
         {
-            statement = "SELECT " + columns + ", COUNT(*) FROM Item";
+            statement = "SELECT " + columns + " FROM Item";
         }
         else
         {
-            statement = "SELECT " + columns + ", COUNT(*) FROM ("
+            statement = "SELECT " + columns + " FROM ("
                     + "(SELECT * FROM Item WHERE name LIKE \"%" + name + "%\") UNION "
                     + "(SELECT * FROM Item WHERE description LIKE \"%" + name + "%\") UNION "
                     + "(SELECT " + columns + " FROM Item, Shop WHERE Item.shopId = Shop.shopId AND Shop.name LIKE \"%" + name + "%\")) AS Item";
@@ -286,10 +286,12 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
                 statement += " OFFSET " + (pageNumber * pageSize);
             }
         }
+        System.err.println(statement);
         
         try (PreparedStatement stm = CON.prepareStatement(statement)) {
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<Item> items = new ArrayList<>();
+                System.err.println(rs.getFetchSize());
                 while(rs.next())
                 {
                     Item item = new Item();
@@ -301,6 +303,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
                     item.setShopId(rs.getInt("shopId"));
                     items.add(item);
                 }
+                
                 return items;
             }
         } catch (SQLException ex) {

@@ -11,7 +11,7 @@ import dao.entities.Item;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -47,31 +47,36 @@ public class AutoCompleteServlet extends HttpServlet {
             ItemDAO db;
             DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
             db=daoFactory.getDAO(ItemDAO.class);
-            String query=request.getParameter("inputSearch");
+            String query=request.getParameter("query");
+            
             String category=request.getParameter("category");
-            String shop=request.getParameter("shopName");
-            System.err.println(query);
+            category=(category.equals(""))?null:category;
             System.err.println(category);
+            
+            String shop=request.getParameter("shop");
+            shop=(shop.equals(""))?null:shop;
             System.err.println(shop);
-            ArrayList<Item>items;
             
-            /*items=db.findItems(query, category, shop, 0, 10000, 0, 5, 100);
-            ArrayList<String>names=new ArrayList<>();
+            String strRating=request.getParameter("category");
+            Integer rating=(strRating.equals(""))?null:Integer.getInteger(strRating);
+            System.err.println(rating);
             
-            Iterator<Item>itr=items.iterator();
-            while(itr.hasNext()){
-                Item i=itr.next();
-                names.add(i.getName());
-                
+            //System.err.println(rating);
+            ArrayList<Item>items=db.findItems(query, category, shop, null, null, rating, null, null);
+            //db.findItems(null, null, null, null, null, nul, rating, rating)
+            System.err.println(items.size());
+            HashSet<String>suggestions=new HashSet<>();
+            for(Item i:items){
+                suggestions.add(i.getName());
             }
-            out.print(names);*/
+            
             String[] sv={"PurpleSmart","BlueFast","YellowQuiet","Ponk","Marshmellow","Apul"};
-            out.write(new Gson().toJson(sv));
+            out.write(new Gson().toJson(suggestions));
         } catch (DAOFactoryException ex) {
             Logger.getLogger(AutoCompleteServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }/* catch (DAOException ex) {
+        } catch (DAOException ex) {
             Logger.getLogger(AutoCompleteServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

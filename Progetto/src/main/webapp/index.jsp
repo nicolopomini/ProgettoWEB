@@ -54,6 +54,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+       <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
        
         <!-- Jquery library -->
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -72,19 +73,37 @@
         
         <title>Home</title>
         <script type="text/javascript">
-            
+            $(document).ready(function($) {
+                $( function() {
+                    $( "#SearchQuery" ).autocomplete({
+                        source : function(request, response) {
+                            $.ajax({
+                                url : "AutoCompleteServlet",
+                                type : "GET",
+                                data : {
+                                    query:$("#SearchQuery").val(),
+                                    category:$("#Categoria").val(),
+                                    shop:$("#Negozio").val(),
+                                    rating:$("#Recensione").val()
+                                    
+                                },
+                                dataType : "json",
+                                success : function(data) {
+                                    response(data);
+                                }
+                            });
+                        }
+                    });
+                });
+            });
         </script>
     </head>
     <body>
-        <div class="container">
+        <jsp:include page="Header.jsp"/>
+        <div class="container-fluid">
             <div class="row">
                 <div class="col">
-                    <jsp:include page="Header.jsp"/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <form class="form">
+                    <form class="form" action="#" method="GET">
                         <div class="form-group">
                             <br>
                             <input type="search" class="form-control" name="SearchQuery" id="SearchQuery" placeholder="Scrivi il nome di un prodotto...">
@@ -96,9 +115,9 @@
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="form-group row">
-                                            <label for="query" class="col-sm-3 col-form-label">Negzio</label>
+                                            <label for="query" class="col-sm-3 col-form-label">Negozio</label>
                                             <div class="col-sm-9">
-                                                <input type="search" class="form-control" id="Categoria" nome="Negozio" placeholder="Scrivi il nome del negozio...">
+                                                <input type="search" class="form-control" id="Negozio" nome="Negozio" placeholder="Scrivi il nome del negozio...">
                                             </div>
                                         </div>
                                     </div>
@@ -106,7 +125,8 @@
                                         <div class="form-group row">
                                             <label class="col-sm-4 col-form-label" for="query">Categoria</label>
                                             <div class="col-sm-8">
-                                                <select class="form-control">
+                                                <select class="form-control" id="Categoria" name="Categoria">
+                                                    <option value=''></option>
                                                     <%
                                                         String head="<option value='";
                                                         String middle="'>";
@@ -135,5 +155,6 @@
                 </div>
             </div>
         </div>
+        <jsp:include page="Footer.jsp"/>
     </body>
 </html>
