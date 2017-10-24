@@ -68,9 +68,32 @@
         <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
         
+        <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/dark-hive/jquery-ui.css"/>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+        
         <title>Home</title>
         <script type="text/javascript">
             $(document).ready(function($) {
+                
+                $( function() {
+                    $( "#inputSearch" ).autocomplete({
+                        source : function(request, response) {
+                            $.ajax({
+                                url : "AutoCompleteServlet",
+                                type : "GET",
+                                data : {
+                                    inputSearch:$("#inputSearch").val(),
+                                    category:$("#category").val(),
+                                    shopName:$("#shopName").val()
+                                },
+                                dataType : "json",
+                                success : function(data) {
+                                    response(data);
+                                }
+                            });
+                        }
+                    });
+                });
                 $(".table-row").click(function() {
                     window.document.location = $(this).data("href");
                 });
@@ -176,9 +199,7 @@
                                 <div class="col-md-10">
                                     <input id="inputSearch" type="search" class="form-control" name="inputSearch" />
                                 </div>
-                                <div class="col-md-offset-2 col-md-10" style="background-color: yellow">
-                                    <p>vbeiowiofneionioge</p>
-                                </div>
+                                
                             </form>
                         </div>
                         <br>
@@ -189,7 +210,7 @@
                                         
                                         if(query!=null||category!=null||shopName!=null){
                                             
-                                            ArrayList<Item>items=itemDatabase.getItemsByNameFilterByCategoryShop(query, category, shopName);
+                                            ArrayList<Item>items=itemDatabase.findItems(query, category, shopName, null, null, null, null, null);
                                             if(!items.isEmpty()){
                                             %>
                                             <div class="row">
