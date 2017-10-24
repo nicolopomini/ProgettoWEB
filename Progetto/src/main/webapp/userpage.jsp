@@ -96,6 +96,9 @@
             Pagina utente
             <% } %>
         </title>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+        <script src="js/bootstrap.min.js"></script>
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
@@ -269,12 +272,12 @@
                     <div class="modal-body">
                         <form action="InsertComplaint" method="POST">
                             <div class="form-group">
-                            <label for="selectPurchase">Example select</label>
+                            <label for="selectPurchase">Seleziona acquisto</label>
                             <select class="form-control" id="selectPurchase" name="purchaseid">
                               <% for(Purchase p : purchases) { 
                                 Item item = itemDAO.getByPrimaryKey(p.getItemId());
                               %>
-                              <option value="<%= p.getPurchaseId() %>"><b><%= item.getName() %></b> acquistato il <%= StringUtils.printDate(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S").parse(p.getPurchaseTime())) %> <% if(p.getQuantity()>1) { %> X<%=p.getQuantity()%> <%}%></option>
+                              <option value="<%= p.getPurchaseId() %>"><b><%= item.getName() %></b> acquistato il <%= StringUtils.printDate(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S").parse(p.getPurchaseTime())) %> <% if(p.getQuantity()>1) { %>, X<%=p.getQuantity()%> <%}%></option>
                               <% } %>
                             </select>
                             </div>

@@ -79,11 +79,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><%= shop.getName() %></title>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+        <script src="js/bootstrap.min.js"></script>
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
     </head>
-    <body onload="addButton()">
+    <body>
         <div class="container">
             <!-- Menu -->
             <jsp:include page="Header.jsp"/>
@@ -110,6 +113,10 @@
                 <% } %>
                     <center>
                     <h1><%= shop.getName() %></h1>
+                    <% if(venditore) { %>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modificanegozio">Modifica Negozio</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inserisciitem">Aggiungi Item</button>
+                    <% } %>
                     <img src="${pageContext.request.contextPath}/<%=shop.getImagePath()%>" class="img-responsive" alt="Responsive image">
                     </center>
                     <br/>
@@ -243,8 +250,8 @@
             </div>
             <!--End modal-->
             <!--Inserisci nuovo item-->
-            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="inserisciitem">
-              <div class="modal-dialog modal-lg" role="document">
+            <div class="modal fade" id="inserisciitem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+              <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -299,17 +306,6 @@
                 document.getElementById("immaginiitem").innerHTML = content;
             }
         </script>
-        <% if(venditore) { %>
-        <script type="text/javascript">
-            function addButton() {
-                var menu = "";
-                menu += '<li><a role="button" data-toggle="modal" data-target="#modificanegozio">Modifica negozio</a></li>';
-                menu += '<li><a role="button" data-toggle="modal" data-target="#inserisciitem">Aggiungi item</a></li>';
-                menu += document.getElementById("voci_menu").innerHTML;
-                document.getElementById("voci_menu").innerHTML = menu;
-            }
-        </script>
-        <% } %>
         </div>
     </body>
 </html>
