@@ -4,6 +4,7 @@
     Author     : pomo
 --%>
 
+<%@page import="dao.ItemDAO"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.DateFormat"%>
@@ -33,6 +34,7 @@
     DAOFactory daoFactory;
     ShopDAO shopDAO;
     ShopReviewDAO shopReviewDAO;
+    ItemDAO itemDAO;
     daoFactory = (DAOFactory) application.getAttribute("daoFactory");
     if (daoFactory == null) {
         throw new ServletException("Impossible to get dao factory for storage system");
@@ -47,6 +49,11 @@
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
+    try {
+        itemDAO = daoFactory.getDAO(ItemDAO.class);
+    } catch (DAOFactoryException ex) {
+        throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+    }
     shop = shopDAO.getByPrimaryKey(shopid);
     if(shop == null)
         throw new NullPointerException("Shop doesn't exist");
@@ -249,6 +256,9 @@
               </div>
             </div>
             <!--End modal-->
+            <%
+                ArrayList<String> categorie = itemDAO.getAllCategories();
+            %>
             <!--Inserisci nuovo item-->
             <div class="modal fade" id="inserisciitem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
               <div class="modal-dialog" role="document">
@@ -274,8 +284,10 @@
                             <div class="form-group">
                                 <label for="categoria">Categoria</label>
                                 <select class="form-control" id='categoria' name="categoria">
-                                    <option value='electronics'>Elettronica</option>
-                                    <option value='books'>Libri</option>
+                                    <% 
+                                            for(String cat : categorie) {%>
+                                            <option value="<%=cat%>"><%=cat%></option>        
+                                        <%  } %>
                                 </select>
                             </div>
                             <div class="form-group">

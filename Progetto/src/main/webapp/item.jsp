@@ -31,7 +31,7 @@
     ArrayList<Picture> immagini;
     ArrayList<ItemReview> commenti;
     ArrayList<Shop> nearby;
-    boolean venditore, logged, cancomment;
+    boolean venditore, logged, cancomment, owner;
     User user;
     double media;
     ItemDAO itemDAO;
@@ -70,14 +70,18 @@
     media = itemReviewDAO.getAverageScoreByItemId(itemid);
     int progress = (int)(media * 10);
     user = (User)session.getAttribute("user");
+    session.setAttribute("item", item);
     if(user == null) {
         logged = false;
         cancomment = false;
         venditore = false;
+        owner = true;
     } else {
         logged = true;
         cancomment = itemDAO.canComment(itemid, user.getUserId());
         venditore = user.getUserId() == shop.getUserId();
+        //owner = itemDAO.isOwner(itemid, user.getUserId());
+        owner = true;
     }
 %>
 <!DOCTYPE html>
@@ -129,6 +133,9 @@
                             <form method="POST" class="form-inline">
                                 <span class="btn btn-success" style="cursor:pointer;" onclick="addToCart('<%=item.getItemId()%>','<%=item.getName()%>')">Aggiungi al carrello</span>
                             </form>
+                            <% if(owner) { %>
+                            <span class="btn btn-success" style="cursor:pointer;" data-toggle="modal" data-target="#modificaitem">Modifica Item</span>
+                            <% } %>
                             <p>Venduto da <a href="shop.jsp?shopid=<%= shop.getShopId() %>" target="_blank"><%= shop.getName() %></a>: <a href="#map">Vedi sulla mappa</a></p>
                             <div id="itemimages" class="row">
                                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -238,6 +245,67 @@
                     </form>
                 <%}%>
                 </div>
+                <% if(owner) { 
+                    ArrayList<String> categorie = itemDAO.getAllCategories();
+                %>
+                <!--Modal-->
+                <div class="modal fade" id="modificaitem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Modifica Item</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="name">Nome Item</label>
+                                    <input type="text" class="form-control" id="name" placeholder="<%= item.getName() %>" name="name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="categoria">Categoria</label>
+                                    <select class="form-control" id="categoria" name="categoria">
+                                        <% 
+                                            for(String c : categorie) {%>
+                                            <option value="<%=c%>"><%=c%></option>        
+                                        <%  } %>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="descrizione">Descrizione</label>
+                                    <textarea class="form-control" id="descrizione" name="descrizione" rows="3" max="1000"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prezzo">Prezzo</label>
+                                    <input type="number" step="0.01" class="form-control" name="prezzo" id="prezzo">
+                                </div>
+                                <div class="form-group">
+                                <label for="image">Inserisci immagini</label>
+                                <div id='immaginiitem'>
+                                <input type="file" id="image" name="image1" class="form-control-file">
+                                </div>
+                                <p class="help-block">Inserisci delle immagini per l'oggetto. <a onclick="addPhoto()" href='#'>Aggiungi un'altra foto</a></p>
+                            </div>
+                            <button type="submit" class="btn btn-default">Aggiungi</button>
+                            <button type='reset' class="btn btn-default">Reset</button>
+                            </form>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                <!--End modal-->
+                <script type="text/javascript">
+                    var count = 1;
+                    function addPhoto() {
+                        var content = document.getElementById("immaginiitem").innerHTML;
+                        count++;
+                        content+='<input type="file" id="image" name="image' + count + '" class="form-control-file">';
+                        document.getElementById("immaginiitem").innerHTML = content;
+                    }
+                </script>
+                <% } %>
             </div>
         </div>
         <!--Script mappa-->
