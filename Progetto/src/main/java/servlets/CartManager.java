@@ -133,23 +133,27 @@ public class CartManager extends HttpServlet {
                     {
                         Logger.getLogger(CartManager.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
-                    out.print("<thead>"
+                    out.print("<h1>Carrello</h1>"
+                            + "<table class=\"table\" style=\"table-layout: fixed;\">"
+                            + "<thead>"
                             + "<th><strong>Totale</strong></th>"
-                            + "<th><strong>€ " + Math.round(totalprice * 100.0)/100.0 + "</strong></th>"
+                            + "<th></th>"
+                            + "<th class=\"text-right\"><strong>€ " + Math.round(totalprice * 100.0)/100.0 + "</strong></th>"
                             + "</thead>"
                             + "<tbody>");
                     for(Item current : items.keySet())
                     {
                         out.print("<tr>"
-                                + "<td><a href=\"item.jsp?itemid=" + current.getItemId()+"\">" + current.getName() + "</a></td>"
-                                + "<td></td>"
-                                + "<td>€ " + current.getPrice() + "</td>"
-                                + "<td></td>"
-                                + "<td><button style=\"margin-right: 5px\" onclick=\"addRemoveItem(0," + current.getItemId() + ")\" class=\"btn btn-xs btn-info\">-</button>" + items.get(current) + "<button style=\"margin-left: 5px\" onclick=\"addRemoveItem(1," + current.getItemId() + ")\" class=\"btn btn-xs btn-info\">+</button></td>"
+                                + "<td><p style=\"word-wrap: break-word;\"><a href=\"item.jsp?itemid=" + current.getItemId()+"\">" + current.getName() + "</a></p></td>"
+                                + "<td class=\"text-right\">€ " + current.getPrice() + "</td>"
+                                + "<td class=\"text-right\"><span class=\"btn-group btn-group-sm\"><button onclick=\"addRemoveItem(0,"+current.getItemId()+")\" class=\"btn btn-xs btn-danger\">-</button><button class=\"btn btn-xs btn-outline-dark\" disabled>"+items.get(current)+"</button><button onclick=\"addRemoveItem(1,"+current.getItemId()+")\" class=\"btn btn-xs btn-danger\">+</button></span></td>"
                                 + "</tr>");
                     }
-                    out.print("</tbody>");
+                    out.print("</tbody>"
+                            + "</table>"
+                            + "<form action=\"/Progetto/Payment.jsp\" method=\"POST\" class=\"form-inline\">" +
+                                    "<input class=\"btn btn-default btn-success\" type=\"submit\" value=\"Procedi al pagamento\">" +
+                              "</form>");
                 }
             }
         }

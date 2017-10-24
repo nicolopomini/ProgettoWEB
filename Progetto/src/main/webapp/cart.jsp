@@ -48,49 +48,55 @@
     </head>
     <body>
         <jsp:include page="Header.jsp"/>
-        <div class="container">
-            <% if(cart == null || cart.isEmpty()) { //carrello vuoto%>
-            <h2 style="text-align: center">Il carrello è vuoto</h2>
-            <% } else { //carrello pieno
-                    HashMap<Item,Integer> items = new HashMap<>();
-                    ArrayList<Item> items_array = new ArrayList<>();
-                    for (Integer i : cart.keySet()){
-                        Item item = itemDAO.getByPrimaryKey(i);
-                        items_array.add(item);
-                        items.put(item,cart.get(i));
-                        totalprice += item.getPrice() * cart.get(i);
-
-                        pageContext.setAttribute("totalprice", totalprice);
-                        /*for(int j= 0; j< cart.get(i);j++)
-                            out.println("ASD PROVA PROVA");
-                        */
+        <div class="container-fluid containerFix">
+            <div class="row">
+                <div id="cartDiv" class="col col-xs-12">
+                    <%if(cart == null || cart.isEmpty()) 
+                    {
+                    %>
+                    <h2 style="text-align: center">Il carrello è vuoto</h2>
+                    <%
                     }
-                pageContext.setAttribute("items", items);
-            %>
-            <form action="/Progetto/Payment.jsp" method="POST" class="form-inline">
-                <input class="btn btn-default" type="submit" value="Procedi al pagamento">
-            </form>
-            <table id="cartTable" class="table">
-                <thead>
-                    <th><strong>Totale</strong></th>
-                    <th><strong><fmt:formatNumber value="${totalprice}" type="currency" currencySymbol="€"/></strong></th>
-                </thead>
-                <tbody>
-                <c:forEach items="${items}" var="current">
-                    <tr>
-                        <td><a href="item.jsp?itemid=<c:out value="${current.key.itemId}"/>">${current.key.name}</a></td>
-                        <td></td>
-                        <td><fmt:formatNumber value="${current.key.price}" type="currency" currencySymbol="€"/></td>
-                        <td></td>
-                        <td><button style="margin-right: 5px" onclick="addRemoveItem(0,${current.key.itemId})" class="btn btn-xs btn-info">-</button><c:out value="${current.value}"/><button style="margin-left: 5px" onclick="addRemoveItem(1,${current.key.itemId})" class="btn btn-xs btn-info">+</button></td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-            <form action="/Progetto/Payment.jsp" method="POST" class="form-inline">
-                <input class="btn btn-default" type="submit" value="Procedi al pagamento">
-            </form>
-            <% } %>
+                    else
+                    {
+                        HashMap<Item,Integer> items = new HashMap<>();
+                        ArrayList<Item> items_array = new ArrayList<>();
+                        for (Integer i : cart.keySet()){
+                            Item item = itemDAO.getByPrimaryKey(i);
+                            items_array.add(item);
+                            items.put(item,cart.get(i));
+                            totalprice += item.getPrice() * cart.get(i);
+
+                            pageContext.setAttribute("totalprice", totalprice);
+                            /*for(int j= 0; j< cart.get(i);j++)
+                                out.println("ASD PROVA PROVA");
+                            */
+                        }
+                        pageContext.setAttribute("items", items);
+                    %>
+                    <h1>Carrello</h1>
+                    <table class="table" style="table-layout: fixed;">
+                        <thead>
+                            <th><strong>Totale</strong></th>
+                            <th></th>
+                            <th class="text-right"><strong><fmt:formatNumber value="${totalprice}" type="currency" currencySymbol="€"/></strong></th>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${items}" var="current">
+                            <tr>
+                                <td><p style="word-wrap: break-word;"><a href="item.jsp?itemid=<c:out value="${current.key.itemId}"/>">${current.key.name}</a></p></td>
+                                <td class="text-right"><fmt:formatNumber value="${current.key.price}" type="currency" currencySymbol="€"/></td>
+                                <td class="text-right"><span class="btn-group btn-group-sm"><button onclick="addRemoveItem(0,${current.key.itemId})" class="btn btn-xs btn-danger">-</button><button class="btn btn-xs btn-outline-dark" disabled><c:out value="${current.value}"/></button><button onclick="addRemoveItem(1,${current.key.itemId})" class="btn btn-xs btn-danger">+</button></span></td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                    <form action="/Progetto/Payment.jsp" method="POST" class="form-inline">
+                        <input class="btn btn-default btn-success" type="submit" value="Procedi al pagamento">
+                    </form>
+                    <% } %>
+                </div>
+            </div>
         </div>
         <jsp:include page="Footer.jsp"/>
     </body>

@@ -8,7 +8,7 @@ function addRemoveItem(action,id)
 {
     var xhttp;
     var table;
-    table = document.getElementById("cartTable");
+    table = document.getElementById("cartDiv");
     xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200)

@@ -14,8 +14,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
 
@@ -106,6 +104,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
             stm.setString(5, notification.getType());
             stm.setString(6, notification.getNotificationTime());
             stm.setString(7, notification.getLink());
+            stm.setInt(8, notification.getNotificationId());
             stm.executeUpdate();
             
             return notification;
@@ -125,7 +124,6 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
             stm.setString(6, notification.getNotificationTime());
             stm.setString(7, notification.getLink());
             stm.executeUpdate();
-            
             ResultSet rs = stm.getGeneratedKeys();
             if(rs.next())
             {

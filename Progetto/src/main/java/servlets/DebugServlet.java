@@ -277,7 +277,7 @@ public class DebugServlet extends HttpServlet {
         
         out.print("Can comment " + itemDAO.canComment(1, 1) + "<br>");
         out.print("Nearby " + itemDAO.getItemNearby(i).size() + "<br>");
-        out.print("FindItems " + itemDAO.findItems("asdf", "home", "shop", 10, 20, 5, 12, 7));
+        out.print("FindItems " + itemDAO.findItems("asdf", "home", "shop", 10, 20, 5, 12, 7) + "<br>");
         out.print("Categories " + itemDAO.getAllCategories().toString() + "<br>");
         
         out.print("<br>");
@@ -319,6 +319,9 @@ public class DebugServlet extends HttpServlet {
         n.setNotificationText("asdf");
         n.setSeen(false);
         n.setAuthor(1);
+        n.setType("newcommentshop");
+        n.setRecipient(1);
+        n.setNotificationTime("1999-01-12 03:43:22");
         
         notificationDAO.add(n);
         
@@ -329,6 +332,7 @@ public class DebugServlet extends HttpServlet {
         
         n.setNotificationText("asdfasdgasg");
         notificationDAO.update(n);
+        
         
         for(Notification notification : notificationDAO.getAll())
         {

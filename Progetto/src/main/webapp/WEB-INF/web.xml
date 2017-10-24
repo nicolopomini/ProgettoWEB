@@ -8,7 +8,7 @@
     <context-param>
         <description>Username for db</description>
         <param-name>dbusername</param-name>
-        <param-value>root</param-value>
+        <param-value>user</param-value>
     </context-param>
     <context-param>
         <description>Password for db</description>
@@ -82,6 +82,10 @@
     <servlet>
         <servlet-name>UpdateUser</servlet-name>
         <servlet-class>servlets.UpdateUser</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AutoCompleteServlet</servlet-name>
+        <servlet-class>servlets.AutoCompleteServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DebugServlet</servlet-name>
@@ -158,6 +162,10 @@
     <servlet-mapping>
         <servlet-name>SendActivationEmail</servlet-name>
         <url-pattern>/SendActivationEmail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AutoCompleteServlet</servlet-name>
+        <url-pattern>/AutoCompleteServlet</url-pattern>
     </servlet-mapping>
     <error-page>
         <exception-type>java.lang.NullPointerException</exception-type>
