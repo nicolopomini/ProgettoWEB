@@ -374,7 +374,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
             statement += " GROUP BY Item.name HAVING AVG(ItemReview.Score) >= " + minAvgScore;
         }
         
-        statement += " LIMIT 10"
+        statement += " LIMIT 10";
         
         try (PreparedStatement stm = CON.prepareStatement(statement)) {
             try (ResultSet rs = stm.executeQuery()) {
