@@ -277,7 +277,7 @@ public class DebugServlet extends HttpServlet {
         
         out.print("Can comment " + itemDAO.canComment(1, 1) + "<br>");
         out.print("Nearby " + itemDAO.getItemNearby(i).size() + "<br>");
-        out.print("FindItems " + itemDAO.findItems("asdf", "home", "shop", 10, 20, 5, 12, 7) + "<br>");
+        out.print("FindItems " + itemDAO.findItems("asdf", "home", "shop", 10, 20, 5) + "<br>");
         out.print("Categories " + itemDAO.getAllCategories().toString() + "<br>");
         
         out.print("<br>");
