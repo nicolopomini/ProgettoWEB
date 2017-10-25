@@ -326,8 +326,8 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
         else
         {
             statement = "SELECT Item.name FROM ("
-                    + "(SELECT * FROM Item WHERE name LIKE \"%" + name + "%\") UNION "
-                    + "(SELECT * FROM Item WHERE description LIKE \"%" + name + "%\") UNION "
+                    + "(SELECT Item.name FROM Item WHERE name LIKE \"%" + name + "%\") UNION "
+                    + "(SELECT Item.name FROM Item WHERE description LIKE \"%" + name + "%\") UNION "
                     + "(SELECT Item.name FROM Item, Shop WHERE Item.shopId = Shop.shopId AND Shop.name LIKE \"%" + name + "%\")) AS Item";
         }
         
