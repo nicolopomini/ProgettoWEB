@@ -319,16 +319,18 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
     public ArrayList<String> autocompletion(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore) throws DAOException {
         String statement = "";
         
+        String columns = "Item.itemId, Item.name, Item.description, Item.category, Item.price, Item.shopId";
+        
         if(name == null)
         {
-            statement = "SELECT Item.name FROM Item";
+            statement = "SELECT " + columns + " FROM Item";
         }
         else
         {
-            statement = "SELECT Item.name FROM ("
-                    + "(SELECT Item.name FROM Item WHERE name LIKE \"%" + name + "%\") UNION "
-                    + "(SELECT Item.name FROM Item WHERE description LIKE \"%" + name + "%\") UNION "
-                    + "(SELECT Item.name FROM Item, Shop WHERE Item.shopId = Shop.shopId AND Shop.name LIKE \"%" + name + "%\")) AS Item";
+            statement = "SELECT " + columns + " FROM ("
+                    + "(SELECT * FROM Item WHERE name LIKE \"%" + name + "%\") UNION "
+                    + "(SELECT * FROM Item WHERE description LIKE \"%" + name + "%\") UNION "
+                    + "(SELECT " + columns + " FROM Item, Shop WHERE Item.shopId = Shop.shopId AND Shop.name LIKE \"%" + name + "%\")) AS Item";
         }
         
         if(minAvgScore != null)
@@ -371,7 +373,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
         
         if(minAvgScore != null)
         {
-            statement += " GROUP BY Item.name HAVING AVG(ItemReview.Score) >= " + minAvgScore;
+            statement += " GROUP BY " + columns + " HAVING AVG(ItemReview.Score) >= " + minAvgScore;
         }
         
         statement += " LIMIT 10";
