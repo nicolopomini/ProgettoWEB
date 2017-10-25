@@ -33,7 +33,9 @@ public interface ItemDAO extends DAO<Item, Integer>{
      */
     public boolean canComment(Integer itemId, Integer userId) throws DAOException;
     
-    public ArrayList<Item> findItems(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore, Integer pageSize, Integer pageNumber) throws DAOException;
+    public ArrayList<Item> findItems(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore) throws DAOException;
+    
+    public ArrayList<String> autocompletion(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore) throws DAOException;
     
     public ArrayList<String> getAllCategories() throws DAOException;
     

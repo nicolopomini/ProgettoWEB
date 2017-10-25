@@ -16,8 +16,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
 
@@ -234,7 +232,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
     }
 
     @Override
-    public ArrayList<Item> findItems(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore, Integer pageSize, Integer pageNumber) throws DAOException {
+    public ArrayList<Item> findItems(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore) throws DAOException {
         String statement = "";
         
         String columns = "Item.itemId, Item.name, Item.description, Item.category, Item.price, Item.shopId";
@@ -294,20 +292,9 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
             statement += " GROUP BY " + columns + " HAVING AVG(ItemReview.Score) >= " + minAvgScore;
         }
         
-        if(pageSize != null)
-        {
-            statement += " LIMIT " + pageSize;
-            if(pageNumber != null)
-            {
-                statement += " OFFSET " + (pageNumber * pageSize);
-            }
-        }
-        System.err.println(statement);
-        
         try (PreparedStatement stm = CON.prepareStatement(statement)) {
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<Item> items = new ArrayList<>();
-                System.err.println(rs.getFetchSize());
                 while(rs.next())
                 {
                     Item item = new Item();
@@ -327,8 +314,81 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
         }
     }
 
+    
     @Override
-    //
+    public ArrayList<String> autocompletion(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore) throws DAOException {
+        String statement = "";
+        
+        if(name == null)
+        {
+            statement = "SELECT Item.name FROM Item";
+        }
+        else
+        {
+            statement = "SELECT Item.name FROM ("
+                    + "(SELECT * FROM Item WHERE name LIKE \"%" + name + "%\") UNION "
+                    + "(SELECT * FROM Item WHERE description LIKE \"%" + name + "%\") UNION "
+                    + "(SELECT Item.name FROM Item, Shop WHERE Item.shopId = Shop.shopId AND Shop.name LIKE \"%" + name + "%\")) AS Item";
+        }
+        
+        if(minAvgScore != null)
+        {
+            statement += ", ItemReview";
+        }
+        
+        ArrayList<String> filters = new ArrayList<>();
+        
+        if(category != null)
+        {
+            filters.add("Item.category LIKE \"%" + category + "%\"");
+        }
+        
+        if(shop != null)
+        {
+            filters.add("Item.shopId IN (SELECT shopId FROM Shop WHERE name LIKE \"%" + shop + "%\")");
+        }
+        
+        if(minPrice != null)
+        {
+            filters.add("Item.price >= " + minPrice);
+        }
+        
+        if(maxPrice != null)
+        {
+            filters.add("Item.price <= " + maxPrice);
+        }
+        
+        if(minAvgScore != null)
+        {
+            filters.add("Item.itemId = ItemReview.itemId");
+        }
+        
+        if(filters.size() > 0)
+        {
+            statement += " WHERE ";
+        }
+        statement += String.join(" AND ", filters);
+        
+        if(minAvgScore != null)
+        {
+            statement += " GROUP BY Item.name HAVING AVG(ItemReview.Score) >= " + minAvgScore;
+        }
+        
+        try (PreparedStatement stm = CON.prepareStatement(statement)) {
+            try (ResultSet rs = stm.executeQuery()) {
+                ArrayList<String> items = new ArrayList<>();
+                while(rs.next())
+                {
+                    items.add(rs.getString("name"));
+                }
+                return items;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get items", ex);
+        }
+    }
+    
+    @Override
     public ArrayList<String> getAllCategories() throws DAOException {
         try (PreparedStatement stm = CON.prepareStatement("SELECT column_type AS category FROM information_schema.columns WHERE table_name = 'Item' AND column_name = 'category';")) {
             try (ResultSet rs = stm.executeQuery()) {
