@@ -17,7 +17,6 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -131,14 +130,8 @@ public class ModifyShop extends HttpServlet {
         } catch (DAOException ex) {
             throw new ServletException("Impossible to update the shop", ex);
         }
-        Cookie c = new Cookie("shop_message","updated");
-        c.setMaxAge(1);
-        response.addCookie(c);
-        String contextPath = getServletContext().getContextPath();
-        if(!contextPath.endsWith("/"))
-            contextPath += "/";
-        contextPath += "shop.jsp?shopid=" + shop.getShopId();
-        response.sendRedirect(response.encodeRedirectURL(contextPath));
+        
+        response.getWriter().print("OK");
     }
 
     /**

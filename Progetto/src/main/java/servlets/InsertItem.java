@@ -124,6 +124,7 @@ public class InsertItem extends HttpServlet {
                 throw new ServletException("Impossible to add the picture");
             }
         }
+        response.getWriter().print("OK");
     }
 
     /**

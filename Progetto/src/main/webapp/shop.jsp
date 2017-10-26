@@ -114,6 +114,24 @@
             <% } %>
             
             <!-- Contenuto pagina -->
+            <div class="modal show in" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true" style="">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="modal-title"></h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modal-text"></p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" style="cursor:pointer;" class="btn btn-success" data-dismiss="modal" id="modal-btn">Ok</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             <div class="row">
                 <% if(!reviews.isEmpty()) { %>
                 <div class="col-md-8">
@@ -227,7 +245,7 @@
                         <h4 class="modal-title">Modifica il tuo negozio</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="ModifyShop" method="POST" enctype="multipart/form-data">
+                        <form method="POST" enctype="multipart/form-data" name="form-modify-shop">
                             <div class="form-group">
                                 <label for="newname">Nome del negozio</label>
                                 <input type="text" class="form-control" name="newname" id="newname" placeholder="<%=shop.getName()%>">
@@ -249,7 +267,7 @@
                                 <input type="file" id="image" name="image">
                                 <p class="help-block">Inserisci un immagine che rappresenti il tuo negozio</p>
                             </div>
-                            <button type="submit" class="btn btn-default">Modifica</button>
+                            <button type="submit" class="btn btn-default" id="modifyshopbutton">Modifica</button>
                         </form>
                     </div>
                 </div>
@@ -268,7 +286,7 @@
                         <h4 class="modal-title">Inserisci nuovo item</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="InsertItem" method="POST" enctype="multipart/form-data">
+                        <form name="form-new-item" method="POST" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="name">Nome dell'item</label>
                                 <input type="text" class="form-control" name="name" id="name" placeholder="Nome item" required>
@@ -297,7 +315,7 @@
                                 </div>
                                 <p class="help-block">Inserisci delle immagini per l'oggetto. <a onclick="addPhoto()" href='#'>Aggiungi un'altra foto</a></p>
                             </div>
-                            <button type="submit" class="btn btn-default">Aggiungi</button>
+                            <button type="submit" class="btn btn-default" id="form-new-item-btn">Aggiungi</button>
                             <button type='reset' class="btn btn-default">Reset</button>
                         </form>
                     </div>
@@ -306,10 +324,7 @@
             </div>
             <!--End modal-->
             <!--Fine nuovo item-->
-            <% } %>
-            <!--Footer-->
-            <jsp:include page="Footer.jsp"/>
-        <script type="text/javascript">
+            <script type="text/javascript">
             var count = 1;
             function addPhoto() {
                 var content = document.getElementById("immaginiitem").innerHTML;
@@ -318,6 +333,10 @@
                 document.getElementById("immaginiitem").innerHTML = content;
             }
         </script>
+            <% } %>
+            <!--Footer-->
+            <jsp:include page="Footer.jsp"/>
+        <script src="js/shopJS.js"></script>
         </div>
     </body>
 </html>
