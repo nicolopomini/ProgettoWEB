@@ -70,7 +70,6 @@
     media = itemReviewDAO.getAverageScoreByItemId(itemid);
     int progress = (int)(media * 10);
     user = (User)session.getAttribute("user");
-    session.setAttribute("item", item);
     if(user == null) {
         logged = false;
         cancomment = false;
@@ -259,7 +258,7 @@
                           </button>
                         </div>
                         <div class="modal-body">
-                            <form method="POST" enctype="multipart/form-data">
+                            <form method="POST" enctype="multipart/form-data" name="edit-item">
                                 <div class="form-group">
                                     <label for="name">Nome Item</label>
                                     <input type="text" class="form-control" id="name" placeholder="<%= item.getName() %>" name="name">
@@ -281,6 +280,7 @@
                                     <label for="prezzo">Prezzo</label>
                                     <input type="number" step="0.01" class="form-control" name="prezzo" id="prezzo">
                                 </div>
+                                    <input type="hidden" name="id" value="<%= item.getItemId() %>">
                                 <div class="form-group">
                                 <label for="image">Inserisci immagini</label>
                                 <div id='immaginiitem'>
@@ -288,7 +288,7 @@
                                 </div>
                                 <p class="help-block">Inserisci delle immagini per l'oggetto. <a onclick="addPhoto()" href='#'>Aggiungi un'altra foto</a></p>
                             </div>
-                            <button type="submit" class="btn btn-default">Aggiungi</button>
+                            <button type="submit" class="btn btn-default" id="edit-item-submit" onclick="edititem()">Modifica</button>
                             <button type='reset' class="btn btn-default">Reset</button>
                             </form>
                         </div>
@@ -373,6 +373,7 @@
              }
         </script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYq_8A3Y0roix5fablhZIDZZ5GemSSUxo&callback=initMap"></script>
+        <script src="js/editItem.js"></script>
         <jsp:include page="Footer.jsp"/>
     </body>
 </html>

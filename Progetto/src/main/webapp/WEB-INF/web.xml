@@ -76,6 +76,10 @@
         <servlet-class>servlets.ReadNotifications</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>ModifyItem</servlet-name>
+        <servlet-class>servlets.ModifyItem</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>SendActivationEmail</servlet-name>
         <servlet-class>servlets.SendActivationEmail</servlet-class>
     </servlet>
@@ -98,6 +102,10 @@
     <servlet-mapping>
         <servlet-name>ItemComment</servlet-name>
         <url-pattern>/ItemComment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ModifyItem</servlet-name>
+        <url-pattern>/ModifyItem</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ModifyShop</servlet-name>
