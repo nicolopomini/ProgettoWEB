@@ -81,10 +81,10 @@
                                 url : "AutoCompleteServlet",
                                 type : "GET",
                                 data : {
-                                    query:$("#SearchQuery").val(),
-                                    category:$("#Categoria").val(),
-                                    shop:$("#Negozio").val(),
-                                    rating:$("#Recensione").val(),
+                                    Query:$("#SearchQuery").val(),
+                                    Categoria:$("#Categoria").val(),
+                                    Negozio:$("#Negozio").val(),
+                                    Recensione:$("#Recensione").val(),
                                     minPrice:$("#minPrice").val(),
                                     maxPrice:$("#maxPrice").val()
                                 },
@@ -119,7 +119,7 @@
                                         <div class="form-group row">
                                             <label for="query" class="col-sm-3 col-form-label">Negozio</label>
                                             <div class="col-sm-9">
-                                                <input type="search" class="form-control" id="Negozio" nome="Negozio" placeholder="Scrivi il nome del negozio...">
+                                                <input type="search" class="form-control" id="Negozio" name="Negozio" placeholder="Scrivi il nome del negozio...">
                                             </div>
                                         </div>
                                     </div>
@@ -146,7 +146,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-6 col-form-label" for="rating">Valutazione</label>
                                             <div class="col-sm-6">
-                                                <input type="number" class="form-control" id="Recensione" nome="Recensione" min="0" max="5">
+                                                <input type="number" class="form-control" id="Recensione" name="Recensione" min="0" max="5">
                                             </div>
                                         </div>
                                     </div>
@@ -156,7 +156,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-6 col-form-label" for="rating">Prezzo minimo:</label>
                                             <div class="col-sm-6">
-                                                <input type="number" class="form-control" id="minPrice" nome="minPrice">
+                                                <input type="number" class="form-control" id="minPrice" name="minPrice">
                                             </div>
                                         </div>
                                     </div>
@@ -164,7 +164,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-6 col-form-label" for="rating">Prezzo massimo:</label>
                                             <div class="col-sm-6">
-                                                <input type="number" class="form-control" id="maxPrice" nome="maxPrice">
+                                                <input type="number" class="form-control" id="maxPrice" name="maxPrice">
                                             </div>
                                         </div>
                                     </div>
