@@ -1,9 +1,8 @@
 <%-- 
-    Document   : index
-    Created on : 18-ago-2017, 14.04.52
-    Author     : blast
+    Document   : resultpage
+    Created on : Oct 25, 2017, 11:07:51 AM
+    Author     : root
 --%>
-
 <%@page import="dao.ItemReviewDAO"%>
 <%@page import="dao.entities.ItemReview"%>
 <%@page import="java.util.TreeSet"%>
@@ -42,9 +41,7 @@
     }else{
         throw new ServletException("Impossible to get dao factory for storage system");
     }
-    String query=request.getParameter("inputSearch");
-    String category=request.getParameter("category");
-    String shopName=request.getParameter("shopName");
+    
 %>
 
 <!DOCTYPE html>
@@ -103,9 +100,8 @@
         <jsp:include page="Header.jsp"/>
         <div class="container-fluid">
             <div class="row">
-                <div class="col">
-                    <form id="form" class="form" action="resultpage.jsp" method="GET">
-                        <input type="submit" style="display: none" />
+                <div class="col-md-4">
+                    <form class="form" action="#" method="GET">
                         <div class="form-group">
                             <br>
                             <input type="search" class="form-control" name="SearchQuery" id="SearchQuery" placeholder="Scrivi il nome di un prodotto...">
@@ -114,67 +110,87 @@
                         </div>
                         <div class="collapse" id="AdvanceSearch">
                             <div class="card card-body">
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="form-group row">
-                                            <label for="query" class="col-sm-3 col-form-label">Negozio</label>
-                                            <div class="col-sm-9">
-                                                <input type="search" class="form-control" id="Negozio" nome="Negozio" placeholder="Scrivi il nome del negozio...">
-                                            </div>
-                                        </div>
+                                
+                                <div class="form-group row">
+                                    <label for="Negozio" class="col-xl-3 col-form-label">Negozio</label>
+                                    <div class="col-xl-9">
+                                        <input type="search" class="form-control" id="Negozio" nome="Negozio" placeholder="Scrivi il nome del negozio...">
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label" for="query">Categoria</label>
-                                            <div class="col-sm-8">
-                                                <select class="form-control" id="Categoria" name="Categoria">
-                                                    <option value=''></option>
-                                                    <%
-                                                        String head="<option value='";
-                                                        String middle="'>";
-                                                        String tail="</option>";
-                                                        ArrayList<String> categories=itemDatabase.getAllCategories();
-                                                        for(String c:categories){
-                                                            out.write(head+c+middle+c+tail);
-                                                        }
-                                                    %>
-                                                </select>
-                                            </div>
-                                        </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-xl-4 col-form-label" for="Categoria">Categoria</label>
+                                    <div class="col-xl-8">
+                                        <select class="form-control" id="Categoria" name="Categoria">
+                                            <option value=''></option>
+                                            <%
+                                                String head="<option value='";
+                                                String middle="'>";
+                                                String tail="</option>";
+                                                ArrayList<String> categories=itemDatabase.getAllCategories();
+                                                for(String c:categories){
+                                                    out.write(head+c+middle+c+tail);
+                                                }
+                                            %>
+                                        </select>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group row">
-                                            <label class="col-sm-6 col-form-label" for="rating">Valutazione</label>
-                                            <div class="col-sm-6">
-                                                <input type="number" class="form-control" id="Recensione" nome="Recensione" min="0" max="5">
-                                            </div>
-                                        </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label class="col-xl-6 col-form-label" for="Recesione">Valutazione</label>
+                                    <div class="col-xl-6">
+                                        <input type="number" class="form-control" id="Recensione" nome="Recensione" min="0" max="5">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-xl-6 col-form-label" for="minPrice">Prezzo minimo:</label>
+                                    <div class="col-xl-6">
+                                        <input type="number" class="form-control" id="minPrice" nome="minPrice">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-xl-6 col-form-label" for="maxPrice">Prezzo massimo:</label>
+                                    <div class="col-xl-6">
+                                        <input type="number" class="form-control" id="maxPrice" nome="maxPrice">
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="form-group row">
-                                            <label class="col-sm-6 col-form-label" for="rating">Prezzo minimo:</label>
-                                            <div class="col-sm-6">
-                                                <input type="number" class="form-control" id="minPrice" nome="minPrice">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group row">
-                                            <label class="col-sm-6 col-form-label" for="rating">Prezzo massimo:</label>
-                                            <div class="col-sm-6">
-                                                <input type="number" class="form-control" id="maxPrice" nome="maxPrice">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-4"></div>
+                                    <div class="col-4">
                                         <input type="reset">
                                     </div>
+                                    <div class="col-4"></div>
                                 </div>
                             </div>
                         </div>
                     </form>
+                </div>
+                <div class="col-md-8">
+                    <table class="table" id="resultTable">
+                        <thead>
+                            <tr>
+                                <!-- <th>Prodotto</th><th>Descrizione</th><th>Negozio</th><th>Prezzo</th><th style="display:none;">Regione</th><th>Recensioni</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%
+                                String name=request.getParameter("SearchQuery");
+                                String category=request.getParameter("Categoria");
+                                String shop=request.getParameter("Negozio");
+                                String minPrice=request.getParameter("minPrice");
+                                String maxPrice=request.getParameter("maxPrice");
+                                String rating=request.getParameter("Recensione");
+                                System.err.println("------");
+                                System.err.println(name);
+                                System.err.println(category);
+                                System.err.println(shop);
+                                System.err.println(minPrice);
+                                System.err.println(maxPrice);
+                                System.err.println(rating);
+                            %>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

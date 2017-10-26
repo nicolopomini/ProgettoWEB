@@ -42,39 +42,36 @@ public class AutoCompleteServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            //System.err.println("test"+request.getParameter("inputSearch"));
+            
             ItemDAO db;
             DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
             db=daoFactory.getDAO(ItemDAO.class);
             String query=request.getParameter("query");
+            //System.err.println(query);
             
             String category=request.getParameter("category");
             category=(category.equals(""))?null:category;
-            System.err.println(category);
+            //System.err.println(category);
             
             String shop=request.getParameter("shop");
             shop=(shop.equals(""))?null:shop;
-            System.err.println(shop);
+            //System.err.println(shop);
             
             String strRating=request.getParameter("category");
             Integer rating=(strRating.equals(""))?null:Integer.getInteger(strRating);
-            System.err.println(rating);
-            
             //System.err.println(rating);
-            ArrayList<Item>items=db.findItems(query, category, shop, null, null, rating, null, null);
-            //db.findItems(null, null, null, null, null, nul, rating, rating)
-            System.err.println(items.size());
-            HashSet<String>suggestions=new HashSet<>();
-            for(Item i:items){
-                suggestions.add(i.getName());
-            }
             
-            String[] sv={"PurpleSmart","BlueFast","YellowQuiet","Ponk","Marshmellow","Apul"};
-            out.write(new Gson().toJson(suggestions));
-        } catch (DAOFactoryException ex) {
-            Logger.getLogger(AutoCompleteServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DAOException ex) {
+            String strMinPrice=request.getParameter("minPrice");
+            Integer minPrice=(strMinPrice.equals(""))?null:Integer.getInteger(strMinPrice);
+            //System.err.println(minPrice);
+            
+            String strMaxPrice=request.getParameter("maxPrice");
+            Integer maxPrice=(strMaxPrice.equals(""))?null:Integer.getInteger(strMaxPrice);
+            //System.err.println(maxPrice);
+            
+            
+            out.write(new Gson().toJson(db.autocompletion(query, category, shop, minPrice, maxPrice, rating)));
+        } catch (DAOFactoryException | DAOException ex) {
             Logger.getLogger(AutoCompleteServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
