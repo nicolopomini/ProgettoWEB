@@ -46,18 +46,18 @@ public class AutoCompleteServlet extends HttpServlet {
             ItemDAO db;
             DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
             db=daoFactory.getDAO(ItemDAO.class);
-            String query=request.getParameter("query");
+            String query=request.getParameter("Query");
             //System.err.println(query);
             
-            String category=request.getParameter("category");
+            String category=request.getParameter("Categoria");
             category=(category.equals(""))?null:category;
             //System.err.println(category);
             
-            String shop=request.getParameter("shop");
+            String shop=request.getParameter("Negozio");
             shop=(shop.equals(""))?null:shop;
             //System.err.println(shop);
             
-            String strRating=request.getParameter("category");
+            String strRating=request.getParameter("Recensione");
             Integer rating=(strRating.equals(""))?null:Integer.getInteger(strRating);
             //System.err.println(rating);
             
@@ -90,21 +90,6 @@ public class AutoCompleteServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
     /**
      * Returns a short description of the servlet.
      *
