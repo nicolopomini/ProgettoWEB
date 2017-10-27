@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
+import utils.StringUtils;
 
 /**
  *
@@ -232,7 +233,13 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
     }
 
     @Override
-    public ArrayList<Item> findItems(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore) throws DAOException {
+    public ArrayList<Item> findItems(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore, String geo) throws DAOException {
+        //check input strings
+        if(name != null)
+            name = StringUtils.checkInputString(name);
+        if(geo != null)
+            geo = StringUtils.checkInputString(geo);
+        
         String statement = "";
         
         String columns = "Item.itemId, Item.name, Item.description, Item.category, Item.price, Item.shopId";

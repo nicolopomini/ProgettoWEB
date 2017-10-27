@@ -110,6 +110,7 @@
                             <br>
                             <input type="search" class="form-control" name="SearchQuery" id="SearchQuery" placeholder="Scrivi il nome di un prodotto...">
                             <br>
+                            <button class="btn btn-dark btn-sm" type="submit" form="form" data-toggle="collapse" aria-expanded="false">Ricerca</button>
                             <button class="btn btn-dark btn-sm" type="button" data-toggle="collapse" data-target="#AdvanceSearch" aria-expanded="false" aria-controls="AdvanceSearch">Ricerca Avanzata</button>
                         </div>
                         <div class="collapse" id="AdvanceSearch">
@@ -169,6 +170,15 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-6 col-form-label" for="geo">Ricerca Geografica:</label>
+                                            <div class="col-sm-6">
+                                                <input type="search" class="form-control" id="geo" name="geo" placeholder="Inserisci un luogo">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <input type="submit" value="Ricerca">
                                         <input type="reset">
                                     </div>
                                 </div>

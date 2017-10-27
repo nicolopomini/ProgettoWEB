@@ -21,6 +21,8 @@ public class StringUtils {
         rtr = rtr.replace("'", "&apos;");
         rtr = rtr.replace("<", "&lt;");
         rtr = rtr.replace(">", "&gt;");
+        rtr = rtr.replace("\"", "\\\"");
+        rtr = rtr.replace("\'", "\\\'");
         return rtr;
     }
     
