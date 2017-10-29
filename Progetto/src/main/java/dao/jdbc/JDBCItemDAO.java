@@ -8,6 +8,10 @@ package dao.jdbc;
 import dao.ItemDAO;
 import dao.entities.Item;
 import dao.entities.Shop;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +20,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.jdbc.JDBCDAO;
 import utils.StringUtils;
@@ -234,11 +241,27 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
 
     @Override
     public ArrayList<Item> findItems(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore, String geo) throws DAOException {
+        double lat = 0.0, lng = 0.0;
         //check input strings
         if(name != null)
             name = StringUtils.checkInputString(name);
-        if(geo != null)
-            geo = StringUtils.checkInputString(geo);
+        if(geo != null) {
+            try {
+                geo = StringUtils.checkInputString(geo);
+                geo = geo.replace(" ", "+");
+                URL jsonAddress = new URL("https://maps.googleapis.com/maps/api/geocode/json?address=" + geo + "&key=AIzaSyDrBp40H8f9zzcsWA8H-1rWNwjl28cthfg");
+                InputStream is = jsonAddress.openStream();
+                JsonReader rdr = Json.createReader(is);
+                JsonObject results = rdr.readObject().getJsonArray("results").getJsonObject(0);
+                JsonObject coordinates = results.getJsonObject("geometry").getJsonObject("location");
+                lat = coordinates.getJsonNumber("lat").doubleValue();
+                lng = coordinates.getJsonNumber("lng").doubleValue();
+            } catch (MalformedURLException ex) {
+                throw new DAOException("Error in address parsing", ex);
+            } catch (IOException ex) {
+                throw new DAOException("Error in address parsing", ex);
+            }
+        }
         
         String statement = "";
         

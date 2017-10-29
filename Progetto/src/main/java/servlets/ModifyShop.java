@@ -107,7 +107,6 @@ public class ModifyShop extends HttpServlet {
             JsonObject results = rdr.readObject().getJsonArray("results").getJsonObject(0);
             address = results.getString("formatted_address");
             JsonObject coordinates = results.getJsonObject("geometry").getJsonObject("location");
-            coordinates.getJsonNumber("lat").doubleValue();
             lat = coordinates.getJsonNumber("lat").doubleValue();
             lng = coordinates.getJsonNumber("lng").doubleValue();
         }
