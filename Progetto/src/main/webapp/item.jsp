@@ -74,13 +74,12 @@
         logged = false;
         cancomment = false;
         venditore = false;
-        owner = true;
+        owner = false;
     } else {
         logged = true;
         cancomment = itemDAO.canComment(itemid, user.getUserId());
         venditore = user.getUserId() == shop.getUserId();
-        //owner = itemDAO.isOwner(itemid, user.getUserId());
-        owner = true;
+        owner = itemDAO.isOwner(itemid, user.getUserId());
     }
 %>
 <!DOCTYPE html>
@@ -172,6 +171,7 @@
                         <div id="map" class="embed-responsive embed-responsive-16by9"></div>
                         <div id="venditori"></div>
                     </div>
+                    <div id="comments-wrapper">
                     <center>
                         <% if(commenti.isEmpty()) { %>
                         <h5 style="text-align: center">Nessuna recensione</h5>
@@ -181,28 +181,25 @@
                     <% if(!commenti.isEmpty()) { %>
                         <div class=" col col-xs-12" >
                             <div id="comments">
-                                <h5>Valutazione media degli utenti: <%=media%>/5</h5>
+                                <h5 id="avg-title">Valutazione media degli utenti: <%=media%>/5</h5>
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="<%=progress%>" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                      <span class="sr-only"><%=progress%></span>
-                                    </div>
+                                    <div id="progress" class="progress-bar" role="progressbar" style="width: <%=progress%>%" aria-valuenow="<%=progress%>" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
-                                <div class="commenti">
+                                <div id="commenti">
                                     <!--Per ogni commento:-->
                                     <% for(ItemReview r : commenti) {
                                         SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
                                         Date date = dt.parse(r.getReviewTime());                         
                                     %>
-                                    <fmt:formatDate value = "<%=date%>" /> : <%for(int i = 0; i < r.getScore(); i++) {%><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <%}%>
-                                    <ul class="list-group">
+                                    <fmt:formatDate value = "<%=date%>" /> : <%= r.getScore() + "/5" %>
+                                    <ul class="list-group" id="<%= r.getItemReviewId() %>">
                                         <li class="list-group-item"><b><%= r.getAuthorName() + " " + r.getAuthorSurname() %></b>: <%=r.getReviewText()%></li>
                                         <%if(r.getReply() != null) {%>
                                         <li class="list-group-item"><b>Venditore</b>: <%=r.getReply()%></li>
                                         <%} else if(venditore) {%>
-                                        <form class="form-inline" method="POST" action="ItemCommentReply">
-                                            <input type="hidden" name="reviewid" value="<%=r.getItemReviewId()%>">
+                                        <form id="form-reply" class="form-inline" method="POST" onsubmit="addReply('<%=r.getItemReviewId()%>')">
                                             <div class="form-group">
-                                              <input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" required>
+                                              <input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" id="replycomment-<%=r.getItemReviewId()%>" required>
                                             </div>
                                             <button type="submit" class="btn btn-default">Invia</button>
                                         </form>
@@ -212,7 +209,7 @@
                                 </div>
                             </div>
                             <% if(cancomment) { %>
-                            <form class="form-inline" method="POST" action="ItemComment">
+                            <form class="form-inline" method="POST" id="addcomment">
                                 <div class="form-group">
                                     <input type="text" class="form-control" placeholder="Inserisci un commento" name="newcomment" id="comment-text" required>
                                   Voto:
@@ -222,7 +219,7 @@
                                       <%}%>
                                   </select>
                                 </div>
-                                <span class="btn btn-sm btn-success" style="cursor:pointer;" onclick="addComment('<%=item.getItemId()%>','<%=item.getName()%>')">Invia</span>
+                                  <span class="btn btn-sm btn-success" style="cursor:pointer;" onclick="addComment('<%=item.getItemId()%>','<%=item.getName()%>', '<%= venditore %>')">Invia</span>
                               </form>
                             <% } else { %>
                             <p>Per lasciare un commento devi aver aquistato in questo negozio.</p>
@@ -230,7 +227,7 @@
                         </div>
                 <%}else if(cancomment) {%>
                     <h4>Inserisci un commento</h4>
-                    <form method="POST" action="ItemComment">
+                    <form method="POST" id="addcomment">
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="Inserisci un commento" name="newcomment" id="comment-text" required>
                             Voto:
@@ -240,9 +237,10 @@
                             <%}%>
                             </select>
                         </div>
-                        <span class="btn btn-sm btn-success" style="cursor:pointer;" onclick="addComment('<%=item.getItemId()%>','<%=item.getName()%>')">Invia</span>
+                            <span class="btn btn-sm btn-success" style="cursor:pointer;" onclick="addComment('<%=item.getItemId()%>','<%=item.getName()%>', '<%= venditore %>')">Invia</span>
                     </form>
                 <%}%>
+                    </div>
                 </div>
                 <% if(owner) { 
                     ArrayList<String> categorie = itemDAO.getAllCategories();

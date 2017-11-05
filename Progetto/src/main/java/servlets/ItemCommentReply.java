@@ -11,6 +11,7 @@ import dao.entities.Item;
 import dao.entities.ItemReview;
 import dao.entities.Notification;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.Date;
 import javax.servlet.ServletException;
@@ -79,6 +80,7 @@ public class ItemCommentReply extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
+        PrintWriter out = response.getWriter();
         Item item = (Item)session.getAttribute("item");
         int reviewid = Integer.parseInt(request.getParameter("reviewid"));
         try {
@@ -94,17 +96,12 @@ public class ItemCommentReply extends HttpServlet {
             notification.setLink("./item.jsp?itemid= " + item.getItemId() + "#commenti");
             notification.setSeen(false);
             notificationDAO.add(notification);
+            String HTMLreturn = "<li class=\"list-group-item\"><b>Venditore</b>: " + review.getReply() +  "</li>";
+            out.println(HTMLreturn);
         } catch (DAOException ex) {
             throw new ServletException("Impossible to reply the review", ex);
         }
-        Cookie c = new Cookie("item_message","replied");
-        c.setMaxAge(1);
-        response.addCookie(c);
-        String contextPath = getServletContext().getContextPath();
-        if(!contextPath.endsWith("/"))
-            contextPath += "/";
-        contextPath += "item.jsp?itemid=" + item.getItemId();
-        response.sendRedirect(response.encodeRedirectURL(contextPath));
+        
     }
 
     /**

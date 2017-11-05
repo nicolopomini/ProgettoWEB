@@ -28,7 +28,7 @@ function addToCart(id,name)
     xhttp.send("itemid="+id);
 }
 
-function addComment(id,name)
+function addComment(id,name, canReply)
 {
     var xhttp;
     var modal;
@@ -43,16 +43,101 @@ function addComment(id,name)
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200)
         {
-            if(this.responseText != "")
+            if(this.responseText != null)
             {
-                $('#modal-text').text("Your comment for the item'"+name+"' has been added succesfully");
-                $('#modal-title').text("Comment added");
+                var risposta = JSON.parse(this.responseText);
+                $('#modal-text').text("Il tuo commento per l'item '"+name+"' è stato aggiunto con successo");
+                $('#modal-title').text("Commento aggiunto");
                 $('#modal-cart-btn').hide();
                 $('#confirm-modal').modal({show: true});
+                var avg = risposta.avg;
+                var avgScore = risposta.avgScore;
+                var review = risposta.ItemReview;
+                document.getElementById("addcomment").reset();
+                var title = document.getElementById("avg-title");
+                if(title == null) { //primo commento
+                    var testo = 
+                            "<div class=\" col col-xs-12\" ><div id=\"comments\">" +
+                                "<h5 id=\"avg-title\">Valutazione media degli utenti: " + avgScore + "/5</h5>" +
+                                '<div class="progress">' +
+                                    '<div id="progress" class="progress-bar" role="progressbar" style="width: ' + avg + '%" aria-valuenow="' + avg + '" aria-valuemin="0" aria-valuemax="100"></div>'+
+                                '</div>' +
+                                "<div id=\"commenti\">" +
+                                review.reviewTime + ": " + review.score + "/5" +
+                                "<ul class=\"list-group\" id=\"" + review.itemReviewId + "\">" +
+                                        "<li class=\"list-group-item\"><b>" + review.authorName + " " + review.authorSurname + "</b>: " + review.reviewText + "</li>";
+                                        if(canReply == "true") {
+                                            testo += 
+                                                                '<form id="form-reply" class="form-inline" method="POST" onsubmit="addReply(' + review.itemReviewId + ')">' +
+                                                                    '<div class="form-group">' +
+                                                                      '<input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" id="replycomment-'+ review.itemReviewId +'" required>' +
+                                                                    '</div>' +
+                                                                    '<button type="submit" class="btn btn-default">Invia</button>' +
+                                                                '</form>';
+                                        }
+                                testo += "</div>"+
+                            "</div>" + 
+                            '<form class="form-inline" method="POST" id="addcomment">'+
+                                '<div class="form-group">'+
+                                    '<input type="text" class="form-control" placeholder="Inserisci un commento" name="newcomment" id="comment-text" required>'+
+                                  'Voto:'+
+                                    '<select class="form-control" name="score" id="item-score">';
+                                      for(var i = 1; i <= 5; i++) { 
+                                      testo += '<option value="'+ i +'">'+ i +'</option>'; 
+                                    }
+                                  testo += '</select>' +
+                                '</div>'+
+                                  '<span class="btn btn-sm btn-success" style="cursor:pointer;" onclick="addComment(\'<%=item.getItemId()%>\',\'<%=item.getName()%>\', \'<%= venditore %>\')">Invia</span>'+
+                              '</form>';
+                    document.getElementById("comments-wrapper").innerHTML = testo;
+                }
+                else {
+                    title.innerHTML = "Valutazione media degli utenti: " + avgScore + "/5";
+                    var indicatore = document.getElementById("progress");
+                    indicatore.setAttribute("aria-valuenow", "" + avg);
+                    indicatore.setAttribute("style","width: " + avg + "%");
+                    var commenti = "";
+                    commenti +=
+                            review.reviewTime + ": " + review.score + " /5" +
+                            "<ul class=\"list-group\" id=\"" + review.itemReviewId + "\">" +
+                                            "<li class=\"list-group-item\"><b>" + review.authorName + " " + review.authorSurname + "</b>: " + review.reviewText + "</li>";
+                    if(canReply == "true") {
+                        commenti += 
+                                            '<form id="form-reply" class="form-inline" method="POST" onsubmit="addReply(' + review.itemReviewId + ')">' +
+                                                '<div class="form-group">' +
+                                                  '<input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" id="replycomment-'+ review.itemReviewId +'" required>' +
+                                                '</div>' +
+                                                '<button type="submit" class="btn btn-default">Invia</button>' +
+                                            '</form>';
+                    }
+                    commenti += document.getElementById("commenti").innerHTML;
+                    document.getElementById("commenti").innerHTML = commenti;
+                }
             }
         }
     };
     xhttp.open("POST", "ItemComment", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("itemid="+id+"&itemscore="+itemScore.options[itemScore.selectedIndex].value+"&newcomment="+commentText.value);
+}
+function addReply(commentID) {
+    var replycomment = document.getElementById("replycomment-" + commentID).value;
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            if(this.responseText.startsWith("<li")) {
+                $('#modal-text').text("La risposta al commento è stata inserita con successo");
+                $('#modal-title').text("Commento risposto");
+                $('#modal-cart-btn').hide();
+                $('#confirm-modal').modal({show: true});
+                document.getElementById("form-reply").reset();
+                var commento = document.getElementById("" + commentID).innerHTML;
+                commento += this.responseText;
+                document.getElementById("" + commentID).innerHTML = commento;
+            }
+        }
+    };
+    xhttp.open("POST","ItemCommentReply", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("reviewid="+commentID+"&replycomment="+replycomment);
 }

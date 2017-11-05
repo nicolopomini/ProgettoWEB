@@ -36,6 +36,7 @@ import utils.StringUtils;
 public class ItemComment extends HttpServlet {
     private ItemReviewDAO itemReviewDAO;
     private NotificationDAO notificationDAO;
+    private ItemDAO itemDAO;
 
     @Override
     public void init() throws ServletException {
@@ -51,6 +52,11 @@ public class ItemComment extends HttpServlet {
         }
         try {
             notificationDAO = daoFactory.getDAO(NotificationDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+        try {
+            itemDAO = daoFactory.getDAO(ItemDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
@@ -82,58 +88,45 @@ public class ItemComment extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("application/json");
         int itemId = Integer.parseInt(request.getParameter("itemid"));
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
-        ItemDAO item;
-        ItemReviewDAO itemReview;
         Item toComment = null;
         double avgScore;
-        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-        if (daoFactory == null) 
-        {
-            throw new ServletException("Impossible to get dao factory for storage system");
-        }
-        try 
-        {
-            item = daoFactory.getDAO(ItemDAO.class);
-            toComment = item.getByPrimaryKey(itemId);
-        } 
-        catch (DAOFactoryException ex) 
-        {
-            throw new ServletException("Impossible to get dao factory for user activation", ex);
-        } 
-        catch (DAOException ex) 
-        {
-            throw new ServletException("Impossible to get dao factory for user activation", ex);
-        }
-        String comment = StringUtils.checkInputString(request.getParameter("newcomment"));
-        int score = Integer.parseInt(request.getParameter("itemscore"));
-        ItemReview review = new ItemReview();
-        review.setItemId(toComment.getItemId());
-        review.setItemReviewId(null);
-        review.setReply(null);
-        review.setReviewText(comment);
-        review.setReviewTime(new Timestamp(new Date().getTime()).toString());
-        review.setScore(score);
-        review.setUserId(user.getUserId());
-        Notification notification = new Notification();
-        notification.setAuthor(user.getUserId());
-        notification.setType(Notification.NEWCOMMENTITEM);
-        notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
-        notification.setNotificationText("");
-        notification.setLink("./item.jsp?itemid= " + toComment.getItemId() + "#commenti");
-        notification.setSeen(false);
+        int avg;
         try {
+            toComment = itemDAO.getByPrimaryKey(itemId);
+            String comment = StringUtils.checkInputString(request.getParameter("newcomment"));
+            int score = Integer.parseInt(request.getParameter("itemscore"));
+            ItemReview review = new ItemReview();
+            review.setItemId(toComment.getItemId());
+            review.setItemReviewId(null);
+            review.setReply(null);
+            review.setReviewText(comment);
+            review.setReviewTime(new Timestamp(new Date().getTime()).toString());
+            review.setScore(score);
+            review.setUserId(user.getUserId());
+            review.setAuthorName(user.getName());
+            review.setAuthorSurname(user.getSurname());
+            Notification notification = new Notification();
+            notification.setAuthor(user.getUserId());
+            notification.setType(Notification.NEWCOMMENTITEM);
+            notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
+            notification.setNotificationText("");
+            notification.setLink("./item.jsp?itemid= " + toComment.getItemId() + "#commenti");
+            notification.setSeen(false);
             notification.setRecipient(itemReviewDAO.getItemSeller(toComment.getItemId()));
             itemReviewDAO.add(review);
             notificationDAO.add(notification);
+            avgScore = itemReviewDAO.getAverageScoreByItemId(itemId);
+            avg = (int)(avgScore * 10);
+            String JSONReturn = "{\"avgScore\": \"" + avgScore + "\", \"avg\": \"" + avg + "\", " + review.toString() + "}";
+            out.println(JSONReturn);
         } catch (DAOException ex) {
             throw new ServletException("Impossible to add the item review", ex);
         }
-        out.print("<h5>Valutazione media degli utenti: ");
     }
 
     /**
