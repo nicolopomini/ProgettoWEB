@@ -197,11 +197,11 @@
                                         <%if(r.getReply() != null) {%>
                                         <li class="list-group-item"><b>Venditore</b>: <%=r.getReply()%></li>
                                         <%} else if(venditore) {%>
-                                        <form id="form-reply" class="form-inline" method="POST" onsubmit="addReply('<%=r.getItemReviewId()%>')">
+                                        <form id="form-reply" class="form-inline" method="POST">
                                             <div class="form-group">
                                               <input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" id="replycomment-<%=r.getItemReviewId()%>" required>
                                             </div>
-                                            <button type="submit" class="btn btn-default">Invia</button>
+                                            <span class="btn btn-sm btn-success" style="cursor:pointer;" onclick="addReply('<%=r.getItemReviewId()%>','<%=item.getItemId()%>')">Invia</span>
                                         </form>
                                         <%}%>
                                     </ul>

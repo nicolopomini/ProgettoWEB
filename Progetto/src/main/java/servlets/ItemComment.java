@@ -18,7 +18,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -115,7 +114,7 @@ public class ItemComment extends HttpServlet {
             notification.setType(Notification.NEWCOMMENTITEM);
             notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
             notification.setNotificationText("");
-            notification.setLink("./item.jsp?itemid= " + toComment.getItemId() + "#commenti");
+            notification.setLink("./item.jsp?itemid= " + toComment.getItemId() + "#" + review.getItemReviewId());
             notification.setSeen(false);
             notification.setRecipient(itemReviewDAO.getItemSeller(toComment.getItemId()));
             itemReviewDAO.add(review);

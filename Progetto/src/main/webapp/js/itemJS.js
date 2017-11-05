@@ -68,11 +68,11 @@ function addComment(id,name, canReply)
                                         "<li class=\"list-group-item\"><b>" + review.authorName + " " + review.authorSurname + "</b>: " + review.reviewText + "</li>";
                                         if(canReply == "true") {
                                             testo += 
-                                                                '<form id="form-reply" class="form-inline" method="POST" onsubmit="addReply(' + review.itemReviewId + ')">' +
+                                                                '<form id="form-reply" class="form-inline" method="POST">' +
                                                                     '<div class="form-group">' +
                                                                       '<input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" id="replycomment-'+ review.itemReviewId +'" required>' +
                                                                     '</div>' +
-                                                                    '<button type="submit" class="btn btn-default">Invia</button>' +
+                                                                    '<span class="btn btn-sm btn-success" style="cursor:pointer;" onclick="addReply(\''+review.itemReviewId+'\',\''+id+'\')">Invia</span>' +
                                                                 '</form>';
                                         }
                                 testo += "</div>"+
@@ -87,7 +87,7 @@ function addComment(id,name, canReply)
                                     }
                                   testo += '</select>' +
                                 '</div>'+
-                                  '<span class="btn btn-sm btn-success" style="cursor:pointer;" onclick="addComment(\'<%=item.getItemId()%>\',\'<%=item.getName()%>\', \'<%= venditore %>\')">Invia</span>'+
+                                  '<span class="btn btn-sm btn-success" style="cursor:pointer;" onclick="addComment(\''+id+'\',\''+name+'\',\''+canReply+'\')">Invia</span>'+
                               '</form>';
                     document.getElementById("comments-wrapper").innerHTML = testo;
                 }
@@ -103,11 +103,11 @@ function addComment(id,name, canReply)
                                             "<li class=\"list-group-item\"><b>" + review.authorName + " " + review.authorSurname + "</b>: " + review.reviewText + "</li>";
                     if(canReply == "true") {
                         commenti += 
-                                            '<form id="form-reply" class="form-inline" method="POST" onsubmit="addReply(' + review.itemReviewId + ')">' +
+                                            '<form id="form-reply" class="form-inline" method="POST">' +
                                                 '<div class="form-group">' +
                                                   '<input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" id="replycomment-'+ review.itemReviewId +'" required>' +
                                                 '</div>' +
-                                                '<button type="submit" class="btn btn-default">Invia</button>' +
+                                                '<span class="btn btn-sm btn-success" style="cursor:pointer;" onclick="addReply(\''+review.itemReviewId+'\',\''+id+'\')">Invia</span>' +
                                             '</form>';
                     }
                     commenti += document.getElementById("commenti").innerHTML;
@@ -120,7 +120,7 @@ function addComment(id,name, canReply)
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("itemid="+id+"&itemscore="+itemScore.options[itemScore.selectedIndex].value+"&newcomment="+commentText.value);
 }
-function addReply(commentID) {
+function addReply(commentID, itemID) {
     var replycomment = document.getElementById("replycomment-" + commentID).value;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
@@ -131,13 +131,11 @@ function addReply(commentID) {
                 $('#modal-cart-btn').hide();
                 $('#confirm-modal').modal({show: true});
                 document.getElementById("form-reply").reset();
-                var commento = document.getElementById("" + commentID).innerHTML;
-                commento += this.responseText;
-                document.getElementById("" + commentID).innerHTML = commento;
+                document.getElementById(commentID).innerHTML = this.responseText;
             }
         }
     };
     xhttp.open("POST","ItemCommentReply", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("reviewid="+commentID+"&replycomment="+replycomment);
+    xhttp.send("itemid="+itemID+"&reviewid="+commentID+"&replycomment="+replycomment);
 }

@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import dao.ItemDAO;
 import dao.ItemReviewDAO;
 import dao.NotificationDAO;
 import dao.entities.Item;
@@ -16,7 +17,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +34,7 @@ import utils.StringUtils;
 public class ItemCommentReply extends HttpServlet {
     private ItemReviewDAO itemReviewDAO;
     private NotificationDAO notificationDAO;
+    private ItemDAO itemDAO;
 
     @Override
     public void init() throws ServletException {
@@ -49,6 +50,11 @@ public class ItemCommentReply extends HttpServlet {
         }
         try {
             notificationDAO = daoFactory.getDAO(NotificationDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+        try {
+            itemDAO = daoFactory.getDAO(ItemDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
@@ -79,11 +85,13 @@ public class ItemCommentReply extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         PrintWriter out = response.getWriter();
-        Item item = (Item)session.getAttribute("item");
+        int itemid = Integer.parseInt(request.getParameter("itemid"));
         int reviewid = Integer.parseInt(request.getParameter("reviewid"));
         try {
+            Item item = itemDAO.getByPrimaryKey(itemid);
             ItemReview review = itemReviewDAO.getByPrimaryKey(reviewid);
             review.setReply(StringUtils.checkInputString(request.getParameter("replycomment")));
             itemReviewDAO.update(review);
@@ -93,10 +101,11 @@ public class ItemCommentReply extends HttpServlet {
             notification.setType(Notification.REPLYCOMMENTITEM);
             notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
             notification.setNotificationText("");
-            notification.setLink("./item.jsp?itemid= " + item.getItemId() + "#commenti");
+            notification.setLink("./item.jsp?itemid= " + item.getItemId() + "#" + review.getItemReviewId());
             notification.setSeen(false);
             notificationDAO.add(notification);
-            String HTMLreturn = "<li class=\"list-group-item\"><b>Venditore</b>: " + review.getReply() +  "</li>";
+            String HTMLreturn = "<li class=\"list-group-item\"><b>" + review.getAuthorName() + " " + review.getAuthorSurname() + "</b>: "+ review.getReviewText() + "</li>" +
+                    "<li class=\"list-group-item\"><b>Venditore</b>: " + review.getReply() +  "</li>";
             out.println(HTMLreturn);
         } catch (DAOException ex) {
             throw new ServletException("Impossible to reply the review", ex);
