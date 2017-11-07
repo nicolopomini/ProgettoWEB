@@ -120,47 +120,48 @@
               </div>
             <div class="row">
                 <div class="col col-sm-12 col-xl-6">
-                    <div class="row">
-                        <div class="col col-xs-12">
-                            <h1><%= item.getName() %></h1>
-                        </div>
+                    <h1><%= item.getName() %></h1>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            Prezzo: <fmt:formatNumber value="<%= item.getPrice() %>" type="currency" currencySymbol="€"/>
+                        </li>
+                        <li class="list-group-item">
+                            <%=item.getDescription()%>
+                        </li>
+                        <li class="list-group-item">
+                            Venduto da <a href="shop.jsp?shopid=<%= shop.getShopId() %>" target="_blank"><%= shop.getName() %></a>: <a href="#map">Vedi sulla mappa</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex justify-content-center">
+                        <span class="btn btn-success" style="cursor:pointer; margin: 20px;" onclick="addToCart('<%=item.getItemId()%>','<%=item.getName()%>')">Aggiungi al carrello</span>
+                        <% if(owner) { %>
+                        <span class="btn btn-success" style="cursor:pointer; margin: 20px;" data-toggle="modal" data-target="#modificaitem">Modifica Item</span>
+                        <% } %>
                     </div>
-                    <div class="row">
-                        <div class=" col col-xs-12">
-                            <p>Prezzo: <fmt:formatNumber value="<%= item.getPrice() %>" type="currency"/></p>
-                            <form method="POST" class="form-inline">
-                                <span class="btn btn-success" style="cursor:pointer;" onclick="addToCart('<%=item.getItemId()%>','<%=item.getName()%>')">Aggiungi al carrello</span>
-                            </form>
-                            <% if(owner) { %>
-                            <span class="btn btn-success" style="cursor:pointer;" data-toggle="modal" data-target="#modificaitem">Modifica Item</span>
-                            <% } %>
-                            <p>Venduto da <a href="shop.jsp?shopid=<%= shop.getShopId() %>" target="_blank"><%= shop.getName() %></a>: <a href="#map">Vedi sulla mappa</a></p>
-                            <div id="itemimages" class="row">
-                                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                                <ol class="carousel-indicators">
-                                <%  int tmp = 0;
-                                    for(Picture p : immagini) {%>
-                                <%--<img src="${pageContext.request.contextPath}/<%=p.getPath()%>" class="img-responsive" alt="Responsive image">--%>
-                                    <li data-target="#carouselExampleIndicators" data-slide-to="<%=tmp%>" class="active"></li>
-                                    <% tmp++; }%>
-                                    </ol>
-                                    <div class="carousel-inner">
-                                    <% for(int i = 0;i<immagini.size();i++) {%>
-                                      <div class="carousel-item <%if(i==0){%>active<%}%>">
-                                        <img class="d-block defaultImage w-100" src="<%=immagini.get(i).getPath()%>" alt="Beautiful image">
-                                      </div>
-                                    <%}%>
-                                    </div>
-                                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                      <span class="sr-only">Previous</span>
-                                    </a>
-                                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                      <span class="sr-only">Next</span>
-                                    </a>
-                                </div>
+                    <div id="itemimages" class="row justify-content-center">
+                        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                        <%  int tmp = 0;
+                            for(Picture p : immagini) {%>
+                        <%--<img src="${pageContext.request.contextPath}/<%=p.getPath()%>" class="img-responsive" alt="Responsive image">--%>
+                            <li data-target="#carouselExampleIndicators" data-slide-to="<%=tmp%>" class="active"></li>
+                            <% tmp++; }%>
+                            </ol>
+                            <div class="carousel-inner">
+                            <% for(int i = 0;i<immagini.size();i++) {%>
+                              <div class="carousel-item <%if(i==0){%>active<%}%>">
+                                <img class="d-block defaultImage w-100" src="<%=immagini.get(i).getPath()%>" alt="Beautiful image">
+                              </div>
+                            <%}%>
                             </div>
+                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="sr-only">Next</span>
+                            </a>
                         </div>
                     </div>
                 </div>
