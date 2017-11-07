@@ -241,7 +241,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
 
     @Override
     public ArrayList<Item> findItems(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore, String geo) throws DAOException {
-        double lat = 0.0, lng = 0.0;
+        double lat = 0.0, lon = 0.0;
         //check input strings
         if(name != null)
             name = StringUtils.checkInputString(name);
@@ -255,7 +255,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
                 JsonObject results = rdr.readObject().getJsonArray("results").getJsonObject(0);
                 JsonObject coordinates = results.getJsonObject("geometry").getJsonObject("location");
                 lat = coordinates.getJsonNumber("lat").doubleValue();
-                lng = coordinates.getJsonNumber("lng").doubleValue();
+                lon = coordinates.getJsonNumber("lng").doubleValue();
             } catch (MalformedURLException ex) {
                 throw new DAOException("Error in address parsing", ex);
             } catch (IOException ex) {
@@ -284,7 +284,19 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
             statement += ", ItemReview";
         }
         
+        if(lat != 0 || lon != 0)
+        {
+            statement += ", Shop";
+        }
+        
         ArrayList<String> filters = new ArrayList<>();
+        
+        if(lat != 0 || lon != 0)
+        {
+            filters.add("Shop.shopId = Item.shopId");
+            filters.add("ABS(Shop.lat - " + lat + ") < " + MAX_DISTANCE * COOR_TO_KM);
+            filters.add("ABS(Shop.lon - " + lon + ") < " + MAX_DISTANCE * COOR_TO_KM);
+        }
         
         if(category != null)
         {
