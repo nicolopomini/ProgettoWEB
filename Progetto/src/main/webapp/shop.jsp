@@ -94,10 +94,8 @@
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
     </head>
     <body>
-        <div class="container">
-            <!-- Menu -->
-            <jsp:include page="Header.jsp"/>
-            <!-- Fine menu -->
+        <jsp:include page="Header.jsp"/>
+        <div class="container-fluid containerFix">
             <% if(c != null) { %>
             <div class="alert alert-info alert-dismissable fade in" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="close">
@@ -334,9 +332,8 @@
             }
         </script>
             <% } %>
-            <!--Footer-->
-            <jsp:include page="Footer.jsp"/>
         <script src="js/shopJS.js"></script>
         </div>
+        <jsp:include page="Footer.jsp"/>
     </body>
 </html>
