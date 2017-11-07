@@ -157,7 +157,7 @@
                         <center>
                             <h3>Dove trovarci</h3>
                             <div class="embed-responsive embed-responsive-16by9">
-                              <iframe class="embed-responsive-item" src="//www.google.com/maps/embed/v1/place?q=<%=location%>&key=AIzaSyAOzJPvYZ2Mq5oCbxK5v1R1HBRy5KyfRUM"></iframe>
+                              <iframe class="embed-responsive-item" src="https://www.google.com/maps/embed/v1/place?q=<%=location%>&key=AIzaSyAOzJPvYZ2Mq5oCbxK5v1R1HBRy5KyfRUM"></iframe>
                             </div>
                         </center>
                     </div>
