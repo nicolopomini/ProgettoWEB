@@ -20,7 +20,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.exceptions.DAOFactoryException;
 import persistence.utils.dao.factories.DAOFactory;
@@ -86,7 +85,6 @@ public class ItemCommentReply extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
         PrintWriter out = response.getWriter();
         int itemid = Integer.parseInt(request.getParameter("itemid"));
         int reviewid = Integer.parseInt(request.getParameter("reviewid"));
@@ -101,7 +99,7 @@ public class ItemCommentReply extends HttpServlet {
             notification.setType(Notification.REPLYCOMMENTITEM);
             notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
             notification.setNotificationText("");
-            notification.setLink("./item.jsp?itemid= " + item.getItemId() + "#" + review.getItemReviewId());
+            notification.setLink("./item.jsp?itemid=" + item.getItemId() + "#" + review.getItemReviewId());
             notification.setSeen(false);
             notificationDAO.add(notification);
             String HTMLreturn = "<li class=\"list-group-item\"><b>" + review.getAuthorName() + " " + review.getAuthorSurname() + "</b>: "+ review.getReviewText() + "</li>" +

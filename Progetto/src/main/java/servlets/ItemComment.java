@@ -109,15 +109,15 @@ public class ItemComment extends HttpServlet {
             review.setUserId(user.getUserId());
             review.setAuthorName(user.getName());
             review.setAuthorSurname(user.getSurname());
+            review = itemReviewDAO.add(review);
             Notification notification = new Notification();
             notification.setAuthor(user.getUserId());
             notification.setType(Notification.NEWCOMMENTITEM);
             notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
             notification.setNotificationText("");
-            notification.setLink("./item.jsp?itemid= " + toComment.getItemId() + "#" + review.getItemReviewId());
+            notification.setLink("./item.jsp?itemid=" + toComment.getItemId() + "#" + review.getItemReviewId());
             notification.setSeen(false);
             notification.setRecipient(itemReviewDAO.getItemSeller(toComment.getItemId()));
-            itemReviewDAO.add(review);
             notificationDAO.add(notification);
             avgScore = itemReviewDAO.getAverageScoreByItemId(itemId);
             avg = (int)(avgScore * 10);
