@@ -105,7 +105,7 @@
                         <li class="list-group-item" style="text-align: center">
                             <a role="button" data-toggle="modal" data-target="#<%= c.getComplaintId() %>">
                             <ul class="list-inline">
-                                <li><%= date %></li>
+                                <li><%=date%></li>
                                 <li><%= c.getPurchaseId() %></li>
                                 <li><%= c.getStatus() %></li>
                             </ul>
