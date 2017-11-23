@@ -125,108 +125,93 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
-        <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
+        <script src="js/bootstrap.min.js"></script>
         <link href="css/LoginTheme.css" type="text/css" rel="stylesheet">
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
         <title>Password Recovery</title>
     </head>
     <body>
-        <div class="container">
-            <jsp:include page="Header.jsp"/>
+        <jsp:include page="Header.jsp"/>
+        <div class="container-fluid containerFix">
             <div class="row">
-                <%
-                    if(hasEmail == 1)
-                    {
-                        %>
-                        <div class="col-xs-12">
-                            <p>Una email contenente un codice per eseguire il reset della password è stata inviata all'indirizzo "<%=email%>"</p>
-                        </div>
-                        <%
-                    }
-                    else if(hasToken != 1)
-                    {
-                        if(hasToken == 0)
+                <div class="col-12">
+                <h1>Password recovery</h1>
+                    <%
+                        if(hasEmail == 1)
                         {
                             %>
-                            <div class="col-xs-12">
-                                <p class="redText">The inserted token is not valid.</p>
-                            </div>
+                                <p>Una email contenente un codice per eseguire il reset della password è stata inviata all'indirizzo "<%=email%>"</p>
                             <%
                         }
-                        %>
-                        <form method="post" action="<%=request.getRequestURL()%>" class="form-horizontal">
-                            <div class="col-xs-12 marginBottomFix">
-                                <label class="col-xs-12">Insert the email you registered with</label>
-                            </div>
-                            <div class="col-xs-12 col-sm-6 col-md-4">
-                                <div class="form-group col-xs-12">
-                                    <%
-                                        if(hasEmail == 0)
-                                        {
-                                            %>
-                                            <label class="col-xs-12 redText">The Email you typed contains invalid characters</label>
-                                            <%
-                                        }
-                                    %>
-                                    <div class="col-xs-12">
+                        else if(hasToken != 1)
+                        {
+                            if(hasToken == 0)
+                            {
+                                %>
+                                    <p class="redText">The inserted token is not valid.</p>
+                                <%
+                            }
+                            %>
+                            <form method="post" action="<%=request.getRequestURL()%>" class="form-horizontal">
+                                <label>Inserisci la email con la quale ti sei registrato</label>
+                                <div class="col-12 col-sm-7 col-lg-4 leftPaddingZero">
+                                    <div class="form-group">
+                                        <%
+                                            if(hasEmail == 0)
+                                            {
+                                                %>
+                                                <label class="redText">La email inserita contiene caratteri invalidi</label>
+                                                <%
+                                            }
+                                        %>
                                         <input class="form-control" type="email" name="Email">
                                     </div>
-                                </div>
-                                <div class="form-group col-xs-12"> 
-                                    <div class="col-xs-6">
-                                        <button type="submit" class="btn btn-default">Reset</button>
+                                    <div class="form-group"> 
+                                        <button type="submit" class="btn btn-success">Reset</button>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
-                        <%
-                    }
-                    else if(hasPassword != 1)
-                    {
-                        %>
-                        <form method="post" action="<%=request.getRequestURL()%>" class="form-horizontal">
-                            <div class="col-xs-12 marginBottomFix">
-                                <label class="col-xs-12">Insert your new password</label>
-                            </div>
-                            <div class="col-xs-12 col-sm-6 col-md-4">
-                                <div class="form-group col-xs-12">
-                                    <%
-                                        if(hasPassword == 0)
-                                        {
-                                            %>
-                                            <label class="col-xs-12 redText">The Password you typed contains invalid characters</label>
-                                            <%
-                                        }
-                                    %>
-                                    <div class="col-xs-12">
+                            </form>
+                            <%
+                        }
+                        else if(hasPassword != 1)
+                        {
+                            %>
+                            <form method="post" action="<%=request.getRequestURL()%>" class="form-horizontal">
+                                <label>Inserisci la tua nuova password</label>
+                                <div class="col-12 col-sm-7 col-lg-4 leftPaddingZero">
+                                    <div class="form-group">
+                                        <%
+                                            if(hasPassword == 0)
+                                            {
+                                                %>
+                                                <label class="redText">La password inserita contiene caratteri invalidi</label>
+                                                <%
+                                            }
+                                        %>
                                         <input class="form-control" type="password" name="Password">
-                                    </div>
-                                    <div class="col-xs-12">
                                         <input class="form-control" type="hidden" name="Token" value="<%=token%>">
                                     </div>
-                                </div>
-                                <div class="form-group col-xs-12"> 
-                                    <div class="col-xs-6">
-                                        <button type="submit" class="btn btn-default">Reset</button>
+                                    <div class="form-group"> 
+                                        <button type="submit" class="btn btn-success">Reset</button>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
-                        <%
-                    }
-                    else
-                    {
-                        %>
-                        <div class="col-xs-12">
-                            <p>La password è stata resettata con successo.</p>
-                        </div>
-                        <%
-                    }
-                %>
+                            </form>
+                            <%
+                        }
+                        else
+                        {
+                            %>
+                            <p class="greenText">La password è stata resettata con successo.</p>
+                            <%
+                        }
+                    %>
+                </div>
             </div>
-            <jsp:include page="Footer.jsp"/>
         </div>
+        <jsp:include page="Footer.jsp"/>
     </body>
 </html>
 

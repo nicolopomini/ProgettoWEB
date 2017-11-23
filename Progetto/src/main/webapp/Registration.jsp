@@ -164,129 +164,110 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Registration Page</title>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
-        <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
+        <script src="js/bootstrap.min.js"></script>
         <link href="css/LoginTheme.css" type="text/css" rel="stylesheet">
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
     </head>
     <body>
-        <div class="container">
+        <jsp:include page="Header.jsp"/>
+        <div class="container-fluid containerFix">
             <!-- Menu -->
-            <jsp:include page="Header.jsp"/>
             <div class="row">
-                <% if(!logged) 
-                {
-                    if(request.getMethod().equals("POST"))
+                <div class="col-12">
+                    <h1>Registration</h1>
+                    <% if(!logged) 
                     {
-                        if(validData)
+                        if(request.getMethod().equals("POST"))
                         {
-                %>
-                
-                <div class="col-xs-12">
+                            if(validData)
+                            {
+                    %>
                     <label>Your registration was successful</label>
                     <p class="redText">WARNING: To start using your account you will need to activate it. An activation email has been sent to the address "<%=tmpEmail%>", click on the button contained in the email to activate your account</p>
-                </div>
-                <script>
-                    function sendActivationEmail(email)
-                    {
-                        var xhttp;
-                        var label;
-                        label = document.getElementById("emailSent");
-                        xhttp = new XMLHttpRequest();
-                        xhttp.onreadystatechange = function () {
-                            if (this.readyState == 4 && this.status == 200)
-                            {
-                                if(this.responseText == "sent")
+                    <script>
+                        function sendActivationEmail(email)
+                        {
+                            var xhttp;
+                            var label;
+                            label = document.getElementById("emailSent");
+                            xhttp = new XMLHttpRequest();
+                            xhttp.onreadystatechange = function () {
+                                if (this.readyState == 4 && this.status == 200)
                                 {
-                                    label.setAttribute("style","display:block");
+                                    if(this.responseText == "sent")
+                                    {
+                                        label.setAttribute("style","display:block");
+                                    }
                                 }
+                            };
+                            xhttp.open("POST", "SendActivationEmail", true);
+                            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                            var toSend = encodeURIComponent(email);
+                            xhttp.send("Email="+toSend);
+                        }
+                        sendActivationEmail("<%=tmpEmail%>");
+                    </script>
+                    <%      }
+                            else
+                            {
+                    %>
+                    <label>Oops, something went wrong</label>
+                    <%
                             }
-                        };
-                        xhttp.open("POST", "SendActivationEmail", true);
-                        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                        var toSend = encodeURIComponent(email);
-                        xhttp.send("Email="+toSend);
-                    }
-                    sendActivationEmail("<%=tmpEmail%>");
-                </script>
-                <%      }
+                        }
                         else
                         {
-                %>
-                
-                <div class="col-xs-12">
-                    <label>Oops, something went wrong</label>
-                </div>
-                
-                <%      }
-                    }
-                    else
-                    {
-                %>
-                <form id="registerForm" method="post" action="<%=request.getRequestURL() %>" class="form-horizontal">
-                    <div class="col-xs-12 marginBottomFix">
-                        <label class="col-xs-12">Fill the form and press "Register" to create a new user</label>
-                    </div>
-                    <div class="col-xs-12 col-sm-6 col-md-4">
-                        <div class="form-group col-xs-12">
-                            <label for="Email" class="col-xs-12">Email</label>
-                            <label class="col-xs-12 redText" id="EmailError"></label>
-                            <div class="col-xs-12">
+                    %>
+                    <form id="registerForm" method="post" action="<%=request.getRequestURL() %>" class="form-horizontal">
+                        <div class="marginBottomFix">
+                            <h6>Fill the form and press "Register" to create a new user</h6>
+                        </div>
+                        <div class="col-12 col-sm-7 col-lg-4 leftPaddingZero">
+                            <div class="form-group">
+                                <label for="Email">Email</label>
+                                <label class="redText" id="EmailError"></label>
                                 <input oninput="isUniqueEmail()" class="form-control" type="email" name="Email" id="Email">
                             </div>
-                        </div>
-                        <div class="form-group col-xs-12">
-                            <label for="Password" class="col-xs-12">Password</label>
-                            <label class="col-xs-12 redText" id="PasswordError"></label>
-                            <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="Password">Password</label>
+                                <label class="redText" id="PasswordError"></label>
                                 <input class="form-control" type="password" name="Password" id="Password">
                             </div>
-                        </div>
-                        <div class="form-group col-xs-12">
-                            <label for="Name" class="col-xs-12">Name</label>
-                            <label class="col-xs-12 redText" id="NameError"></label>
-                            <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="Name">Name</label>
+                                <label class="redText" id="NameError"></label>
                                 <input class="form-control" type="text" name="Name" id="Name">
                             </div>
-                        </div>
-                        <div class="form-group col-xs-12">
-                            <label for="Surname" class="col-xs-12">Surname</label>
-                            <label class="col-xs-12 redText" id="SurnameError"></label>
-                            <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="Surname">Surname</label>
+                                <label class="redText" id="SurnameError"></label>
                                 <input class="form-control" type="text" name="Surname" id="Surname">
                             </div>
-                        </div>
-                        <div class="form-group col-xs-12">
-                            <label for="Address" class="col-xs-12">Address</label>
-                            <label class="col-xs-12 redText" id="AddressError"></label>
-                            <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="Address">Address</label>
+                                <label class="redText" id="AddressError"></label>
                                 <input class="form-control" type="text" name="Address" id="Address">
                             </div>
-                        </div>
-                        <div class="form-group col-xs-12"> 
-                            <div class="col-xs-6">
-                                <span onclick="registerAttempt()" class="btn btn-default">Register</span>
-                            </div>
-                            <div class="col-xs-6">
-                                <span onclick="goBack()" style="float:right;" class="btn btn-danger">Cancel</a>
+                            <div class="form-group"> 
+                                <span onclick="registerAttempt()" class="btn btn-success">Register</span>
+                                <span onclick="goBack()" style="float:right;" class="btn btn-danger">Cancel</span>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
             <%      }
                 } 
                 else 
                 {
             %>
-            
-                <div class="col-xs-12">
-                    <label>Effettua il logout per accedere a questa pagina</label>
-                </div>
-            
+                <label>Effettua il logout per accedere a questa pagina</label>
             <%  } %>
+                </div>
             </div>
-            <jsp:include page="Footer.jsp"/>
         </div>
+        <jsp:include page="Footer.jsp"/>
         <script src="js/registrationJS.js"></script>
     </body>
 </html>

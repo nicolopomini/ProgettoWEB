@@ -108,15 +108,19 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Login Page</title>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
-        <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
+        <script src="js/bootstrap.min.js"></script>
         <link href="css/LoginTheme.css" type="text/css" rel="stylesheet">
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
     </head>
     <body>
-        <div class="container">
-            <jsp:include page="Header.jsp"/>
+        <jsp:include page="Header.jsp"/>
+        <div class="container-fluid containerFix">
             <div class="row">
+                <div class="col-12">
+                    <h1>Login</h1>
                 <%
                     if(!logged)
                     {
@@ -124,46 +128,37 @@
                         {
                 %>
                 <form id="registerForm" method="post" action="<%=request.getRequestURL() %>" class="form-horizontal">
-                    <div class="col-xs-12 marginBottomFix">
-                        <label class="col-xs-12">Fill the form an press the button to login</label>
-                        <label class="col-xs-12">You need to be registered in order to login</label>
-                        <p class="col-xs-12"><a href="Registration.jsp">Not registered? click here to register</a></p>
-                    </div>
-                    <div class="col-xs-12 col-sm-6 col-md-4">
-                        <div class="form-group col-xs-12">
+                    <h6>Fill the form an press the button to login</h6>
+                    <div class="col-12 col-sm-7 col-lg-4 leftPaddingZero">
+                        <div class="marginBottomFix">
+                            <p><a href="Registration.jsp">Not registered? click here to register</a></p>
+                        </div>
+                        <div class="form-group">
                             <%
                                 if(!valid)
                                 {
                                     %>
-                                    <label class="col-xs-12 redText">The email and password you typed do not match any user</label>
+                                    <label class="redText">The email and password you typed do not match any user</label>
                                     <%
                                 }
                             %>
-                            <label for="Email" class="col-xs-12">Email</label>
-                            <div class="col-xs-12">
-                                <input class="form-control" value="<%=email%>" type="email" name="Email" id="Email">
-                            </div>
+                            <label for="Email">Email</label>
+                            <input class="form-control" value="<%=email%>" type="email" name="Email" id="Email">
                         </div>
-                        <div class="form-group col-xs-12">
-                            <label for="Password" class="col-xs-12">Password</label>
-                            <div class="col-xs-12">
-                                <input class="form-control" type="password" name="Password" id="Password">
-                            </div>
+                        <div class="form-group">
+                            <label for="Password">Password</label>
+                            <input class="form-control" type="password" name="Password" id="Password">
                             <%
                                 if(!toRedirect.equals(""))
                                 {
                                     %>
-                                        <div class="col-xs-12">
-                                            <input class="form-control" type="hidden" name="ToRedirect" value="<%=toRedirect%>" id="ToRedirect">
-                                        </div>
+                                        <input class="form-control" type="hidden" name="ToRedirect" value="<%=toRedirect%>" id="ToRedirect">
                                     <%
                                 }
                                 else
                                 {
                                     %>
-                                        <div class="col-xs-12">
-                                            <input class="form-control" type="hidden" name="ToRedirect" id="ToRedirect">
-                                        </div>
+                                        <input class="form-control" type="hidden" name="ToRedirect" id="ToRedirect">
                                         <script>
                                             var input = document.getElementById("ToRedirect");
                                             input.value = document.referrer;
@@ -172,45 +167,38 @@
                                 }
                             %>
                         </div>
-                        <div class="form-group col-xs-12"> 
-                            <div class="col-xs-12 marginBottomFix">
+                        <div class="form-group"> 
+                            <div class="marginBottomFix">
                                 <a href='passwordRecovery.jsp'>I forgot my password</a>
                             </div>
-                            <div class="col-xs-6">
-                                <button type="submit" class="btn btn-default">Login</button>
-                            </div>
-                            <div class="col-xs-6">
-                                <span onclick="goBack()" style="float:right;" class="btn btn-danger">Cancel</a>
-                            </div>
+                            <button type="submit" class="btn btn-success">Login</button>
+                            <span onclick="goBack()" style="float:right;" class="btn btn-danger">Cancel</span>
                         </div>
                     </div>
                 </form>
                 <%
-                        }
-                        else
-                        {
+                    }
+                    else
+                    {
                 %>
-                <div class="col-xs-12">
                     <label>Your account needs to be activated first!</label>
                     <p class="redText">WARNING: To start using your account you will need to activate it. Click the button below to send another activation email.</p>
                     <button onclick="sendActivationEmail('<%=email%>')" class="btn btn-success marginBottomFix">Send Activation</button>
                     <p class="hiddenText" id="emailSent">An activation email has been sent to the address "<%=email%>".</p>
-                </div>
                 <%
                         }
                     }
                     else
                     {
                 %>
-                <div class="col-xs-12">
                     <label>Effettua il logout per accedere a questa pagina</label>
-                </div>
                 <%
                     }
                 %>
+                </div>
             </div>
-            <jsp:include page="Footer.jsp"/>
         </div>
+        <jsp:include page="Footer.jsp"/>
         <script src="js/registrationJS.js"></script>
         <script src="js/loginJS.js"></script>
     </body>

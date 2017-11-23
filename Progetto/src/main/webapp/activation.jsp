@@ -70,21 +70,24 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
-        <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
+        <script src="js/bootstrap.min.js"></script>
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
         <title>Account activation</title>
     </head>
     <body>
-        <div class="container">
-            <jsp:include page="Header.jsp"/>
+        <jsp:include page="Header.jsp"/>
+        <div class="container-fluid containerFix">
             <%
                 if(validCode)
                 {
             %>
             <div class="row">
-                <div class="col-xs-12">
-                    <label>Your account has been activated</label>
+                <div class="col-12">
+                    <h1>Activation</h1>
+                    <label class="greenText">Your account has been activated</label>
                     <p>You will now be able to access your customer area and buy our products</p>
                     <p id="redirectTimer"></p>
                     <script>
@@ -106,12 +109,12 @@
             </div>
             <% } else { %>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-12">
                     <label>Something went wrong</label>
                 </div>
             </div>
             <% } %>
-            <jsp:include page="Footer.jsp"/>
         </div>
+        <jsp:include page="Footer.jsp"/>
     </body>
 </html>

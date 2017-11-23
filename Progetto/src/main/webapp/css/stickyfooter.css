@@ -40,3 +40,18 @@ body {
     max-width: 600px;
     max-height: 600px;
 }
+
+.greenText
+{
+    color: green;
+}
+
+.redText
+{
+    color: red;
+}
+
+.leftPaddingZero
+{
+    padding-left: 0px !important;
+}
