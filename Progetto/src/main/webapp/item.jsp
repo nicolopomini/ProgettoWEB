@@ -119,7 +119,7 @@
                 </div>
               </div>
             <div class="row">
-                <div class="col col-sm-12 col-xl-6">
+                <div class="col-12 col-xl-6">
                     <h1><%= item.getName() %></h1>
                     <ul class="list-group">
                         <li class="list-group-item">
@@ -165,7 +165,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col col-sm-12 col-xl-6">
+                <div class="col-12 col-xl-6">
                     <div>
                         <h3>Dove puoi trovare il prodotto</h3>
                         <div><select class="form-control" id="locationSelect" visibility: hidden"></select></div>
@@ -174,10 +174,10 @@
                     </div>
                     <div id="comments-wrapper">
                     <center>
+                        <br/>
                         <% if(commenti.isEmpty()) { %>
                         <h5 style="text-align: center">Nessuna recensione</h5>
                         <%}%>
-                        <br/>
                     </center>
                     <% if(!commenti.isEmpty()) { %>
                         <div class=" col col-xs-12" >

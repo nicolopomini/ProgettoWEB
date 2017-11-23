@@ -131,16 +131,10 @@
                 </div>
               </div>
             <div class="row">
-                <% if(!reviews.isEmpty()) { %>
-                <div class="col-md-8">
-                <% } %>
+                <div class="col-12 col-xl-6">
                     <center>
                     <h1><%= shop.getName() %></h1>
-                    <% if(venditore) { %>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modificanegozio">Modifica Negozio</button>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inserisciitem">Aggiungi Item</button>
-                    <% } %>
-                    <img src="${pageContext.request.contextPath}/<%=shop.getImagePath()%>" class="img-responsive" alt="Responsive image">
+                    <img src="${pageContext.request.contextPath}/<%=shop.getImagePath()%>" class="img-fluid" alt="Responsive image">
                     </center>
                     <br/>
                     <div id="info">
@@ -148,11 +142,17 @@
                             <li class="list-group-item">Website: <a href="http://<%= shop.getWebsite() %>" target="_blank"><%= shop.getWebsite() %></a></li>
                             <li class="list-group-item">Orari del negozio: <%=shop.getOpeningHours()%></li>
                         </ul>
-                        <br/>
-                        <% if(reviews.isEmpty()) { %>
-                        <h5 style="text-align: center">Nessuna recensione</h5>
-                        <%}%>
                     </div>
+                    <center>
+                        <% if(venditore) { %>
+                            <br/>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modificanegozio">Modifica Negozio</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inserisciitem">Aggiungi Item</button>
+                        <% } %>
+                    </center>
+                    <br/>
+                </div>
+                <div class="col-12 col-xl-6" id="comments">
                     <div id="map">
                         <center>
                             <h3>Dove trovarci</h3>
@@ -161,55 +161,41 @@
                             </div>
                         </center>
                     </div>
-                    <br/>
-                    <br/>
-                <% if(!reviews.isEmpty()) { %>
-                </div>
-                <div class="col-md-4" id="comments">
-                <% } else if(cancomment) { %>
-                <h4>Inserisci un commento</h4>
-                <form method="POST" action="ShopComment">
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Inserisci un commento" name="newcomment" required>
-                          Voto:
-                            <select class="form-control" name="score">
-                              <% for(int i = 1; i <= 5; i++) { %>
-                              <option value="<%=i%>"><%=i%></option>
-                              <%}%>
-                          </select>
-                        </div>
-                        <button type="submit" class="btn btn-default">Invia</button>
-                      </form>
-                <% } %>
+                    <center>
+                        <br/>
+                        <% if(reviews.isEmpty()) { %>
+                        <h5 style="text-align: center">Nessuna recensione</h5>
+                        <%}%>
+                    </center>
                     <% if(!reviews.isEmpty()) { %>
-                    <h5>Valutazione media degli utenti: <%=valutation%>/5</h5>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                          <span class="sr-only"><%=progress%></span>
+                    <div class=" col col-xs-12" >
+                        <h5>Valutazione media degli utenti: <%=valutation%>/5</h5>
+                        <div class="progress">
+                            <div id="progress" class="progress-bar" role="progressbar" style="width: <%=progress%>%" aria-valuenow="<%=progress%>" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                      </div>
-                    <div class="commenti">
-                        <!--Per ogni commento:-->
-                        <% for(ShopReview s : reviews) { 
-                        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
-                        Date date = dt.parse(s.getReviewTime());
-                        %>
-                        <ul class="list-group">
-                            <fmt:formatDate value = "<%=date%>" /> : <%for(int i = 0; i < s.getScore(); i++) {%><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <%}%>
-                            <li class="list-group-item"><b><%= s.getAuthorName() + " " + s.getAuthorSurname() %></b>: <%=s.getReviewText()%></li>
-                            <% if(s.getReply() != null) { %>
-                            <li class="list-group-item"><b>Venditore</b>: <%=s.getReply()%></li>
-                            <% } else if(venditore) { %>
-                            <form class="form-inline" method="POST" action="ShopCommentReply">
-                                <input type="hidden" name="reviewid" value="<%=s.getShopReviewId()%>">
-                                <div class="form-group">
-                                  <input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" required>
-                                </div>
-                                <button type="submit" class="btn btn-default">Invia</button>
-                              </form>
+                        <div class="commenti">
+                            <!--Per ogni commento:-->
+                            <% for(ShopReview s : reviews) { 
+                            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
+                            Date date = dt.parse(s.getReviewTime());
+                            %>
+                            <ul class="list-group">
+                                <fmt:formatDate value = "<%=date%>" /> : <%for(int i = 0; i < s.getScore(); i++) {%><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <%}%>
+                                <li class="list-group-item"><b><%= s.getAuthorName() + " " + s.getAuthorSurname() %></b>: <%=s.getReviewText()%></li>
+                                <% if(s.getReply() != null) { %>
+                                <li class="list-group-item"><b>Venditore</b>: <%=s.getReply()%></li>
+                                <% } else if(venditore) { %>
+                                <form class="form-inline" method="POST" action="ShopCommentReply">
+                                    <input type="hidden" name="reviewid" value="<%=s.getShopReviewId()%>">
+                                    <div class="form-group">
+                                      <input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-default">Invia</button>
+                                  </form>
+                                <% } %>
+                            </ul>
                             <% } %>
-                        </ul>
-                        <% } %>
+                        </div>
                     </div>
                     <% if(cancomment) { %>
                     <form class="form-inline" method="POST" action="ShopComment">
@@ -223,14 +209,12 @@
                           </select>
                         </div>
                         <button type="submit" class="btn btn-default">Invia</button>
-                      </form>
+                    </form>
                     <% } else { %>
                     <p>Per lasciare un commento devi aver aquistato in questo negozio.</p>
                     <% } %>
                     <% } %>
-                <% if(!reviews.isEmpty()) { %>
                 </div>
-                <% } %>
             </div>
             <!--Fine contenuto-->
             <% if(venditore) { %>
