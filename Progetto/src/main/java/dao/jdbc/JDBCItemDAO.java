@@ -361,7 +361,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
     public ArrayList<String> autocompletion(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore) throws DAOException {
         String statement = "";
         
-        String columns = "Item.itemId, Item.name, Item.description, Item.category, Item.price, Item.shopId";
+        String columns = "Item.itemId, Item.name, Item.description, Item.category, Item.price, Item.shopId, Shop.name AS shopName";
         
         if(name == null)
         {
@@ -380,7 +380,11 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
             statement += ", ItemReview";
         }
         
+        statement += ", Shop";
+        
         ArrayList<String> filters = new ArrayList<>();
+        
+        filters.add("Shop.shopId = Item.shopId");
         
         if(category != null)
         {
@@ -425,7 +429,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
                 ArrayList<String> items = new ArrayList<>();
                 while(rs.next())
                 {
-                    items.add(rs.getString("name"));
+                    items.add(rs.getString("name") + " - " + rs.getString("shopName"));
                 }
                 return items;
             }
