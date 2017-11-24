@@ -6,17 +6,18 @@
 package servlets;
 
 import dao.NotificationDAO;
+import dao.ShopDAO;
 import dao.ShopReviewDAO;
 import dao.entities.Notification;
 import dao.entities.Shop;
 import dao.entities.ShopReview;
 import dao.entities.User;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +33,8 @@ import utils.StringUtils;
  */
 @WebServlet(name = "ShopComment", urlPatterns = {"/ShopComment"})
 public class ShopComment extends HttpServlet {
-    private ShopReviewDAO shopReview;
+    private ShopDAO shopDAO;
+    private ShopReviewDAO shopReviewDAO;
     private NotificationDAO notificationDAO;
 
     @Override
@@ -43,7 +45,12 @@ public class ShopComment extends HttpServlet {
             throw new ServletException("Impossible to get dao factory for storage system");
         }
         try {
-            shopReview = daoFactory.getDAO(ShopReviewDAO.class);
+            shopDAO = daoFactory.getDAO(ShopDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+        try {
+            shopReviewDAO = daoFactory.getDAO(ShopReviewDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
@@ -81,41 +88,43 @@ public class ShopComment extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("application/json");
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
-        Shop shop = (Shop)session.getAttribute("shop");
+        int shopId = Integer.parseInt(request.getParameter("shopid"));
+        PrintWriter out = response.getWriter();
         String comment = StringUtils.checkInputString(request.getParameter("newcomment"));
         int score = Integer.parseInt(request.getParameter("score"));
-        ShopReview review = new ShopReview();
-        review.setReply(null);
-        review.setShopReviewId(null);
-        review.setReviewText(comment);
-        review.setScore(score);
-        review.setReviewTime(new Timestamp(new Date().getTime()).toString());
-        review.setShopId(shop.getShopId());
-        review.setUserId(user.getUserId());
-        Notification notification = new Notification();
-        notification.setAuthor(review.getUserId());
-        notification.setRecipient(shop.getUserId());
-        notification.setType(Notification.NEWCOMMENTSHOP);
-        notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
-        notification.setNotificationText("");
-        notification.setLink("./item.jsp?itemid= " + shop.getShopId() + "#commenti");
-        notification.setSeen(false);
         try {
-            shopReview.add(review);
+            Shop shop = shopDAO.getByPrimaryKey(shopId);
+            ShopReview review = new ShopReview();
+            review.setReply(null);
+            review.setShopReviewId(null);
+            review.setReviewText(comment);
+            review.setScore(score);
+            review.setReviewTime(new Timestamp(new Date().getTime()).toString());
+            review.setShopId(shop.getShopId());
+            review.setUserId(user.getUserId());
+            review.setAuthorName(user.getName());
+            review.setAuthorSurname(user.getSurname());
+            review = shopReviewDAO.add(review);
+            Notification notification = new Notification();
+            notification.setAuthor(review.getUserId());
+            notification.setRecipient(shop.getUserId());
+            notification.setType(Notification.NEWCOMMENTSHOP);
+            notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
+            notification.setNotificationText("");
+            notification.setLink("./shop.jsp?shopid=" + shop.getShopId() + "#" + review.getShopReviewId());
+            notification.setSeen(false);
             notificationDAO.add(notification);
+            double avgScore = shopReviewDAO.getAverageScoreByShopId(shopId);
+            int avg = (int)(avgScore * 10);
+            String JSONReturn = "{\"avgScore\": \"" + avgScore + "\", \"avg\": \"" + avg + "\", " + review.toString() + "}";
+            out.println(JSONReturn);
         } catch (DAOException ex) {
             throw new ServletException("Error during insering the shop review",ex);
         }
-        Cookie c = new Cookie("shop_message","insered");
-        c.setMaxAge(1);
-        response.addCookie(c);
-        String contextPath = getServletContext().getContextPath();
-        if(!contextPath.endsWith("/"))
-            contextPath += "/";
-        contextPath += "shop.jsp?shopid=" + shop.getShopId();
-        response.sendRedirect(response.encodeRedirectURL(contextPath));
+        
     }
 
     /**

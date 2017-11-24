@@ -6,17 +6,18 @@
 package servlets;
 
 import dao.NotificationDAO;
+import dao.ShopDAO;
 import dao.ShopReviewDAO;
 import dao.entities.Notification;
 import dao.entities.Shop;
 import dao.entities.ShopReview;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.rmi.ServerException;
 import java.sql.Timestamp;
 import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,8 +33,9 @@ import utils.StringUtils;
  */
 @WebServlet(name = "ShopCommentReply", urlPatterns = {"/ShopCommentReply"})
 public class ShopCommentReply extends HttpServlet {
-    private ShopReviewDAO shopReview;
+    private ShopReviewDAO shopReviewDAO;
     private NotificationDAO notificationDAO;
+    private ShopDAO shopDAO;
 
     @Override
     public void init() throws ServletException {
@@ -43,7 +45,12 @@ public class ShopCommentReply extends HttpServlet {
             throw new ServletException("Impossible to get dao factory for storage system");
         }
         try {
-            shopReview = daoFactory.getDAO(ShopReviewDAO.class);
+            shopReviewDAO = daoFactory.getDAO(ShopReviewDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        }
+        try {
+            shopDAO = daoFactory.getDAO(ShopDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for shop storage system", ex);
         }
@@ -79,34 +86,32 @@ public class ShopCommentReply extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
-        Shop shop = (Shop)session.getAttribute("shop");
+        int shopid = Integer.parseInt(request.getParameter("shopid"));
         int reviewid = Integer.parseInt(request.getParameter("reviewid"));
         try {
-            ShopReview review = shopReview.getByPrimaryKey(reviewid);
+            Shop shop = shopDAO.getByPrimaryKey(shopid);
+            ShopReview review = shopReviewDAO.getByPrimaryKey(reviewid);
             String reply = StringUtils.checkInputString(request.getParameter("replycomment"));
             review.setReply(reply);
-            shopReview.update(review);
+            shopReviewDAO.update(review);
             Notification notification = new Notification();
             notification.setAuthor(shop.getUserId());
             notification.setRecipient(review.getUserId());
             notification.setType(Notification.REPLYCOMMENTSHOP);
             notification.setNotificationTime(new Timestamp(new Date().getTime()).toString());
             notification.setNotificationText("");
-            notification.setLink("./item.jsp?itemid= " + shop.getShopId() + "#commenti");
+            notification.setLink("./shop.jsp?shopid=" + shop.getShopId() + "#" + review.getShopReviewId());
             notification.setSeen(false);
             notificationDAO.add(notification);
+            String HTMLreturn = "<li class=\"list-group-item\"><b>" + review.getAuthorName() + " " + review.getAuthorSurname() + "</b>: "+ review.getReviewText() + "</li>" +
+                    "<li class=\"list-group-item\"><b>Venditore</b>: " + review.getReply() +  "</li>";
+            out.println(HTMLreturn);
         } catch (DAOException ex) {
             throw new ServerException("Impossible to reply the review", ex);
         }
-        Cookie c = new Cookie("shop_message","replied");
-        c.setMaxAge(1);
-        response.addCookie(c);
-        String contextPath = getServletContext().getContextPath();
-        if(!contextPath.endsWith("/"))
-            contextPath += "/";
-        contextPath += "shop.jsp?shopid=" + shop.getShopId();
-        response.sendRedirect(response.encodeRedirectURL(contextPath));
     }
 
     /**

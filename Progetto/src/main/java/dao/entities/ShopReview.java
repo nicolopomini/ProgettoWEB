@@ -94,6 +94,6 @@ public class ShopReview {
 
     @Override
     public String toString() {
-        return "ShopReview{" + "shopReviewId=" + shopReviewId + ", reviewText=" + reviewText + ", reply=" + reply + ", userId=" + userId + ", shopId=" + shopId + ", reviewTime=" + reviewTime + ", score=" + score + ", authorName=" + authorName + ", authorSurname=" + authorSurname + '}';
+        return "\"ShopReview\": {" + "\"shopReviewId\": \"" + shopReviewId + "\", \"reviewText\": \"" + reviewText + "\", \"reply\": \"" + reply + "\", \"userId\": \"" + userId + "\", \"shopId\": \"" + shopId + "\", \"reviewTime\": \"" + reviewTime + "\", \"score\": \"" + score + "\", \"authorName\": \"" + authorName + "\", \"authorSurname\": \"" + authorSurname + "\"}";
     }
 }

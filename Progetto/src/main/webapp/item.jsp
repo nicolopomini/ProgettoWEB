@@ -172,7 +172,8 @@
                         <div id="map" class="embed-responsive embed-responsive-16by9"></div>
                         <div id="venditori"></div>
                     </div>
-                    <div id="comments-wrapper">
+                    <
+                    div id="comments-wrapper">
                     <center>
                         <br/>
                         <% if(commenti.isEmpty()) { %>

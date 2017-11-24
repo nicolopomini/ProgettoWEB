@@ -64,14 +64,15 @@
     user = (User)session.getAttribute("user");
     session.setAttribute("shop", shop);
     if(user == null) {  //non è loggato
-        logged = false;
-        venditore = false;
-        cancomment = false;
+        logged = true;
+        venditore = true;
+        cancomment = true;
     }
     else {
         logged = true;
         venditore = user.getUserId() == shop.getUserId();
-        cancomment = shopDAO.canComment(shop.getShopId(), user.getUserId());
+        //cancomment = shopDAO.canComment(shop.getShopId(), user.getUserId());
+        cancomment = true;
     }
     Cookie[] cookies = request.getCookies();
     Cookie c = null;
@@ -89,6 +90,7 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
         <script src="js/bootstrap.min.js"></script>
+        <script src="js/shopJS.js"></script>
         <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
         <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
@@ -152,7 +154,7 @@
                     </center>
                     <br/>
                 </div>
-                <div class="col-12 col-xl-6" id="comments">
+                <div class="col-12 col-xl-6">
                     <div id="map">
                         <center>
                             <h3>Dove trovarci</h3>
@@ -161,6 +163,7 @@
                             </div>
                         </center>
                     </div>
+                    <div id="comments-wrapper">
                     <center>
                         <br/>
                         <% if(reviews.isEmpty()) { %>
@@ -169,51 +172,53 @@
                     </center>
                     <% if(!reviews.isEmpty()) { %>
                     <div class=" col col-xs-12" >
-                        <h5>Valutazione media degli utenti: <%=valutation%>/5</h5>
-                        <div class="progress">
-                            <div id="progress" class="progress-bar" role="progressbar" style="width: <%=progress%>%" aria-valuenow="<%=progress%>" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <div class="commenti">
-                            <!--Per ogni commento:-->
-                            <% for(ShopReview s : reviews) { 
-                            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
-                            Date date = dt.parse(s.getReviewTime());
-                            %>
-                            <ul class="list-group">
-                                <fmt:formatDate value = "<%=date%>" /> : <%for(int i = 0; i < s.getScore(); i++) {%><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <%}%>
-                                <li class="list-group-item"><b><%= s.getAuthorName() + " " + s.getAuthorSurname() %></b>: <%=s.getReviewText()%></li>
-                                <% if(s.getReply() != null) { %>
-                                <li class="list-group-item"><b>Venditore</b>: <%=s.getReply()%></li>
-                                <% } else if(venditore) { %>
-                                <form class="form-inline" method="POST" action="ShopCommentReply">
-                                    <input type="hidden" name="reviewid" value="<%=s.getShopReviewId()%>">
-                                    <div class="form-group">
-                                      <input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-default">Invia</button>
-                                  </form>
-                                <% } %>
-                            </ul>
-                            <% } %>
+                        <div id="comments">
+                            <h5 id="avg-title">Valutazione media degli utenti: <%=valutation%>/5</h5>
+                            <div class="progress">
+                                <div id="progress" class="progress-bar" role="progressbar" style="width: <%=progress%>%" aria-valuenow="<%=progress%>" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="commenti" id="commenti">
+                                <!--Per ogni commento:-->
+                                <% for(ShopReview s : reviews) { 
+                                SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
+                                Date date = dt.parse(s.getReviewTime());
+                                %>
+                                <fmt:formatDate value = "<%=date%>" /> : <%= s.getScore() + "/5" %>
+                                <ul class="list-group" id="<%= s.getShopReviewId() %>">
+                                    <li class="list-group-item"><b><%= s.getAuthorName() + " " + s.getAuthorSurname() %></b>: <%=s.getReviewText()%></li>
+                                    <%if(s.getReply() != null) {%>
+                                    <li class="list-group-item"><b>Venditore</b>: <%=s.getReply()%></li>
+                                    <%} else if(venditore) {%>
+                                    <form id="form-reply" class="form-inline" method="POST">
+                                        <div class="form-group">
+                                          <input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" id="replycomment-<%=s.getShopReviewId()%>" required>
+                                        </div>
+                                        <span class="btn btn-sm btn-success" style="cursor:pointer;" onclick="addReply('<%=s.getShopReviewId()%>','<%=shop.getShopId()%>')">Invia</span>
+                                    </form>
+                                    <%}%>
+                                </ul>
+                                <%}%>
+                            </div>
                         </div>
                     </div>
                     <% if(cancomment) { %>
-                    <form class="form-inline" method="POST" action="ShopComment">
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Inserisci un commento" name="newcomment" required>
-                          Voto:
-                            <select class="form-control" name="score">
-                              <% for(int i = 1; i <= 5; i++) { %>
-                              <option value="<%=i%>"><%=i%></option>
-                              <%}%>
-                          </select>
-                        </div>
-                        <button type="submit" class="btn btn-default">Invia</button>
-                    </form>
+                    <form class="form-inline" method="POST" id="addcomment">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Inserisci un commento" name="newcomment" id="comment-text" required>
+                                  Voto:
+                                    <select class="form-control" name="score" id="shop-score">
+                                      <% for(int i = 1; i <= 5; i++) { %>
+                                      <option value="<%=i%>"><%=i%></option>
+                                      <%}%>
+                                  </select>
+                                </div>
+                                  <span class="btn btn-sm btn-success" style="cursor:pointer;" onclick="addComment('<%=shop.getShopId()%>','<%=shop.getName()%>', '<%= venditore %>')">Invia</span>
+                              </form>
                     <% } else { %>
                     <p>Per lasciare un commento devi aver aquistato in questo negozio.</p>
                     <% } %>
                     <% } %>
+                </div>
                 </div>
             </div>
             <!--Fine contenuto-->
@@ -316,7 +321,6 @@
             }
         </script>
             <% } %>
-        <script src="js/shopJS.js"></script>
         </div>
         <jsp:include page="Footer.jsp"/>
     </body>
