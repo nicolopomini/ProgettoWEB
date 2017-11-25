@@ -73,11 +73,6 @@
         venditore = user.getUserId() == shop.getUserId();
         cancomment = shopDAO.canComment(shop.getShopId(), user.getUserId());
     }
-    Cookie[] cookies = request.getCookies();
-    Cookie c = null;
-    for(Cookie cookie : cookies)
-        if(cookie.getName().equals("shop_message"))
-            c = cookie;
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -97,21 +92,6 @@
     <body>
         <jsp:include page="Header.jsp"/>
         <div class="container-fluid containerFix">
-            <% if(c != null) { %>
-            <div class="alert alert-info alert-dismissable fade in" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="close">
-                    <span aria-hidden="true">x</span>
-                </button>
-                <%if(c.getValue().equals("updated")) {%>
-                Negozio aggiornato.
-                <%} else if(c.getValue().equals("insered")) {%>
-                Commento inserito.
-                <%} else if(c.getValue().equals("replied")) {%>
-                Risposto al commento.
-                <%}%>
-            </div>
-            <% } %>
-            
             <!-- Contenuto pagina -->
             <div class="modal show in" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true" style="">
                 <div class="modal-dialog" role="document">
