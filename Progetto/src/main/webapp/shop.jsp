@@ -64,16 +64,14 @@
     user = (User)session.getAttribute("user");
     session.setAttribute("shop", shop);
     if(user == null) {  //non è loggato
-        logged = true;
-        venditore = true;
-        cancomment = true;
+        logged = false;
+        venditore = false;
+        cancomment = false;
     }
     else {
         logged = true;
-        //venditore = user.getUserId() == shop.getUserId();
-        //cancomment = shopDAO.canComment(shop.getShopId(), user.getUserId());
-        cancomment = true;
-        venditore = true;
+        venditore = user.getUserId() == shop.getUserId();
+        cancomment = shopDAO.canComment(shop.getShopId(), user.getUserId());
     }
     Cookie[] cookies = request.getCookies();
     Cookie c = null;

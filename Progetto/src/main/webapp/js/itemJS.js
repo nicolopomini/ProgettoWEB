@@ -130,7 +130,7 @@ function addReply(commentID, itemID) {
                 $('#modal-title').text("Commento risposto");
                 $('#modal-cart-btn').hide();
                 $('#confirm-modal').modal({show: true});
-                document.getElementById("form-reply").reset();
+                //document.getElementById("form-reply").reset();
                 document.getElementById(commentID).innerHTML = this.responseText;
             }
         }
