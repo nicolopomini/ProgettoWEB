@@ -21,7 +21,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.exceptions.DAOFactoryException;
 import persistence.utils.dao.factories.DAOFactory;
@@ -88,7 +87,6 @@ public class ShopCommentReply extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        HttpSession session = request.getSession();
         int shopid = Integer.parseInt(request.getParameter("shopid"));
         int reviewid = Integer.parseInt(request.getParameter("reviewid"));
         try {

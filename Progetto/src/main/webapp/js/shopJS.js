@@ -62,9 +62,8 @@ function addComment(id,name, canReply)
         {
             if(this.responseText != null)
             {
-                console.log(this.responseText);
                 var risposta = JSON.parse(this.responseText);
-                $('#modal-text').text("Il tuo commento per l'item '"+name+"' è stato aggiunto con successo");
+                $('#modal-text').text("Il tuo commento per il negozio '"+name+"' è stato aggiunto con successo");
                 $('#modal-title').text("Commento aggiunto");
                 $('#confirm-modal').modal({show: true});
                 var avg = risposta.avg;
@@ -136,4 +135,21 @@ function addComment(id,name, canReply)
     xhttp.open("POST", "ShopComment", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("shopid="+id+"&score="+shopScore.options[shopScore.selectedIndex].value+"&newcomment="+commentText.value);
+}
+function addReply(commentID, itemID) {
+    var replycomment = document.getElementById("replycomment-" + commentID).value;
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            if(this.responseText.startsWith("<li")) {
+                $('#modal-text').text("La risposta al commento è stata inserita con successo");
+                $('#modal-title').text("Commento risposto");
+                $('#confirm-modal').modal({show: true});
+                document.getElementById(commentID).innerHTML = this.responseText;
+            }
+        }
+    };
+    xhttp.open("POST","ShopCommentReply", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("shopid="+itemID+"&reviewid="+commentID+"&replycomment="+replycomment);
 }

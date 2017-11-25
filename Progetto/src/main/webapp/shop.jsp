@@ -70,9 +70,10 @@
     }
     else {
         logged = true;
-        venditore = user.getUserId() == shop.getUserId();
+        //venditore = user.getUserId() == shop.getUserId();
         //cancomment = shopDAO.canComment(shop.getShopId(), user.getUserId());
         cancomment = true;
+        venditore = true;
     }
     Cookie[] cookies = request.getCookies();
     Cookie c = null;
@@ -189,7 +190,7 @@
                                     <%if(s.getReply() != null) {%>
                                     <li class="list-group-item"><b>Venditore</b>: <%=s.getReply()%></li>
                                     <%} else if(venditore) {%>
-                                    <form id="form-reply" class="form-inline" method="POST">
+                                    <form id="form-reply-<%=s.getShopReviewId()%>" class="form-inline" method="POST">
                                         <div class="form-group">
                                           <input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" id="replycomment-<%=s.getShopReviewId()%>" required>
                                         </div>
@@ -217,7 +218,21 @@
                     <% } else { %>
                     <p>Per lasciare un commento devi aver aquistato in questo negozio.</p>
                     <% } %>
-                    <% } %>
+                <% }else if(cancomment) {%>
+                    <h4>Inserisci un commento</h4>
+                    <form method="POST" id="addcomment">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Inserisci un commento" name="newcomment" id="comment-text" required>
+                            Voto:
+                            <select class="form-control" name="score" id="shop-score">
+                            <% for(int i = 1; i <= 5; i++) { %>
+                            <option value="<%=i%>"><%=i%></option>
+                            <%}%>
+                            </select>
+                        </div>
+                            <span class="btn btn-sm btn-success" style="cursor:pointer;" onclick="addComment('<%=shop.getShopId()%>','<%=shop.getName()%>', '<%= venditore %>')">Invia</span>
+                    </form>
+                <%}%>
                 </div>
                 </div>
             </div>
