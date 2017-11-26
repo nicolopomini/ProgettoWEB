@@ -58,7 +58,7 @@
             <% } else { %>
             <li class="nav-item"><a class="nav-link" href="notifications.jsp">Notifiche<% if(unread > 0) { %> <span class="badge"><%=unread%></span> <% } %></a></li>
             <% } %>
-            <li class="nav-item"><a class="nav-link" href="userpage.jsp"><%=sessionUser.getName() + " " + sessionUser.getSurname()%></a></li>
+            <li class="nav-item"><a class="nav-link" href="UserPage.jsp"><%=sessionUser.getName() + " " + sessionUser.getSurname()%></a></li>
             <li class="nav-item"><a class="nav-link" href="Logout">Esci</a></li>
         <% }else {%>
             <li class="nav-item"><a class="nav-link" href="login.jsp">Login</a></li>

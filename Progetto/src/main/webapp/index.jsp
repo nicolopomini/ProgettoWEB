@@ -54,7 +54,6 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-       <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
        
         <!-- Jquery library -->
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -70,6 +69,7 @@
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/dark-hive/jquery-ui.css"/>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+        <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
         
         <title>Home</title>
         <script type="text/javascript">
@@ -101,7 +101,7 @@
     </head>
     <body>
         <jsp:include page="Header.jsp"/>
-        <div class="container-fluid">
+        <div class="container-fluid containerFix">
             <div class="row">
                 <div class="col">
                     <form id="form" class="form" action="resultpage.jsp" method="GET">

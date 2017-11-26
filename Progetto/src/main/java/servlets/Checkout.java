@@ -107,7 +107,7 @@ public class Checkout extends HttpServlet {
         String contextPath = getServletContext().getContextPath();
         if(!contextPath.endsWith("/"))
             contextPath += "/";
-        contextPath += "cart.jsp";
+        contextPath += "index.jsp";
         response.sendRedirect(response.encodeRedirectURL(contextPath));
 
 

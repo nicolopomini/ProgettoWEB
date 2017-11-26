@@ -91,7 +91,7 @@
                         </c:forEach>
                         </tbody>
                     </table>
-                    <form action="/Progetto/Payment.jsp" method="POST" class="form-inline">
+                    <form action="/Payment.jsp" method="POST" class="form-inline">
                         <input class="btn btn-default btn-success" type="submit" value="Procedi al pagamento">
                     </form>
                     <% } %>

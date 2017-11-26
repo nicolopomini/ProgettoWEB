@@ -73,6 +73,7 @@
 
         <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.js"></script>
+        <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
         
         <title>Home</title>
         <script type="text/javascript">
