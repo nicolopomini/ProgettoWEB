@@ -97,7 +97,13 @@
             function checkAndSend(){
                 card = document.getElementById('cardno').value.replace(/\s+/g, '');
                 document.getElementById('error').setAttribute("class","alert alert-danger collapse");
-                if(checkCC(card)){
+                if(document.getElementById("owner").value==""){
+                    document.getElementById('error').setAttribute("class","alert alert-danger");
+                    document.getElementById('error').innerHTML = "Owner cannot be empty";
+                }else if(document.getElementById("CVV").value==""){
+                    document.getElementById('error').setAttribute("class","alert alert-danger");
+                    document.getElementById('error').innerHTML = "CVV cannot be empty";
+                }else if(checkCC(card)){
                     document.getElementById("form-payment").submit();
                 } else{
                     document.getElementById('error').setAttribute("class","alert alert-danger");
@@ -166,7 +172,7 @@
                                         <option value="29">2029</option>
                                         <option value="30">2030</option>
                                     </select></br>
-                                    <label>Security Code:</label> <input type="text" maxlength="4"  name="CVV">
+                                    <label>Security Code:</label> <input type="text" maxlength="4" id="CVV"  name="CVV">
                                 </div>
 
                             </div>
