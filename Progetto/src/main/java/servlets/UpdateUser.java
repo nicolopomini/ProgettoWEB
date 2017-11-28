@@ -39,7 +39,7 @@ public class UpdateUser extends HttpServlet {
         try {
         userDAO = daoFactory.getDAO(UserDAO.class);
         } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+            throw new ServletException("Impossible to get dao factory for user storage system", ex);
         }
     }
     

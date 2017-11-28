@@ -26,7 +26,7 @@
     try {
         itemDAO = daoFactory.getDAO(ItemDAO.class);
     } catch (DAOFactoryException ex) {
-        throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        throw new ServletException("Impossible to get dao factory for item storage system", ex);
     }
 
     HashMap<Integer,Integer> cart = (HashMap<Integer,Integer>) session.getAttribute("cart");

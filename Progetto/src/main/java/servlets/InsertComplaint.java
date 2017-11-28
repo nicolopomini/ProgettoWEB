@@ -6,22 +6,15 @@
 package servlets;
 
 import dao.ComplaintDAO;
-import dao.PurchaseDAO;
-import dao.UserDAO;
 import dao.entities.Complaint;
-import dao.entities.User;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import persistence.utils.dao.exceptions.DAOException;
 import persistence.utils.dao.exceptions.DAOFactoryException;
 import persistence.utils.dao.factories.DAOFactory;

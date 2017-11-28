@@ -6,9 +6,7 @@
 package servlets;
 
 import dao.ItemDAO;
-import dao.UserDAO;
 import dao.entities.Item;
-import dao.entities.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -93,7 +91,7 @@ public class CartManager extends HttpServlet {
         } 
         catch (DAOFactoryException ex) 
         {
-            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+            throw new ServletException("Impossible to get dao factory for item storage system", ex);
         }
         if(!StringUtils.isEmpty(action) && !StringUtils.isEmpty(itemId))
         {

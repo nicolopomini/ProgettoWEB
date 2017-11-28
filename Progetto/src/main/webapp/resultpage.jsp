@@ -37,7 +37,7 @@
         try {
             reviewDatabase = daoFactory.getDAO(ItemReviewDAO.class);
         } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get dao factory for itemReview storage system", ex);
+            throw new ServletException("Impossible to get dao factory for review storage system", ex);
         }
     }else{
         throw new ServletException("Impossible to get dao factory for storage system");

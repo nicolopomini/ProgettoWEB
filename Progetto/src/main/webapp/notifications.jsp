@@ -32,17 +32,17 @@
     try {
         notificationDAO = daoFactory.getDAO(NotificationDAO.class);
     } catch (DAOFactoryException ex) {
-        throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        throw new ServletException("Impossible to get dao factory for notification storage system", ex);
     }
     try {
         complaintDAO = daoFactory.getDAO(ComplaintDAO.class);
     } catch (DAOFactoryException ex) {
-        throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        throw new ServletException("Impossible to get dao factory for complaint storage system", ex);
     }
     try {
         purchaseDAO = daoFactory.getDAO(PurchaseDAO.class);
     } catch (DAOFactoryException ex) {
-        throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        throw new ServletException("Impossible to get dao factory for purchase storage system", ex);
     }
     ArrayList<Notification> notifiche = new ArrayList<>();
     ArrayList<Complaint> complaints = new ArrayList<>();

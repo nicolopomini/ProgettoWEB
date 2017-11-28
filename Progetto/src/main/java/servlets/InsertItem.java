@@ -44,12 +44,12 @@ public class InsertItem extends HttpServlet {
         try {
             itemDAO = daoFactory.getDAO(ItemDAO.class);
         } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+            throw new ServletException("Impossible to get dao factory for item storage system", ex);
         }
         try {
             pictureDAO = daoFactory.getDAO(PictureDAO.class);
         } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+            throw new ServletException("Impossible to get dao factory for picture storage system", ex);
         }
     }
 

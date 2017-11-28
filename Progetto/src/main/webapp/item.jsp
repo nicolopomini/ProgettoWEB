@@ -45,7 +45,7 @@
     try {
         itemDAO = daoFactory.getDAO(ItemDAO.class);
     } catch (DAOFactoryException ex) {
-        throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        throw new ServletException("Impossible to get dao factory for item storage system", ex);
     }
     try {
             shopDAO = daoFactory.getDAO(ShopDAO.class);
@@ -55,12 +55,12 @@
     try {
             pictureDAO = daoFactory.getDAO(PictureDAO.class);
         } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+            throw new ServletException("Impossible to get dao factory for picture storage system", ex);
         }
     try {
             itemReviewDAO = daoFactory.getDAO(ItemReviewDAO.class);
         } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+            throw new ServletException("Impossible to get dao factory for review storage system", ex);
         }
     item = itemDAO.getByPrimaryKey(itemid);
     shop = shopDAO.getByPrimaryKey(item.getShopId());

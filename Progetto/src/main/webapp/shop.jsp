@@ -47,12 +47,12 @@
     try {
             shopReviewDAO = daoFactory.getDAO(ShopReviewDAO.class);
         } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+            throw new ServletException("Impossible to get dao factory for review storage system", ex);
         }
     try {
         itemDAO = daoFactory.getDAO(ItemDAO.class);
     } catch (DAOFactoryException ex) {
-        throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+        throw new ServletException("Impossible to get dao factory for item storage system", ex);
     }
     shop = shopDAO.getByPrimaryKey(shopid);
     if(shop == null)

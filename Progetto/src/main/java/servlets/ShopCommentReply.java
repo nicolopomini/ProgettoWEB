@@ -46,7 +46,7 @@ public class ShopCommentReply extends HttpServlet {
         try {
             shopReviewDAO = daoFactory.getDAO(ShopReviewDAO.class);
         } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+            throw new ServletException("Impossible to get dao factory for review storage system", ex);
         }
         try {
             shopDAO = daoFactory.getDAO(ShopDAO.class);
@@ -56,7 +56,7 @@ public class ShopCommentReply extends HttpServlet {
         try {
             notificationDAO = daoFactory.getDAO(NotificationDAO.class);
         } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+            throw new ServletException("Impossible to get dao factory for notification storage system", ex);
         }
     }
 

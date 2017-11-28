@@ -7,10 +7,7 @@ package servlets;
 
 import dao.ComplaintDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.rmi.ServerException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -38,7 +35,7 @@ public class ReadComplaint extends HttpServlet {
         try {
         complaintDAO = daoFactory.getDAO(ComplaintDAO.class);
         } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get dao factory for shop storage system", ex);
+            throw new ServletException("Impossible to get dao factory for complaint storage system", ex);
         }
     }
 

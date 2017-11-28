@@ -199,10 +199,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
             else 
                 return 0;
         } catch (SQLException ex) {
-            throw new DAOException("Impossible to read notifications", ex);
+            throw new DAOException("Impossible to get unread notifications counter", ex);
         }
-    }
-    
-    
-    
+    } 
 }

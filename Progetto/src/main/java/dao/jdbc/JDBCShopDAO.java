@@ -171,7 +171,7 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO{
                 return rs.getLong(1) > 0;
             }
         } catch (SQLException ex) {
-            throw new DAOException("Impossible to count purchases", ex);
+            throw new DAOException("Impossible to check whether the user can comment", ex);
         }
         return false;
     }

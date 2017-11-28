@@ -170,7 +170,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
                 return rs.getLong(1) > 0;
             }
         } catch (SQLException ex) {
-            throw new DAOException("Impossible to count purchases", ex);
+            throw new DAOException("Impossible to check whether the passed user can comment", ex);
         }
         return false;
     }
@@ -184,7 +184,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
             ResultSet rs = stm.executeQuery();
             return rs.next();
         } catch (SQLException ex) {
-            throw new DAOException("Impossible to count purchases", ex);
+            throw new DAOException("Impossible to check whether the passed user is owner", ex);
         }
     }
     
@@ -235,7 +235,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
                 return shops;
             }
         } catch (SQLException ex) {
-            throw new DAOException("Impossible to get shops", ex);
+            throw new DAOException("Impossible to get items nearby", ex);
         }
     }
 
