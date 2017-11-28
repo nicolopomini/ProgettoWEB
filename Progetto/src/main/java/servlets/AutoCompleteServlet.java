@@ -90,6 +90,17 @@ public class AutoCompleteServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
+        super.doPost(req, response); //To change body of generated methods, choose Tools | Templates.
+        String contextPath = getServletContext().getContextPath();
+        if(!contextPath.endsWith("/"))
+            contextPath += "/";
+        contextPath += "index.jsp";
+        response.sendRedirect(response.encodeRedirectURL(contextPath));
+    }
+    
     /**
      * Returns a short description of the servlet.
      *

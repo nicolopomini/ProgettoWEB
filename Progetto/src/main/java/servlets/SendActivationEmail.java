@@ -52,6 +52,11 @@ public class SendActivationEmail extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException 
     {
+        String contextPath = getServletContext().getContextPath();
+        if(!contextPath.endsWith("/"))
+            contextPath += "/";
+        contextPath += "index.jsp";
+        response.sendRedirect(response.encodeRedirectURL(contextPath));
     }
 
     /**

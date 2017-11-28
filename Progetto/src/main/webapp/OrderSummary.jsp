@@ -19,6 +19,7 @@
     User sessionUser = (User)session.getAttribute("user");
     boolean logged = (sessionUser != null);
     HashMap<Integer,Integer> cart = (HashMap<Integer,Integer>) session.getAttribute("cart");
+    session.setAttribute("checkout", cart);
     ItemDAO itemDAO;
 
     DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");

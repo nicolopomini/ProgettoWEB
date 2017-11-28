@@ -97,17 +97,24 @@
             function checkAndSend(){
                 card = document.getElementById('cardno').value.replace(/\s+/g, '');
                 toggleVisibility("error",false);
-                if(document.getElementById("owner").value==""){
-                    toggleVisibility("error",true);
-                    document.getElementById('error').innerHTML = "Owner cannot be empty";
-                }else if(document.getElementById("CVV").value==""){
-                    toggleVisibility("error",true);
-                    document.getElementById('error').innerHTML = "CVV cannot be empty";
-                }else if(checkCC(card)){
+                if(!document.getElementById("typeCOD").checked)
+                {
+                    if(document.getElementById("owner").value==""){
+                        toggleVisibility("error",true);
+                        document.getElementById('error').innerHTML = "Owner cannot be empty";
+                    }else if(document.getElementById("CVV").value==""){
+                        toggleVisibility("error",true);
+                        document.getElementById('error').innerHTML = "CVV cannot be empty";
+                    }else if(checkCC(card)){
+                        document.getElementById("form-payment").submit();
+                    } else{
+                        toggleVisibility("error",true);
+                        document.getElementById('error').innerHTML = "Invalid Credit Card Number";
+                    }
+                }
+                else
+                {
                     document.getElementById("form-payment").submit();
-                } else{
-                    toggleVisibility("error",true);
-                    document.getElementById('error').innerHTML = "Invalid Credit Card Number";
                 }
                 //document.write(detectCardType(card));
             }

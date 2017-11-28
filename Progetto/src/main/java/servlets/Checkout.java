@@ -60,7 +60,13 @@ public class Checkout extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException 
+    {
+        String contextPath = getServletContext().getContextPath();
+        if(!contextPath.endsWith("/"))
+            contextPath += "/";
+        contextPath += "index.jsp";
+        response.sendRedirect(response.encodeRedirectURL(contextPath));
     }
 
     /**
@@ -89,7 +95,7 @@ public class Checkout extends HttpServlet {
         HashMap<Item, Integer> items = new HashMap<>();
         ArrayList<Item> items_array = new ArrayList<>();
         try {
-            cart = (HashMap<Integer, Integer>) request.getSession().getAttribute("cart");
+            cart = (HashMap<Integer, Integer>) request.getSession().getAttribute("checkout");
             if (cart != null && !cart.isEmpty()) {
                 for (Integer i : cart.keySet()) {
                     Purchase p = new Purchase();
@@ -104,57 +110,12 @@ public class Checkout extends HttpServlet {
         } catch (DAOException e){
             throw new ServletException("An unexpected error occured");
         }
+        session.setAttribute("cart", new HashMap<Integer,Integer>());
         String contextPath = getServletContext().getContextPath();
         if(!contextPath.endsWith("/"))
             contextPath += "/";
         contextPath += "index.jsp";
         response.sendRedirect(response.encodeRedirectURL(contextPath));
-
-
-        /*Shop shop = (Shop)session.getAttribute("shop");
-        double prezzo = -1.0;
-        ArrayList<String> images = new ArrayList<>();
-        String encoding = request.getCharacterEncoding();
-        if(encoding == null)
-            encoding = "UTF-8";
-        Collection<Part> requestObjects = request.getParts();
-        for(Part p : requestObjects) {
-            if(p.getSize() > 0) {
-                if(p.getName().startsWith("image"))
-                    images.add(MultipartHandler.processImage(p,getServletContext().getRealPath("/")));
-                else if(p.getName().equals("name"))
-                    name = StringUtils.checkInputString(MultipartHandler.getStringValue(p, encoding));
-                else if(p.getName().equals("descrizione"))
-                    descrizione = StringUtils.checkInputString(MultipartHandler.getStringValue(p, encoding));
-                else if(p.getName().equals("prezzo"))
-                    prezzo = Double.parseDouble(MultipartHandler.getStringValue(p, encoding));
-                else if(p.getName().equals("categoria"));
-
-            }
-        }
-        Item item = new Item();
-        item.setCategory(categoria);
-        item.setDescription(descrizione);
-        item.setItemId(null);
-        item.setName(name);
-        item.setPrice(prezzo);
-        item.setShopId(shop.getShopId());
-        try {
-            item = itemDAO.add(item);
-        } catch (DAOException ex) {
-            throw new ServletException("Impossible to add the item");
-        }
-        for(String s : images) {
-            Picture p = new Picture();
-            p.setItemId(item.getItemId());
-            p.setPath(s);
-            p.setPictureId(null);
-            try {
-                pictureDAO.add(p);
-            } catch (DAOException ex) {
-                throw new ServletException("Impossible to add the picture");
-            }
-        }*/
     }
 
     /**

@@ -197,7 +197,7 @@
                                         <li class="list-group-item"><b><%= r.getAuthorName() + " " + r.getAuthorSurname() %></b>: <%=r.getReviewText()%></li>
                                         <%if(r.getReply() != null) {%>
                                         <li class="list-group-item"><b>Venditore</b>: <%=r.getReply()%></li>
-                                        <%} else if(venditore) {%>
+                                        <%} else if(!venditore) {%>
                                         <form id="form-reply" class="form-inline" method="POST">
                                             <div class="form-group">
                                               <input type="text" class="form-control" placeholder="Rispondi al commento" name="replycomment" id="replycomment-<%=r.getItemReviewId()%>" required>

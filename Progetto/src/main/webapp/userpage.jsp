@@ -142,10 +142,11 @@
             <h1 style="text-align: center">Accesso negato</h1>
             <p class="text-center">Per visualizzare il tuo profilo <a href="login.jsp">accedi</a>.</p>
             <% }else { %>
-                <div id="profilo">
+            <div class="row">
+                <div class="col-12 col-lg-6" id="profilo" style="margin-bottom: 16px">
                     <h2><%= sessionUser.getName() + " " + sessionUser.getSurname() %></h2>
                     <form name="update-profile" method="post" action="UpdateUser" onsubmit="return validate()">
-                        <div class="col-12 col-sm-7 col-lg-4 leftPaddingZero">
+                        <div class="col-12 col-sm-8 col-lg-12 leftPaddingZero">
                             <div class="form-group">
                                 <label for="inidirizzo">Modifica indirizzo</label>
                                 <input type="text" class="form-control" id="indirizzo" placeholder="<%= sessionUser.getAddress() %>" name="indirizzo">
@@ -172,26 +173,26 @@
                         </div>
                     </form>
                 </div>
-                <div id="anomalie">
+                <div class="col-12 col-lg-6" id="anomalie">
                     <% if(!purchases.isEmpty()) { %>
                     <h2>Segnalazione anomalie</h2>
-                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#anomalia">
+                    <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#anomalia" style="margin-top:8px;margin-bottom:8px">
                         Segnala anomalia
                     </button>
                     <% } %>
                     <% if(!complaints.isEmpty()) { %>
                         <p>Le tue anomalie:</p>
-                        <ul>
+                        <ul class="list-group">
                         <% for(Complaint c : complaints) { 
                             SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
                             String date = StringUtils.printDate(dt.parse(c.getComplaintTime()));
                         %>
-                        <li>
+                        <li class="list-group-item list-group-item-action" style="cursor: pointer">
                             <a role="button" data-toggle="modal" data-target="#<%= c.getComplaintId() %>">
                             <ul class="list-inline">
                                 <li><%= date %></li>
-                                <li><%= c.getPurchaseId() %></li>
-                                <li><%= c.getStatus() %></li>
+                                <li>Id acquisto: <%= c.getPurchaseId() %></li>
+                                <li>Stato anomalia: <%= c.getStatus() %></li>
                             </ul>
                             </a>
                         </li>
@@ -219,6 +220,7 @@
                     <% } %>
                 </div>
                 <% } %>
+            </div>
           <!--Modals-->
           <%for(Complaint c : complaints) {  
                     SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S"); 
