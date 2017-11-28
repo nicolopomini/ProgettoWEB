@@ -40,7 +40,7 @@ public class Logout extends HttpServlet {
         {
             request.getSession().setAttribute("user", null);
         }
-        response.sendRedirect("/Progetto/login.jsp");
+        response.sendRedirect("/login.jsp");
     }
 
     /**

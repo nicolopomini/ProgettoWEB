@@ -70,7 +70,7 @@ public class AutoCompleteServlet extends HttpServlet {
             //System.err.println(maxPrice);
             
             
-            out.write(new Gson().toJson(db.autocompletion(query, category, shop, minPrice, maxPrice, rating)));
+            out.write(new Gson().toJson(db.autoCompletion(query, category, shop, minPrice, maxPrice, rating)));
         } catch (DAOFactoryException | DAOException ex) {
             Logger.getLogger(AutoCompleteServlet.class.getName()).log(Level.SEVERE, null, ex);
         }

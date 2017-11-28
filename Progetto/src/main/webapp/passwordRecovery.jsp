@@ -99,11 +99,18 @@
                     String passwordRegex = "[^a-zA-Z0-9-_]";
                     if(StringUtils.isValidString(password,passwordRegex) && !StringUtils.isEmpty(password))
                     {
-                        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
-                        toUpdate.setPassword(hashedPassword);
-                        toUpdate.setToken("");
-                        user.update(toUpdate);
-                        hasPassword = 1;
+                        if(password.length() >= 8)
+                        {
+                            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
+                            toUpdate.setPassword(hashedPassword);
+                            toUpdate.setToken("");
+                            user.update(toUpdate);
+                            hasPassword = 1;
+                        }
+                        else
+                        {
+                            hasPassword = -2;
+                        }
                     }
                     else
                     {
@@ -151,7 +158,7 @@
                             if(hasToken == 0)
                             {
                                 %>
-                                    <p class="redText">The inserted token is not valid.</p>
+                                <div class="alert alert-danger">The inserted token is not valid.</div>
                                 <%
                             }
                             %>
@@ -163,7 +170,7 @@
                                             if(hasEmail == 0)
                                             {
                                                 %>
-                                                <label class="redText">La email inserita contiene caratteri invalidi</label>
+                                                <div class="alert alert-danger">La email inserita contiene caratteri invalidi</div>
                                                 <%
                                             }
                                         %>
@@ -187,7 +194,13 @@
                                             if(hasPassword == 0)
                                             {
                                                 %>
-                                                <label class="redText">La password inserita contiene caratteri invalidi</label>
+                                                <div class="alert alert-danger">La password inserita contiene caratteri invalidi</div>
+                                                <%
+                                            }
+                                            else if(hasPassword == -2)
+                                            {
+                                                %>
+                                                <div class="alert alert-danger">La password inserita deve essere più lunga di 8 caratteri</div>
                                                 <%
                                             }
                                         %>
@@ -204,7 +217,7 @@
                         else
                         {
                             %>
-                            <p class="greenText">La password è stata resettata con successo.</p>
+                            <div class="alert alert-success">La password è stata resettata con successo.</div>
                             <%
                         }
                     %>

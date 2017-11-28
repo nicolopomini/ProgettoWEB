@@ -88,6 +88,7 @@ public class InsertComplaint extends HttpServlet {
         } catch (DAOException ex) {
             throw new ServletException("Error during creating a new complaint",ex);
         }
+        response.sendRedirect("/userpage.jsp");
     }
 
     /**

@@ -35,7 +35,7 @@ public interface ItemDAO extends DAO<Item, Integer>{
     
     public ArrayList<Item> findItems(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore, String geo) throws DAOException;
     
-    public ArrayList<String> autocompletion(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore) throws DAOException;
+    public ArrayList<String> autoCompletion(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore) throws DAOException;
     
     public ArrayList<String> getAllCategories() throws DAOException;
     

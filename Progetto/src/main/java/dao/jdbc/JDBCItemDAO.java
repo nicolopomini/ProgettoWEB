@@ -334,6 +334,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
             statement += " GROUP BY " + columns + " HAVING AVG(ItemReview.Score) >= " + minAvgScore;
         }
         
+        System.out.println(statement);
         try (PreparedStatement stm = CON.prepareStatement(statement)) {
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<Item> items = new ArrayList<>();
@@ -358,10 +359,11 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
 
     
     @Override
-    public ArrayList<String> autocompletion(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore) throws DAOException {
+    public ArrayList<String> autoCompletion(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore) throws DAOException {
         String statement = "";
         
         String columns = "Item.itemId, Item.name, Item.description, Item.category, Item.price, Item.shopId, Shop.name AS shopName";
+        String shortColumns = "Item.itemId, Item.name, Item.description, Item.category, Item.price, Item.shopId";
         
         if(name == null)
         {
@@ -372,7 +374,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
             statement = "SELECT " + columns + " FROM ("
                     + "(SELECT * FROM Item WHERE name LIKE \"%" + name + "%\") UNION "
                     + "(SELECT * FROM Item WHERE description LIKE \"%" + name + "%\") UNION "
-                    + "(SELECT " + columns + " FROM Item, Shop WHERE Item.shopId = Shop.shopId AND Shop.name LIKE \"%" + name + "%\")) AS Item";
+                    + "(SELECT " + shortColumns + " FROM Item, Shop WHERE Item.shopId = Shop.shopId AND Shop.name LIKE \"%" + name + "%\")) AS Item";
         }
         
         if(minAvgScore != null)

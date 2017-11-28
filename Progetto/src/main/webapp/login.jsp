@@ -138,7 +138,7 @@
                                 if(!valid)
                                 {
                                     %>
-                                    <label class="redText">The email and password you typed do not match any user</label>
+                                    <div class="alert alert-danger">The email and password you typed do not match any user</div>
                                     <%
                                 }
                             %>

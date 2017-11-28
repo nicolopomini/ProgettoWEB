@@ -227,28 +227,28 @@
                         </div>
                         <div class="col-12 col-sm-7 col-lg-4 leftPaddingZero">
                             <div class="form-group">
+                                <div class="alert alert-danger collapse" id="EmailError"></div>
                                 <label for="Email">Email</label>
-                                <label class="redText" id="EmailError"></label>
                                 <input oninput="isUniqueEmail()" class="form-control" type="email" name="Email" id="Email">
                             </div>
                             <div class="form-group">
+                                <div class="alert alert-danger collapse" id="PasswordError"></div>
                                 <label for="Password">Password</label>
-                                <label class="redText" id="PasswordError"></label>
                                 <input class="form-control" type="password" name="Password" id="Password">
                             </div>
                             <div class="form-group">
+                                <div class="alert alert-danger collapse" id="NameError"></div>
                                 <label for="Name">Name</label>
-                                <label class="redText" id="NameError"></label>
                                 <input class="form-control" type="text" name="Name" id="Name">
                             </div>
                             <div class="form-group">
+                                <div class="alert alert-danger collapse" id="SurnameError"></div>
                                 <label for="Surname">Surname</label>
-                                <label class="redText" id="SurnameError"></label>
                                 <input class="form-control" type="text" name="Surname" id="Surname">
                             </div>
                             <div class="form-group">
+                                <div class="alert alert-danger collapse" id="AddressError"></div>
                                 <label for="Address">Address</label>
-                                <label class="redText" id="AddressError"></label>
                                 <input class="form-control" type="text" name="Address" id="Address">
                             </div>
                             <div class="form-group"> 

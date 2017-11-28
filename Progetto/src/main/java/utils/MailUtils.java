@@ -60,11 +60,11 @@ public class MailUtils
                    + "<p>Name: "+user.getName()+"</p>"
                    + "<p>Surname: "+user.getSurname()+"</p>"
                    + "<p>Address: "+user.getAddress()+"</p>"
-                   + "<form action='localhost/Progetto/activation.jsp' target='_blank' method='post'>"
+                   + "<form action='localhost/activation.jsp' target='_blank' method='post'>"
                    + "<input type='hidden' name='ActivationCode' value='"+user.getVerificationCode()+"'>"
                    + "<button type='submit'>Activate account</button>"
                    + "</form>"
-                   + "<p>Oppure http://localhost/Progetto/activation.jsp?ActivationCode="+user.getVerificationCode(),
+                   + "<p>Oppure http://localhost/activation.jsp?ActivationCode="+user.getVerificationCode(),
              "text/html; charset=utf-8");
 
 	   // Send message
@@ -115,7 +115,7 @@ public class MailUtils
                    + "<body>"
                    + "<h3>Password Reset</h3>"
                    + "<p>Clicca il seguente link per resettare la tua password.</p>"
-                   + "<p>http://localhost/Progetto/passwordRecovery.jsp?Token="+user.getToken()
+                   + "<p>http://localhost/passwordRecovery.jsp?Token="+user.getToken()
                    + "</body>"
                    + "</html>",
              "text/html");

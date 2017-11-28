@@ -18,12 +18,14 @@ function registerAttempt()
         {
             validForm = false;
             fieldError.innerHTML = "The Email field cannot contain invalid characters";
+            toggleVisibility("EmailError", true);
             field.setAttribute("style","border: 1px solid red");
         }
         else
         {
             if(document.getElementById("EmailError").innerHTML == "")
             {
+                toggleVisibility("EmailError", false);
                 fieldError.innerHTML = "";
                 field.setAttribute("style","border: 1px solid #ccc");
             }
@@ -31,6 +33,7 @@ function registerAttempt()
             {
                 validForm = false;
                 fieldError.innerHTML = "The typed email is already in use";
+                toggleVisibility("EmailError", true);
                 field.setAttribute("style","border: 1px solid red");
             }
         }
@@ -39,6 +42,7 @@ function registerAttempt()
     {
         validForm = false;
         fieldError.innerHTML = "The Email field cannot be empty";
+        toggleVisibility("EmailError", true);
         field.setAttribute("style","border: 1px solid red");
     }
     
@@ -53,12 +57,14 @@ function registerAttempt()
         {
             validForm = false;
             fieldError.innerHTML = "The Password field cannot contain invalid characters";
+            toggleVisibility("PasswordError", true);
             field.setAttribute("style","border: 1px solid red");
         }
         else 
         {
             if(field.value.length >= 8)
             {
+                toggleVisibility("PasswordError", false);
                 fieldError.innerHTML = "";
                 field.setAttribute("style","border: 1px solid #ccc");
             }
@@ -66,6 +72,7 @@ function registerAttempt()
             {
                 validForm = false;
                 fieldError.innerHTML = "The Password field has to be at least 8 characters long";
+                toggleVisibility("PasswordError", true);
                 field.setAttribute("style","border: 1px solid red");
             }
         }
@@ -74,6 +81,7 @@ function registerAttempt()
     {
         validForm = false;
         fieldError.innerHTML = "The Password field cannot be empty";
+        toggleVisibility("PasswordError", true);
         field.setAttribute("style","border: 1px solid red");
     }
     
@@ -88,10 +96,12 @@ function registerAttempt()
         {
             validForm = false;
             fieldError.innerHTML = "The Name field cannot contain invalid characters";
+            toggleVisibility("NameError", true);
             field.setAttribute("style","border: 1px solid red");
         }
         else
         {
+            toggleVisibility("NameError", false);
             fieldError.innerHTML = "";
             field.setAttribute("style","border: 1px solid #ccc");
         } 
@@ -100,6 +110,7 @@ function registerAttempt()
     {
         validForm = false;
         fieldError.innerHTML = "The Name field cannot be empty";
+        toggleVisibility("NameError", true);
         field.setAttribute("style","border: 1px solid red");
     }
     
@@ -114,10 +125,12 @@ function registerAttempt()
         {
             validForm = false;
             fieldError.innerHTML = "The Surname field cannot contain invalid characters";
+            toggleVisibility("SurnameError", true);
             field.setAttribute("style","border: 1px solid red");
         }
         else
         {
+            toggleVisibility("SurnameError", false);
             fieldError.innerHTML = "";
             field.setAttribute("style","border: 1px solid #ccc");
         } 
@@ -126,6 +139,7 @@ function registerAttempt()
     {
         validForm = false;
         fieldError.innerHTML = "The Surname field cannot be empty";
+        toggleVisibility("SurnameError", true);
         field.setAttribute("style","border: 1px solid red");
     }
     
@@ -139,10 +153,12 @@ function registerAttempt()
         {
             validForm = false;
             fieldError.innerHTML = "The Address field cannot contain invalid characters";
+            toggleVisibility("AddressError", true);
             field.setAttribute("style","border: 1px solid red");
         }
         else
         {
+            toggleVisibility("AddressError", false);
             fieldError.innerHTML = "";
             field.setAttribute("style","border: 1px solid #ccc");
         }
@@ -151,6 +167,7 @@ function registerAttempt()
     {
         validForm = false;
         fieldError.innerHTML = "The Address field cannot be empty";
+        toggleVisibility("AddressError", true);
         field.setAttribute("style","border: 1px solid red");
     }
     
@@ -187,10 +204,12 @@ function isUniqueEmail()
             label.innerHTML = this.responseText;
             if(label.innerHTML == "")
             {
+                toggleVisibility("EmailError", false);
                 input.setAttribute("style","border: 1px solid #ccc");
             }
             else
             {
+                toggleVisibility("EmailError", true);
                 input.setAttribute("style","border: 1px solid red");
             }
         }
@@ -204,4 +223,14 @@ function isUniqueEmail()
 function goBack()
 {
     window.history.back();
+}
+
+function toggleVisibility(id, visible)
+{
+    var elem = document.getElementById(id);
+    if(visible){
+        document.getElementById(id).setAttribute("class","alert alert-danger");
+    }else{
+       document.getElementById(id).setAttribute("class","alert alert-danger collapse");
+    }
 }
