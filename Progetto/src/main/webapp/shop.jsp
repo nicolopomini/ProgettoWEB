@@ -128,6 +128,7 @@
                         <% if(venditore) { %>
                             <br/>
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modificanegozio">Modifica Negozio</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inserisciitem">Visualizza Item</button>
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inserisciitem">Aggiungi Item</button>
                         <% } %>
                     </center>

@@ -362,7 +362,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
     public ArrayList<String> autoCompletion(String name, String category, String shop, Integer minPrice, Integer maxPrice, Integer minAvgScore) throws DAOException {
         String statement = "";
         
-        String columns = "Item.itemId, Item.name, Item.description, Item.category, Item.price, Item.shopId, Shop.name AS shopName";
+        String columns = "Item.itemId, Item.name, Item.description, Item.category, Item.price, Item.shopId";
         
         if(name == null)
         {
@@ -420,7 +420,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
         }
         
         statement += " LIMIT 10";
-        
+        System.out.println(statement);
         try (PreparedStatement stm = CON.prepareStatement(statement)) {
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<String> items = new ArrayList<>();

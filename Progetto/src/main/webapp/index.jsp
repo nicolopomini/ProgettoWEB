@@ -107,11 +107,7 @@
                     <form id="form" class="form" action="resultpage.jsp" method="GET">
                         <input type="submit" style="display: none" />
                         <div class="form-group">
-                            <br>
                             <input type="search" class="form-control" name="SearchQuery" id="SearchQuery" placeholder="Scrivi il nome di un prodotto...">
-                            <br>
-                            <button class="btn btn-dark btn-sm" type="submit" form="form" data-toggle="collapse" aria-expanded="false">Ricerca</button>
-                            <button class="btn btn-dark btn-sm" type="button" data-toggle="collapse" data-target="#AdvanceSearch" aria-expanded="false" aria-controls="AdvanceSearch">Ricerca Avanzata</button>
                         </div>
                         <div class="collapse" id="AdvanceSearch">
                             <div class="card card-body">
@@ -177,12 +173,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <input type="submit" value="Ricerca">
-                                        <input type="reset">
-                                    </div>
                                 </div>
                             </div>
+                            <br/>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-dark btn-sm" type="submit">Ricerca</button>
+                            <button class="btn btn-dark btn-sm" type="button" data-toggle="collapse" data-target="#AdvanceSearch" aria-expanded="false" aria-controls="AdvanceSearch">Ricerca Avanzata</button>
+                            <button class="btn btn-dark btn-sm" type="reset">Reset</button>
                         </div>
                     </form>
                 </div>

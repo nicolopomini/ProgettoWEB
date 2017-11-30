@@ -115,11 +115,7 @@
                     <form class="form" action="resultpage.jsp" method="GET">
                         <input type="submit" style="display: none" />
                         <div class="form-group">
-                            <br>
                             <input type="search" class="form-control" name="SearchQuery" id="SearchQuery" placeholder="Scrivi il nome di un prodotto...">
-                            <br>
-                            <button class="btn btn-dark btn-sm" type="submit" form="form" data-toggle="collapse" aria-expanded="false">Ricerca</button>
-                            <button class="btn btn-dark btn-sm" type="button" data-toggle="collapse" data-target="#AdvanceSearch" aria-expanded="false" aria-controls="AdvanceSearch">Ricerca Avanzata</button>
                         </div>
                         <div class="collapse" id="AdvanceSearch">
                             <div class="card card-body">
@@ -174,15 +170,13 @@
                                         <input name="geo" type="search" class="form-control" id="geo" placeholder="Inserisci un luogo">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-4"></div>
-                                    <div class="col-4">
-                                        <input type="submit" value="Ricerca">
-                                        <input type="reset">
-                                    </div>
-                                    <div class="col-4"></div>
-                                </div>
                             </div>
+                            <br/>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-dark btn-sm" type="submit">Ricerca</button>
+                            <button class="btn btn-dark btn-sm" type="button" data-toggle="collapse" data-target="#AdvanceSearch" aria-expanded="false" aria-controls="AdvanceSearch">Ricerca Avanzata</button>
+                            <button class="btn btn-dark btn-sm" type="reset">Reset</button>
                         </div>
                     </form>
                 </div>
@@ -205,13 +199,13 @@
                                 String shop=(strShop.equals(""))?null:strShop;
                                 
                                 String strMinPrice=request.getParameter("minPrice");
-                                Integer minPrice=(strMinPrice.equals(""))?null:Integer.getInteger(strMinPrice);
+                                Integer minPrice=(strMinPrice.equals(""))?null:Integer.parseInt(strMinPrice);
                                 
                                 String strMaxPrice=request.getParameter("maxPrice");
-                                Integer maxPrice=(strMaxPrice.equals(""))?null:Integer.getInteger(strMaxPrice);
+                                Integer maxPrice=(strMaxPrice.equals(""))?null:Integer.parseInt(strMaxPrice);
                                 
                                 String strMinAvgScore=request.getParameter("Recensione");
-                                Integer minAvgScore=(strMinAvgScore.equals(""))?null:Integer.getInteger(strMinAvgScore);
+                                Integer minAvgScore=(strMinAvgScore.equals(""))?null:Integer.parseInt(strMinAvgScore);
                                 
                                 String strGeo = request.getParameter("geo");
                                 String geo = (strGeo.equals(""))?null:strGeo;

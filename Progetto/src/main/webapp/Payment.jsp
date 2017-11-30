@@ -32,9 +32,12 @@
     <body>
         <script type="text/javascript">
             function showDiv(radioselect) {
-                document.getElementById("Card").style.visibility = 'hidden';
-                document.getElementById(radioselect).style.visibility = 'visible';
-                document.getElementById(radioselect).focus();
+                if(radioselect == "Card"){
+                    document.getElementById("Card").setAttribute("class","form-group");
+                    document.getElementById("Card").focus();
+                }else{
+                    document.getElementById("Card").setAttribute("class","form-group collapse");
+                }
             }
 
             function detectCardType(number) {
@@ -138,24 +141,26 @@
                     <h2 style="text-align: center">Il carrello è vuoto</h2>
                     <% } else { //carrello pieno%>
 
-
-                    <form action="OrderSummary.jsp" class="form-horizontal" id="form-payment" name="payment-info" method="post">
-                        <h1>Seleziona il metodo di pagamento:</h1>
-                        <div class="col-12 col-sm-7 col-lg-4 leftPaddingZero">
-                            <div class="form-group">
-                                <input type="radio" id="typeCOD" name="type" value="cod" onClick="showDiv('COD');">
+                    <div class="col-12 col-sm-7 col-lg-4 leftPaddingZero">
+                    <h1>Seleziona il metodo di pagamento:</h1>
+                    <form action="OrderSummary.jsp" id="form-payment" name="payment-info" method="post">
+                            <div class="form-check">
+                                <input type="radio" id="typeCOD" name="type" value="cod" onClick="showDiv('');">
                                 <label for="typeCOD">C.O.D.</label>
                                 <img src="resources/icons/money.png" height="22">
                             </div>
-                            <div class="form-group">
+                            <div class="form-check">
                                 <input type="radio" id="typeCC" name="type" value="card" onClick="showDiv('Card');">
                                 <label for="typeCC">Credit Card    </label>
                                 <img src="resources/icons/credit.png" height="22">
-                                <div id="Card" style="visibility:collapse">
-                                    <div class="alert alert-danger collapse" id="error" ></div>
-                                    <label for="cardno">Card Number:</label>
-                                    <input type="text" oninput="updateImage()" name="cardno" id="cardno">
-                                    <img id="cardimg" src="resources/icons/credit.png"><br/>
+                            </div>
+                                <div id="Card" class="collapse">
+                                    <div class="form-group">
+                                        <div class="alert alert-danger collapse" id="error" ></div>
+                                        <label for="cardno">Card Number:</label>
+                                        <input type="text" oninput="updateImage()" name="cardno" id="cardno">
+                                        <img id="cardimg" src="resources/icons/credit.png">
+                                    </div>
                                     <label for="owner">Owner Name:</label>
                                     <input type="text"  id="owner" name="owner"><br/>
                                     <label>Expiration Date:</label>
@@ -191,10 +196,8 @@
                                     </select></br>
                                     <label>Security Code:</label> <input type="text" maxlength="4" id="CVV"  name="CVV">
                                 </div>
-
-                            </div>
-                        </div>
                     </form>
+                    </div>
                     <button type="button" onclick="checkAndSend()" name="submit">Conferma</button>
                         <% } %>
         </div>
