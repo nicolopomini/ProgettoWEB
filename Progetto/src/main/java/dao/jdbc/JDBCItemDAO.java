@@ -363,18 +363,17 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
         String statement = "";
         
         String columns = "Item.itemId, Item.name, Item.description, Item.category, Item.price, Item.shopId, Shop.name AS shopName";
-        String shortColumns = "Item.itemId, Item.name, Item.description, Item.category, Item.price, Item.shopId";
         
         if(name == null)
         {
-            statement = "SELECT " + columns + " FROM Item";
+            statement = "SELECT DISTINCT Item.name FROM Item";
         }
         else
         {
-            statement = "SELECT " + columns + " FROM ("
+            statement = "SELECT DISTINCT Item.name FROM ("
                     + "(SELECT * FROM Item WHERE name LIKE \"%" + name + "%\") UNION "
                     + "(SELECT * FROM Item WHERE description LIKE \"%" + name + "%\") UNION "
-                    + "(SELECT " + shortColumns + " FROM Item, Shop WHERE Item.shopId = Shop.shopId AND Shop.name LIKE \"%" + name + "%\")) AS Item";
+                    + "(SELECT " + columns + " FROM Item, Shop WHERE Item.shopId = Shop.shopId AND Shop.name LIKE \"%" + name + "%\")) AS Item";
         }
         
         if(minAvgScore != null)
@@ -382,11 +381,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
             statement += ", ItemReview";
         }
         
-        statement += ", Shop";
-        
         ArrayList<String> filters = new ArrayList<>();
-        
-        filters.add("Shop.shopId = Item.shopId");
         
         if(category != null)
         {
@@ -431,7 +426,7 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
                 ArrayList<String> items = new ArrayList<>();
                 while(rs.next())
                 {
-                    items.add(rs.getString("name") + " - " + rs.getString("shopName"));
+                    items.add(rs.getString("name"));
                 }
                 return items;
             }
