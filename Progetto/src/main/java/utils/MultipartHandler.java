@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.UUID;
 import javax.servlet.http.Part;
 /**
@@ -19,6 +21,7 @@ import javax.servlet.http.Part;
  */
 public class MultipartHandler {
     private static final int DEFAULT_BUFFER_SIZE = 1024;
+    private static final HashSet<String> IMG_FORMATS = new HashSet<>(Arrays.asList("JPG", "jpg","JPEG","jpeg","PNG","png"));
     
     public static String getStringValue(Part part, String encoding) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(part.getInputStream(), encoding));
@@ -37,6 +40,8 @@ public class MultipartHandler {
             ext = upname.charAt(i) + ext;
             i--;
         }
+        if(!IMG_FORMATS.contains(ext)) 
+            throw new IOException("Image format not valid.");
         if(!context.endsWith("/"))
             context += "/";
         String path = "img/";

@@ -243,7 +243,7 @@
                                 <input type="text" class="form-control" name="orari" id="orari" placeholder="<%=shop.getOpeningHours()%>">
                             </div>
                             <div class="form-group">
-                                <label for="image">Immagine negozio</label>
+                                <label for="image">Immagine negozio (dim. max 2MB)</label>
                                 <input type="file" id="image" name="image">
                                 <p class="help-block">Inserisci un immagine che rappresenti il tuo negozio</p>
                             </div>
@@ -289,7 +289,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="image">Inserisci immagini</label>
+                                <label for="image">Inserisci immagini (dim. max 2MB)</label>
                                 <div id='immaginiitem'>
                                 <input type="file" id="image" name="image1">
                                 </div>

@@ -280,7 +280,7 @@
                                 </div>
                                     <input type="hidden" name="id" value="<%= item.getItemId() %>">
                                 <div class="form-group">
-                                <label for="image">Inserisci immagini</label>
+                                <label for="image">Inserisci immagini (dim. max 2MB)</label>
                                 <div id='immaginiitem'>
                                 <input type="file" id="image" name="image1" class="form-control-file">
                                 </div>
