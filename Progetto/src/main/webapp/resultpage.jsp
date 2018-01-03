@@ -42,7 +42,13 @@
     }else{
         throw new ServletException("Impossible to get dao factory for storage system");
     }
-    
+    System.out.println(request.getParameter("Categoria").equals(""));
+    System.out.println(request.getParameter("Negozio").equals(""));
+    System.out.println(request.getParameter("Recensione").equals(""));
+    System.out.println(request.getParameter("minPrice").equals(""));
+    System.out.println(request.getParameter("maxPrice").equals(""));
+    System.out.println(request.getParameter("geo").equals(""));
+    boolean notAdvanced = request.getParameter("Categoria").equals("") && request.getParameter("Negozio").equals("") && request.getParameter("Recensione").equals("") && request.getParameter("minPrice").equals("") && request.getParameter("maxPrice").equals("") && request.getParameter("geo").equals("");
 %>
 
 <!DOCTYPE html>
@@ -115,15 +121,28 @@
                     <form class="form" action="resultpage.jsp" method="GET">
                         <input type="submit" style="display: none" />
                         <div class="form-group">
-                            <input type="search" class="form-control" name="SearchQuery" id="SearchQuery" placeholder="Scrivi il nome di un prodotto...">
+                            <input value="<%=request.getParameter("SearchQuery")%>" type="search" class="form-control" name="SearchQuery" id="SearchQuery" placeholder="Scrivi il nome di un prodotto...">
                         </div>
-                        <div class="collapse" id="AdvanceSearch">
+                            <%
+                            if(notAdvanced)
+                            {
+                            %>
+                                <div class="collapse" id="AdvanceSearch">
+                            <%
+                            }
+                            else
+                            {
+                            %>
+                                <div id="AdvanceSearch">
+                            <%
+                            }
+                            %>
                             <div class="card card-body">
                                 
                                 <div class="form-group row">
                                     <label for="Negozio" class="col-xl-3 col-form-label">Negozio</label>
                                     <div class="col-xl-9">
-                                        <input type="text" class="form-control" id="Negozio" name="Negozio" placeholder="Scrivi il nome del negozio...">
+                                        <input value="<%=request.getParameter("Negozio")%>" type="text" class="form-control" id="Negozio" name="Negozio" placeholder="Scrivi il nome del negozio...">
                                     </div>
                                 </div>
 
@@ -133,12 +152,13 @@
                                         <select class="form-control" id="Categoria" name="Categoria">
                                             <option value=''></option>
                                             <%
-                                                String head="<option value='";
+                                                String head="<option ";
                                                 String middle="'>";
                                                 String tail="</option>";
                                                 ArrayList<String> categories=itemDatabase.getAllCategories();
                                                 for(String c:categories){
-                                                    out.write(head+c+middle+c+tail);
+                                                    String check = (request.getParameter("Categoria").equals(c))?"selected value='":"value='";
+                                                    out.write(head+check+c+middle+c+tail);
                                                 }
                                             %>
                                         </select>
@@ -147,27 +167,27 @@
 
 
                                 <div class="form-group row">
-                                    <label class="col-xl-6 col-form-label" for="Recesione">Valutazione</label>
+                                    <label class="col-xl-6 col-form-label" for="Recensione">Valutazione</label>
                                     <div class="col-xl-6">
-                                        <input name="Recensione" type="number" class="form-control" id="Recensione" min="0" max="5">
+                                        <input value="<%=request.getParameter("Recensione")%>" name="Recensione" type="number" class="form-control" id="Recensione" min="0" max="5">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-xl-6 col-form-label" for="minPrice">Prezzo minimo:</label>
                                     <div class="col-xl-6">
-                                        <input name="minPrice" type="number" class="form-control" id="minPrice">
+                                        <input value="<%=request.getParameter("minPrice")%>" name="minPrice" type="number" class="form-control" id="minPrice">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-xl-6 col-form-label" for="maxPrice">Prezzo massimo:</label>
                                     <div class="col-xl-6">
-                                        <input name="maxPrice" type="number" class="form-control" id="maxPrice">
+                                        <input value="<%=request.getParameter("maxPrice")%>" name="maxPrice" type="number" class="form-control" id="maxPrice">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-xl-6 col-form-label" for="geo">Ricerca geografica:</label>
                                     <div class="col-xl-6">
-                                        <input name="geo" type="search" class="form-control" id="geo" placeholder="Inserisci un luogo">
+                                        <input value="<%=request.getParameter("geo")%>" name="geo" type="search" class="form-control" id="geo" placeholder="Inserisci un luogo">
                                     </div>
                                 </div>
                             </div>
