@@ -111,7 +111,7 @@
                         <p id="modal-text"></p>
                     </div>
                     <div class="modal-footer">
-                      <a href="cart.jsp" id="modal-cart-btn" class="btn btn-warning">Go to cart</a>
+                      <a href="cart.jsp" id="modal-cart-btn" class="btn btn-warning">Vai al carrello</a>
                       <button type="button" style="cursor:pointer;" class="btn btn-success" data-dismiss="modal">Ok</button>
                     </div>
                   </div>

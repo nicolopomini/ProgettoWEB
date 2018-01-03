@@ -67,7 +67,7 @@
                             items.put(item,cart.get(i));
                             totalprice += item.getPrice() * cart.get(i);
 
-                            pageContext.setAttribute("totalprice", totalprice);
+                            session.setAttribute("totalprice", totalprice);
                             /*for(int j= 0; j< cart.get(i);j++)
                                 out.println("ASD PROVA PROVA");
                             */

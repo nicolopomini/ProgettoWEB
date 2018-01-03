@@ -128,17 +128,17 @@
                         {
                 %>
                 <form id="registerForm" method="post" action="<%=request.getRequestURL() %>" class="form-horizontal">
-                    <h6>Fill the form an press the button to login</h6>
+                    <h6>Inserisci il tuo username e la tua password per entrare</h6>
                     <div class="col-12 col-sm-7 col-lg-4 leftPaddingZero">
                         <div class="marginBottomFix">
-                            <p><a href="Registration.jsp">Not registered? click here to register</a></p>
+                            <p><a href="Registration.jsp">Non sei registrato? Clicca qui per registrarti.</a></p>
                         </div>
                         <div class="form-group">
                             <%
                                 if(!valid)
                                 {
                                     %>
-                                    <div class="alert alert-danger">The email and password you typed do not match any user</div>
+                                    <div class="alert alert-danger">L'email e la password inseriti non corrispondono a nesssun account</div>
                                     <%
                                 }
                             %>
@@ -169,7 +169,7 @@
                         </div>
                         <div class="form-group"> 
                             <div class="marginBottomFix">
-                                <a href='passwordRecovery.jsp'>I forgot my password</a>
+                                <a href='passwordRecovery.jsp'>Ho dimenticato la mia password.</a>
                             </div>
                             <button type="submit" class="btn btn-success">Login</button>
                             <span onclick="goBack()" style="float:right;" class="btn btn-danger">Cancel</span>
@@ -181,10 +181,10 @@
                     else
                     {
                 %>
-                    <label>Your account needs to be activated first!</label>
-                    <p class="redText">WARNING: To start using your account you will need to activate it. Click the button below to send another activation email.</p>
+                    <label>Il tuo account deve essere attivato</label>
+                    <p class="redText">ATTENZIONE: Per cominciare ad utilizzare il tuo account devi prima attivarlo. Clicca sul bottono qui sotto per reinviare una email di conferma.</p>
                     <button onclick="sendActivationEmail('<%=email%>')" class="btn btn-success marginBottomFix">Send Activation</button>
-                    <p class="hiddenText" id="emailSent">An activation email has been sent to the address "<%=email%>".</p>
+                    <p class="hiddenText" id="emailSent">Una email di conferma è stata inviata all'indirizzo "<%=email%>".</p>
                 <%
                         }
                     }

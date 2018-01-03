@@ -158,7 +158,7 @@
                             if(hasToken == 0)
                             {
                                 %>
-                                <div class="alert alert-danger">The inserted token is not valid.</div>
+                                <div class="alert alert-danger">Il token inserito non è valido, ripetere la procedura di recupero.</div>
                                 <%
                             }
                             %>

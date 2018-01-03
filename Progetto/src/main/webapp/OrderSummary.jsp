@@ -20,6 +20,7 @@
     boolean logged = (sessionUser != null);
     HashMap<Integer,Integer> cart = (HashMap<Integer,Integer>) session.getAttribute("cart");
     session.setAttribute("checkout", cart);
+    double totalprice = (double)session.getAttribute("totalprice");
     ItemDAO itemDAO;
 
     DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
@@ -67,26 +68,43 @@
         </script>
         <jsp:include page="Header.jsp"/>
         <div class="container-fluid containerFix">
+            <h1>Riepilogo Ordine</h1>
+            <br/>
             <form id="confirmForm" method="post" action="Checkout">
                 <input type="hidden" id="CVV" name="CVV">
                 <input type="hidden" name="type" value="<%= type%>">
-                <label><%= CCN%></label><input type="hidden" name="cardno" value="<%= CCN%>"> <br/>
-                <label><%= name%></label><input type="hidden" name="owner" value="<%= name%>"> <br/>
-                <label><%= expDate%></label><input type="hidden" name="expDate" value="<%= expDate%>"> <br/>
+                <% if(type.equals("card")){%> 
+                <label>Tipo di pagamento: <b>Carta di Credito</b></label><br/>
+                <label>Numero carta: <b><%= CCN%></b></label><input type="hidden" name="cardno" value="<%= CCN%>"> <br/>
+                <label>Proprietario: <b><%= name%></b></label><input type="hidden" name="owner" value="<%= name%>"> <br/>
+                <label>Scadenza <b><%= expDate%></b></label><input type="hidden" name="expDate" value="<%= expDate%>"><br/>
+                <% }else{%>
+                <label>Tipo di pagamento: <b>Contrassegno</b></label><br/>
+                <% }%>
+                <table class="table" style="table-layout: fixed;">
+                    <thead>
+                            <th><strong>Totale</strong></th>
+                            <th></th>
+                            <th class="text-right"><strong><fmt:formatNumber value="${totalprice}" type="currency" currencySymbol="€"/></strong></th>
+                        </thead>
+                        <tbody>
                 <%
                     for (Integer i : cart.keySet()) {
-                        Item item = itemDAO.getByPrimaryKey(i); %>
-                        <label><%=item.getName()%></label>
-                        <label><%=item.getPrice()+" $"%></label>
-                        <label><%=cart.get(i)%></label>
-                        <br/>
+                %>
+                    <tr>
+                        <%Item item = itemDAO.getByPrimaryKey(i); %>
+                        <td><label><%=item.getName()%></label></td>
+                        <td><label><%=item.getPrice()+" $"%></label></td>
+                        <td><label><%=cart.get(i)%></label></td>
+                    </tr>
                 <%
                     }
                 %>
-
-                <button type = "button" onclick="sendForm()">Conferma</button>
+                        </tbody>
+                </table>
+                <button class="btn btn-success" type = "button" onclick="sendForm()">Conferma</button>
                 <a href="cart.jsp">
-                    <button type = "button">Torna al carrello</button>
+                    <button class="btn btn-warning" type = "button">Torna al carrello</button>
                 </a>
             </form>
         </div>

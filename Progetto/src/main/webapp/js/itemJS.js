@@ -16,8 +16,8 @@ function addToCart(id,name)
         {
             if(this.responseText == "added")
             {
-                $('#modal-text').text("Item '"+name+"' has been added to the cart");
-                $('#modal-title').text("Item added");
+                $('#modal-text').text("L'oggetto '"+name+"' è stato aggiunto al carrello");
+                $('#modal-title').text("Oggetto aggiunto");
                 $('#modal-cart-btn').show();
                 $('#confirm-modal').modal({show: true});
             }

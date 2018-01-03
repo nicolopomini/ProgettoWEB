@@ -177,7 +177,7 @@
             <!-- Menu -->
             <div class="row">
                 <div class="col-12">
-                    <h1>Registration</h1>
+                    <h1>Registrazione</h1>
                     <% if(!logged) 
                     {
                         if(request.getMethod().equals("POST"))
@@ -185,8 +185,8 @@
                             if(validData)
                             {
                     %>
-                    <label>Your registration was successful</label>
-                    <p class="redText">WARNING: To start using your account you will need to activate it. An activation email has been sent to the address "<%=tmpEmail%>", click on the button contained in the email to activate your account</p>
+                    <label>Registrazione effettuata con successo</label>
+                    <p class="redText">ATTENZIONE: Per cominciare ad usare il tuo account devi prima attivarlo. Una email di conferma è stata inviata all'indirizzo "<%=tmpEmail%>", clicca sul bottone contenuto nella email per attivare il tuo account.</p>
                     <script>
                         function sendActivationEmail(email)
                         {
@@ -214,7 +214,7 @@
                             else
                             {
                     %>
-                    <label>Oops, something went wrong</label>
+                    <label>Oops, qualcosa è andato storto</label>
                     <%
                             }
                         }
@@ -223,7 +223,7 @@
                     %>
                     <form id="registerForm" method="post" action="<%=request.getRequestURL() %>" class="form-horizontal">
                         <div class="marginBottomFix">
-                            <h6>Fill the form and press "Register" to create a new user</h6>
+                            <h6>Compila il form e clicca "Registrati" per creare un account</h6>
                         </div>
                         <div class="col-12 col-sm-7 col-lg-4 leftPaddingZero">
                             <div class="form-group">
@@ -238,22 +238,22 @@
                             </div>
                             <div class="form-group">
                                 <div class="alert alert-danger collapse" id="NameError"></div>
-                                <label for="Name">Name</label>
+                                <label for="Name">Nome</label>
                                 <input class="form-control" type="text" name="Name" id="Name">
                             </div>
                             <div class="form-group">
                                 <div class="alert alert-danger collapse" id="SurnameError"></div>
-                                <label for="Surname">Surname</label>
+                                <label for="Surname">Cognome</label>
                                 <input class="form-control" type="text" name="Surname" id="Surname">
                             </div>
                             <div class="form-group">
                                 <div class="alert alert-danger collapse" id="AddressError"></div>
-                                <label for="Address">Address</label>
+                                <label for="Address">Indirizzo</label>
                                 <input class="form-control" type="text" name="Address" id="Address">
                             </div>
                             <div class="form-group"> 
-                                <span onclick="registerAttempt()" class="btn btn-success">Register</span>
-                                <span onclick="goBack()" style="float:right;" class="btn btn-danger">Cancel</span>
+                                <span onclick="registerAttempt()" class="btn btn-success">Registrati</span>
+                                <span onclick="goBack()" style="float:right;" class="btn btn-danger">Annulla</span>
                             </div>
                         </div>
                     </form>

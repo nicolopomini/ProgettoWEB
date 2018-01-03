@@ -12,6 +12,7 @@
     User sessionUser = (User)session.getAttribute("user");
     boolean logged = (sessionUser != null);
     HashMap<Integer,Integer> cart = (HashMap<Integer,Integer>) session.getAttribute("cart");
+   
 
 %><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -147,7 +148,7 @@
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label" for="typeCOD">
                                     <input class="form-check-input" type="radio" id="typeCOD" name="type" value="cod" onClick="showDiv('');">
-                                    C.O.D.
+                                    Contrassegno
                                     <img src="resources/icons/money.png" height="22">
                                 </label>
                                 
@@ -155,7 +156,7 @@
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label" for="typeCC">
                                     <input class="form-check-input" type="radio" id="typeCC" name="type" value="card" onClick="showDiv('Card');">
-                                    Credit Card
+                                    Carta di Credito
                                     <img src="resources/icons/credit.png" height="22">  
                                 </label>
                             </div>
@@ -182,6 +183,7 @@
                                     <div class="form-group form-row">
                                         <div class="col">
                                             <select class="form-control" name="exp-month">
+                                                <option value=""></option>
                                                 <option value="01">01</option>
                                                 <option value="02">02</option>
                                                 <option value="03">03</option>
@@ -198,7 +200,7 @@
                                         </div>
                                         <div class="col">
                                             <select class="form-control" name="exp-year">
-                                                <option value="17">2017</option>
+                                                <option value=""></option>
                                                 <option value="18">2018</option>
                                                 <option value="19">2019</option>
                                                 <option value="20">2020</option>
@@ -218,7 +220,7 @@
                                     <label>Security Code:</label> <input class="form-control" type="text" maxlength="4" id="CVV"  name="CVV">
                                 </div>
                         <br/><br/>
-                        <button class="btn btn-success" type="button" onclick="checkAndSend()" name="submit">Conferma</button>
+                        <button class="btn btn-success" type="button" onclick="checkAndSend()">Conferma</button>
                     </form>
                     </div>
                     </div>

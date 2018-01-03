@@ -32,7 +32,7 @@ function registerAttempt()
             else
             {
                 validForm = false;
-                fieldError.innerHTML = "The typed email is already in use";
+                fieldError.innerHTML = "La email inserita è già in uso";
                 toggleVisibility("EmailError", true);
                 field.setAttribute("style","border: 1px solid red");
             }
@@ -41,7 +41,7 @@ function registerAttempt()
     else
     {
         validForm = false;
-        fieldError.innerHTML = "The Email field cannot be empty";
+        fieldError.innerHTML = "Il campo email non può essere vuoto";
         toggleVisibility("EmailError", true);
         field.setAttribute("style","border: 1px solid red");
     }
@@ -56,7 +56,7 @@ function registerAttempt()
         if(!isValidString(fieldRegex,field.value))
         {
             validForm = false;
-            fieldError.innerHTML = "The Password field cannot contain invalid characters";
+            fieldError.innerHTML = "Il campo password contiene caratteri invalidi";
             toggleVisibility("PasswordError", true);
             field.setAttribute("style","border: 1px solid red");
         }
@@ -71,7 +71,7 @@ function registerAttempt()
             else
             {
                 validForm = false;
-                fieldError.innerHTML = "The Password field has to be at least 8 characters long";
+                fieldError.innerHTML = "La password deve essere lunga almeno 8 caratteri";
                 toggleVisibility("PasswordError", true);
                 field.setAttribute("style","border: 1px solid red");
             }
@@ -80,7 +80,7 @@ function registerAttempt()
     else
     {
         validForm = false;
-        fieldError.innerHTML = "The Password field cannot be empty";
+        fieldError.innerHTML = "Il campo password non può essere vuoto";
         toggleVisibility("PasswordError", true);
         field.setAttribute("style","border: 1px solid red");
     }
@@ -95,7 +95,7 @@ function registerAttempt()
         if(!isValidString(fieldRegex,field.value))
         {
             validForm = false;
-            fieldError.innerHTML = "The Name field cannot contain invalid characters";
+            fieldError.innerHTML = "Il campo nome contiene caratteri invalidi";
             toggleVisibility("NameError", true);
             field.setAttribute("style","border: 1px solid red");
         }
@@ -109,7 +109,7 @@ function registerAttempt()
     else
     {
         validForm = false;
-        fieldError.innerHTML = "The Name field cannot be empty";
+        fieldError.innerHTML = "Il campo nome non può essere vuoto";
         toggleVisibility("NameError", true);
         field.setAttribute("style","border: 1px solid red");
     }
@@ -124,7 +124,7 @@ function registerAttempt()
         if(!isValidString(fieldRegex,field.value))
         {
             validForm = false;
-            fieldError.innerHTML = "The Surname field cannot contain invalid characters";
+            fieldError.innerHTML = "Il campo cognome contiene caratteri invalidi";
             toggleVisibility("SurnameError", true);
             field.setAttribute("style","border: 1px solid red");
         }
@@ -138,7 +138,7 @@ function registerAttempt()
     else
     {
         validForm = false;
-        fieldError.innerHTML = "The Surname field cannot be empty";
+        fieldError.innerHTML = "Il campo cognome non può essere vuoto";
         toggleVisibility("SurnameError", true);
         field.setAttribute("style","border: 1px solid red");
     }
@@ -152,7 +152,7 @@ function registerAttempt()
         if(!isValidString(fieldRegex,field.value))
         {
             validForm = false;
-            fieldError.innerHTML = "The Address field cannot contain invalid characters";
+            fieldError.innerHTML = "Il campo indirizzo contiene caratteri invalidi";
             toggleVisibility("AddressError", true);
             field.setAttribute("style","border: 1px solid red");
         }
@@ -166,7 +166,7 @@ function registerAttempt()
     else
     {
         validForm = false;
-        fieldError.innerHTML = "The Address field cannot be empty";
+        fieldError.innerHTML = "Il campo indirizzo non può essere vuoto";
         toggleVisibility("AddressError", true);
         field.setAttribute("style","border: 1px solid red");
     }
