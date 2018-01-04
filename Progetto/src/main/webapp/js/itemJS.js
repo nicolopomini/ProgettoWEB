@@ -113,7 +113,17 @@ function addComment(id,name, canReply)
                     commenti += document.getElementById("commenti").innerHTML;
                     document.getElementById("commenti").innerHTML = commenti;
                 }
+            } else {
+                $('#modal-text').text("Qualcosa è andato storto");
+                $('#modal-title').text("Errore");
+                $('#modal-cart-btn').hide();
+                $('#confirm-modal').modal({show: true});
             }
+        } else {
+            $('#modal-text').text("Qualcosa è andato storto");
+            $('#modal-title').text("Errore");
+            $('#modal-cart-btn').hide();
+            $('#confirm-modal').modal({show: true});
         }
     };
     xhttp.open("POST", "ItemComment", true);
@@ -133,6 +143,11 @@ function addReply(commentID, itemID) {
                 //document.getElementById("form-reply").reset();
                 document.getElementById(commentID).innerHTML = this.responseText;
             }
+        } else {
+            $('#modal-text').text("Qualcosa è andato storto");
+            $('#modal-title').text("Errore");
+            $('#modal-cart-btn').hide();
+            $('#confirm-modal').modal({show: true});
         }
     };
     xhttp.open("POST","ItemCommentReply", true);

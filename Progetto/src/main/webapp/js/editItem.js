@@ -9,9 +9,19 @@ form.addEventListener('submit', function(ev) {
           if(this.responseText == "OK") {
                 location.reload();
           }
+          else {
+            $('#modal-text').text("Qualcosa è andato storto");
+            $('#modal-title').text("Errore");
+            $('#modal-cart-btn').hide();
+            $('#confirm-modal').modal({show: true});
+          }
       }
       else {
           $("#edit-item-submit").prop("disabled", false);
+          $('#modal-text').text("Qualcosa è andato storto");
+            $('#modal-title').text("Errore");
+            $('#modal-cart-btn').hide();
+            $('#confirm-modal').modal({show: true});
       }
   };
 
