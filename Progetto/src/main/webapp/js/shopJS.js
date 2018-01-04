@@ -7,13 +7,21 @@ modifyShop.addEventListener('submit', function(ev) {
     var req = new XMLHttpRequest();
     req.open("POST", "ModifyShop", true);
     req.onload = function(event) {
+        $('#modificanegozio').modal('hide');
       if (req.status == 200) {
           if(this.responseText == "OK") {
                 location.reload();
+          } else {
+                $('#modal-text').text("Qualcosa è andato storto:(");
+                $('#modal-title').text("Errore");
+                $('#confirm-modal').modal({show: true});
           }
       }
       else {
           $("#modifyshopbutton").prop("disabled", false);
+          $('#modal-text').text("Qualcosa è andato storto:(");
+            $('#modal-title').text("Errore");
+            $('#confirm-modal').modal({show: true});
       }
   };
 
@@ -27,17 +35,25 @@ newItem.addEventListener('submit', function(ev) {
     var req = new XMLHttpRequest();
     req.open("POST", "InsertItem", true);
     req.onload = function(event) {
+        $('#inserisciitem').modal('hide');
       if (req.status == 200) {
           if(this.responseText == "OK") {
                 newItem.reset();
-                $('#inserisciitem').modal('hide')
                 $('#modal-text').text("Nuovo item inserito con successo");
                 $('#modal-title').text("Operazione eseguita");
                 $('#confirm-modal').modal({show: true});
           }
+          else {
+                $('#modal-text').text("Qualcosa è andato storto:(");
+                $('#modal-title').text("Errore");
+                $('#confirm-modal').modal({show: true});
+          }
       }
       else {
-          $("#form-new-item-btn").prop("disabled", false);
+            $("#form-new-item-btn").prop("disabled", false);
+            $('#modal-text').text("Qualcosa è andato storto:(");
+            $('#modal-title').text("Errore");
+            $('#confirm-modal').modal({show: true});
       }
   };
 
@@ -129,7 +145,15 @@ function addComment(id,name, canReply)
                     commenti += document.getElementById("commenti").innerHTML;
                     document.getElementById("commenti").innerHTML = commenti;
                 }
+            } else {
+                $('#modal-text').text("Qualcosa è andato storto:(");
+                $('#modal-title').text("Errore");
+                $('#confirm-modal').modal({show: true});
             }
+        } else {
+            $('#modal-text').text("Qualcosa è andato storto:(");
+                $('#modal-title').text("Errore");
+                $('#confirm-modal').modal({show: true});
         }
     };
     xhttp.open("POST", "ShopComment", true);
@@ -146,7 +170,15 @@ function addReply(commentID, itemID) {
                 $('#modal-title').text("Commento risposto");
                 $('#confirm-modal').modal({show: true});
                 document.getElementById(commentID).innerHTML = this.responseText;
+            } else {
+                $('#modal-text').text("Qualcosa è andato storto:(");
+                $('#modal-title').text("Errore");
+                $('#confirm-modal').modal({show: true});
             }
+        } else {
+            $('#modal-text').text("Qualcosa è andato storto:(");
+                $('#modal-title').text("Errore");
+                $('#confirm-modal').modal({show: true});
         }
     };
     xhttp.open("POST","ShopCommentReply", true);

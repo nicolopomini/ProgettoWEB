@@ -14,7 +14,8 @@ function addRemoveItem(action,id)
         if (this.readyState == 4 && this.status == 200)
         {
             table.innerHTML = this.responseText;
-        }
+        } else
+            table.innerHTML = "<b>Errore</b>, qualcosa è andato storto :(";
     };
     xhttp.open("POST", "CartManager", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

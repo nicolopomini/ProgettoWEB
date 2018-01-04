@@ -18,7 +18,11 @@ function sendActivationEmail(email)
             {
                 label.setAttribute("style","display:block");
             }
+            else
+                alert("Errore, qualcosa è andato storto");
         }
+        else
+            alert("Errore, qualcosa è andato storto");
     };
     xhttp.open("POST", "SendActivationEmail", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
