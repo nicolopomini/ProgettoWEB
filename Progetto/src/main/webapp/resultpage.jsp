@@ -230,14 +230,6 @@
                                 String strGeo = request.getParameter("geo");
                                 String geo = (strGeo.equals(""))?null:strGeo;
                                 
-                                System.err.println("------");
-                                System.err.println(name);
-                                System.err.println(category);
-                                System.err.println(shop);
-                                System.err.println(minPrice);
-                                System.err.println(maxPrice);
-                                System.err.println(minAvgScore);
-                                
                                 ArrayList<Item>items=itemDatabase.findItems(name, category, shop, minPrice, maxPrice, minAvgScore, geo);
                                 for (Item i:items) {
                                     String itemName=i.getName();
