@@ -39,5 +39,7 @@ public interface ItemDAO extends DAO<Item, Integer>{
     
     public ArrayList<String> getAllCategories() throws DAOException;
     
-    public boolean isOwner(int idemId, int userId) throws DAOException;
+    public boolean isOwner(int itemId, int userId) throws DAOException;
+
+    public ArrayList<Item> findItemsByShop(int shopId) throws DAOException;
 }

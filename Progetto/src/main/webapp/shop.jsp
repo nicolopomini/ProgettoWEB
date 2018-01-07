@@ -17,6 +17,7 @@
 <%@page import="dao.ShopDAO"%>
 <%@page import="persistence.utils.dao.factories.DAOFactory"%>
 <%@page import="dao.entities.Shop"%>
+<%@ page import="dao.entities.Item" %>
 <%@ page errorPage="/errorpage.jsp" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -73,6 +74,9 @@
         venditore = user.getUserId() == shop.getUserId();
         cancomment = shopDAO.canComment(shop.getShopId(), user.getUserId());
     }
+
+    ArrayList<Item> soldItems = itemDAO.findItemsByShop(shopid);
+
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -127,7 +131,7 @@
                         <% if(venditore) { %>
                             <br/>
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modificanegozio">Modifica Negozio</button>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inserisciitem">Visualizza Item</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#visualizzaitem">Visualizza Item</button>
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inserisciitem">Aggiungi Item</button>
                         <% } %>
                     </center>
@@ -257,6 +261,36 @@
             <%
                 ArrayList<String> categorie = itemDAO.getAllCategories();
             %>
+            <!--visualizza tutti gli item-->
+            <div class="modal fade" id="visualizzaitem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Visualizza Oggetti Venduti</h4>
+                        </div>
+                        <div class="modal-body">
+                            <ul>
+                                <%
+                                    if(soldItems.size() == 0){
+                                        %>
+                                        Non stai vendendo ancora nessun oggetto
+                                    <%
+                                    }else{
+                                        for (Item item:soldItems) {
+                                            System.out.println(item.getItemId());
+                                            %>
+                                            <li><a href="item.jsp?itemid=<%=item.getItemId()%>"><%=item.getName()%></a></li>
+                                    <%
+                                        }
+                                    }
+                                %>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End modal-->
             <!--Inserisci nuovo item-->
             <div class="modal fade" id="inserisciitem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
               <div class="modal-dialog" role="document">

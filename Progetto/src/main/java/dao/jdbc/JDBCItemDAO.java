@@ -452,4 +452,27 @@ public class JDBCItemDAO extends JDBCDAO<Item, Integer> implements ItemDAO{
             throw new DAOException("Impossible to get categories", ex);
         }
     }
+
+
+    public ArrayList<Item> findItemsByShop(int shopId) throws DAOException{
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Item WHERE shopId =" + shopId)) {
+            try (ResultSet rs = stm.executeQuery()) {
+                ArrayList<Item> items = new ArrayList<>();
+                while(rs.next())
+                {
+                    Item item = new Item();
+                    item.setItemId(rs.getInt("itemId"));
+                    item.setName(rs.getString("name"));
+                    item.setDescription(rs.getString("description"));
+                    item.setCategory(rs.getString("category"));
+                    item.setPrice(rs.getDouble("price"));
+                    item.setShopId(rs.getInt("shopId"));
+                    items.add(item);
+                }
+                return items;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get items", ex);
+        }
+    }
 }
