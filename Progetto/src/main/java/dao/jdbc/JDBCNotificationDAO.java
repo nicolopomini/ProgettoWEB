@@ -152,7 +152,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
     @Override
     public ArrayList<Notification> getByRecipient(int UserId) throws DAOException {
         try {
-            PreparedStatement stm = CON.prepareStatement("SELECT notificationId, Notification.author AS author, User.name AS authorName, User.surname AS authorSurname, notificationTime, notificationText, recipient, seen, Notification.type AS type, link FROM Notification JOIN User ON (Notification.author = user.UserId) WHERE recipient = ? ORDER BY notificationTime desc;");
+            PreparedStatement stm = CON.prepareStatement("SELECT notificationId, Notification.author AS author, User.name AS authorName, User.surname AS authorSurname, notificationTime, notificationText, recipient, seen, Notification.type AS type, link FROM Notification JOIN User ON (Notification.author = user.UserId) WHERE recipient = ? ORDER BY seen, notificationTime desc;");
             stm.setInt(1, UserId);
             ResultSet rs = stm.executeQuery();
             ArrayList<Notification> l = new ArrayList<>(); 

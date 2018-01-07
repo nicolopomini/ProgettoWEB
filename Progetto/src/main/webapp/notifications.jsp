@@ -122,7 +122,7 @@
                           textType = "Il tuo commento è stato risposto da ";
                        else if(n.getType().equals(Notification.NEWCOMMENTSHOP))
                           textType = "Nuovo commento su un negozio da ";
-                       else if(n.getType().equals(Notification.REPLYCOMPLAINT))
+                       else if(n.getType().equals(Notification.REPLYCOMPLAINT)) 
                           textType = "Risposta alla segnalazione di anomalia.";
                 %>
                 <li class="list-group-item topoint <%if(!n.getSeen()){%> daleggere <%}%>" style="text-align: center" onclick="location.href = '<%= n.getLink() %>';">
@@ -130,6 +130,9 @@
                     <%= textType %>
                     <% if(!n.getType().equals(Notification.REPLYCOMPLAINT)) { %>
                         <%= n.getAuthorName() + " " + n.getAuthorSurname() %>
+                    <% } %>
+                    <% if(!n.getNotificationText().equals("")) { %>
+                    <br/><%= n.getNotificationText() %>
                     <% } %>
                 </li>
                 <%}%>
@@ -158,6 +161,13 @@
                             <li><b>Data</b>: <%=date%></li>
                             <li><b>Stato</b>: <%= c.getStatus() %></li>
                             <li><b>Messaggio</b>: <%= c.getComplaintText() %></li>
+                            <li><b>Risposta</b>:
+                                <% if(c.getReply() == null ||  c.getReply().equals("")) { %>
+                                Nessuna risposta.
+                                <% }else { %>
+                                <%= c.getReply() %>
+                                <% } %>
+                            </li>
                         </ul>
                         <h4>Info acquisto</h4>
                         <ul>

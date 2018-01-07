@@ -69,7 +69,7 @@ public class JDBCComplaintDAO extends JDBCDAO<Complaint, Integer> implements Com
 
     @Override
     public List<Complaint> getAll() throws DAOException {
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Complaint")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Complaint order by complainttime desc")) {
             try (ResultSet rs = stm.executeQuery()) {
                 ArrayList<Complaint> complaints = new ArrayList<>();
                 while(rs.next())

@@ -107,11 +107,13 @@ public class UpdateComplaint extends HttpServlet {
                 complaint.setReply(reply);
                 notification.setNotificationText(reply);
                 addNotification = true;
-            }
+            } else
+                notification.setNotificationText("");
             if(reject != null && reject.equals("on")) {
                 complaint.setStatus(Complaint.STATUS_REJECTED);
+                
                 addNotification = true;
-                notification.setNotificationText(notification.getNotificationText() + "\nL'anomalia è stata respinta.");
+                notification.setNotificationText(notification.getNotificationText() + "<br/>L'anomalia è stata respinta.");
             }
             if(addNotification) {
                 notification.setAuthor(user.getUserId());
