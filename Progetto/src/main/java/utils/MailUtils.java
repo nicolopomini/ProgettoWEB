@@ -60,11 +60,7 @@ public class MailUtils
                    + "<p>Name: "+user.getName()+"</p>"
                    + "<p>Surname: "+user.getSurname()+"</p>"
                    + "<p>Address: "+user.getAddress()+"</p>"
-                   + "<form action='localhost/activation.jsp' target='_blank' method='post'>"
-                   + "<input type='hidden' name='ActivationCode' value='"+user.getVerificationCode()+"'>"
-                   + "<button type='submit'>Activate account</button>"
-                   + "</form>"
-                   + "<p>Oppure http://localhost/activation.jsp?ActivationCode="+user.getVerificationCode(),
+                   + "<a href=\"http://localhost/activation.jsp?ActivationCode="+user.getVerificationCode()+"\">Per procedere alla attivazione clicca qui</a>",
              "text/html; charset=utf-8");
 
 	   // Send message

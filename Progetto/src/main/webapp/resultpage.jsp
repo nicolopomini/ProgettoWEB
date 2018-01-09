@@ -59,7 +59,18 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
        <link href="css/stickyfooter.css" type="text/css" rel="stylesheet">
-       
+       <script>
+            function resetForm()
+            {
+                document.getElementById("SearchQuery").value = "";
+                document.getElementById("Negozio").value = "";
+                document.getElementById("Categoria").value = "";
+                document.getElementById("Recensione").value = "";
+                document.getElementById("minPrice").value = "";
+                document.getElementById("maxPrice").value = "";
+                document.getElementById("geo").value = "";
+            }
+       </script>
         <!-- Jquery library -->
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         
@@ -119,7 +130,6 @@
             <div class="row">
                 <div class="col-md-4">
                     <form class="form" action="resultpage.jsp" method="GET">
-                        <input type="submit" style="display: none" />
                         <div class="form-group">
                             <input value="<%=request.getParameter("SearchQuery")%>" type="search" class="form-control" name="SearchQuery" id="SearchQuery" placeholder="Scrivi il nome di un prodotto...">
                         </div>
@@ -196,7 +206,7 @@
                         <div class="form-group">
                             <button class="btn btn-dark btn-sm" type="submit">Ricerca</button>
                             <button class="btn btn-dark btn-sm" type="button" data-toggle="collapse" data-target="#AdvanceSearch" aria-expanded="false" aria-controls="AdvanceSearch">Ricerca Avanzata</button>
-                            <button class="btn btn-dark btn-sm" type="reset">Reset</button>
+                            <button class="btn btn-dark btn-sm" type="button" onclick="resetForm()">Reset</button>
                         </div>
                     </form>
                 </div>

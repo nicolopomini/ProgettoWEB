@@ -182,7 +182,7 @@
                     {
                 %>
                     <label>Il tuo account deve essere attivato</label>
-                    <p class="redText">ATTENZIONE: Per cominciare ad utilizzare il tuo account devi prima attivarlo. Clicca sul bottono qui sotto per reinviare una email di conferma.</p>
+                    <p class="redText">ATTENZIONE: Per cominciare ad utilizzare il tuo account devi prima attivarlo. Clicca sul bottone qui sotto per reinviare una email di conferma.</p>
                     <button onclick="sendActivationEmail('<%=email%>')" class="btn btn-success marginBottomFix">Send Activation</button>
                     <p class="hiddenText" id="emailSent">Una email di conferma è stata inviata all'indirizzo "<%=email%>".</p>
                 <%

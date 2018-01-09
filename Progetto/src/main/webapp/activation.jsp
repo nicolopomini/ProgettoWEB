@@ -24,9 +24,10 @@
         }
     }
     String activationCode = "";
-    boolean validCode = true;
+    boolean validCode = false;
     if(request.getParameter("ActivationCode") != null)
     {
+        validCode = true;
         activationCode = request.getParameter("ActivationCode");
         String activationCodeRegex = "[^a-zA-Z0-9]";
         if(StringUtils.isValidString(activationCode,activationCodeRegex) && !StringUtils.isEmpty(activationCode))
@@ -87,8 +88,8 @@
             <div class="row">
                 <div class="col-12">
                     <h1>Activation</h1>
-                    <label class="greenText">Your account has been activated</label>
-                    <p>You will now be able to access your customer area and buy our products</p>
+                    <label class="greenText">Il tuo account è stato attivato con successo</label>
+                    <p>Puoi ora acquistare ed accedere alla tua area personale per modificare i tuoi dati</p>
                     <p id="redirectTimer"></p>
                     <script>
                         function timedRedirect(timeLeft)
