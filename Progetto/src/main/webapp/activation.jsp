@@ -94,7 +94,7 @@
                     <script>
                         function timedRedirect(timeLeft)
                         {
-                            document.getElementById("redirectTimer").innerHTML = "An automatic redirect to the home page will happen in " + timeLeft;
+                            document.getElementById("redirectTimer").innerHTML = "Verrai reindirizzato alla home in " + timeLeft;
                             if(timeLeft > 0)
                             {
                                 setTimeout(function() {timedRedirect(timeLeft-1)},1000);
